@@ -10,53 +10,57 @@
   <title>이상호 | 부산진구청장 예비후보 - 더불어민주당</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <!-- 모바일 하단 고정 네비게이션 -->
-  <nav class="bottom-nav" id="bottomNav">
-    <a href="#hero" class="nav-item active" data-section="hero">
-      <i class="fas fa-home"></i>
+  <nav class="bottom-nav" id="bottomNav" role="navigation" aria-label="메인 네비게이션">
+    <a href="#hero" class="nav-item active" data-section="hero" aria-label="홈으로 이동">
+      <i class="fas fa-home" aria-hidden="true"></i>
       <span>홈</span>
     </a>
-    <a href="#about" class="nav-item" data-section="about">
-      <i class="fas fa-user"></i>
+    <a href="#about" class="nav-item" data-section="about" aria-label="후보 소개">
+      <i class="fas fa-user" aria-hidden="true"></i>
       <span>소개</span>
     </a>
-    <a href="#pledges" class="nav-item" data-section="pledges">
-      <i class="fas fa-bullhorn"></i>
+    <a href="#pledges" class="nav-item" data-section="pledges" aria-label="핵심 공약">
+      <i class="fas fa-bullhorn" aria-hidden="true"></i>
       <span>공약</span>
     </a>
-    <a href="#gallery" class="nav-item" data-section="gallery">
-      <i class="fas fa-images"></i>
+    <a href="#gallery" class="nav-item" data-section="gallery" aria-label="사진첩">
+      <i class="fas fa-images" aria-hidden="true"></i>
       <span>사진</span>
     </a>
-    <a href="#video" class="nav-item" data-section="video">
-      <i class="fas fa-play-circle"></i>
+    <a href="#video" class="nav-item" data-section="video" aria-label="영상 보기">
+      <i class="fas fa-play-circle" aria-hidden="true"></i>
       <span>영상</span>
     </a>
-    <a href="#contact" class="nav-item" data-section="contact">
-      <i class="fas fa-phone"></i>
+    <a href="#contact" class="nav-item" data-section="contact" aria-label="연락처">
+      <i class="fas fa-phone" aria-hidden="true"></i>
       <span>연락</span>
     </a>
   </nav>
 
-  <!-- 히어로 섹션 - 모바일 1화면 맞춤 -->
+  <!-- 히어로 섹션 - 모바일 1화면 맞춤 + staggered reveal -->
   <section class="hero" id="hero">
     <div class="hero-top">
       <span class="party-name-tag">더불어민주당</span>
-      <span class="hero-divider">|</span>
-      <span class="hero-position">부산진구청장 예비후보</span>
     </div>
     <div class="hero-center">
       <div class="hero-photo-area">
-        <img src="assets/news1.jpg" alt="이상호" class="hero-img">
+        <img src="assets/news1.jpg" alt="이상호 후보 사진" class="hero-img">
       </div>
       <div class="hero-text">
+        <div class="hero-badges">
+          <span class="hero-badge">부산진구 토박이</span>
+          <span class="hero-badge">40대 신기수</span>
+        </div>
         <h1 class="candidate-name">이상호</h1>
+        <p class="hero-title-sub">부산진구청장 예비후보</p>
+        <div class="hero-divider-line"></div>
         <p class="slogan-main">기본사회가 강한 도시</p>
         <p class="slogan-sub">진짜 사람중심 부산진구</p>
       </div>
@@ -66,24 +70,24 @@
       <a href="#about" class="btn btn-outline">후보 소개</a>
     </div>
     <div class="scroll-indicator">
-      <i class="fas fa-chevron-down"></i>
+      <i class="fas fa-chevron-down" aria-hidden="true"></i>
     </div>
   </section>
 
   <!-- 핵심 슬로건 배너 -->
-  <section class="slogan-banner">
+  <section class="slogan-banner" aria-label="핵심 가치">
     <div class="container">
       <div class="slogan-items">
         <div class="slogan-item">
-          <i class="fas fa-heart"></i>
+          <i class="fas fa-heart" aria-hidden="true"></i>
           <span>복지는 돌봄으로</span>
         </div>
         <div class="slogan-item">
-          <i class="fas fa-chart-line"></i>
+          <i class="fas fa-chart-line" aria-hidden="true"></i>
           <span>경제는 기회로</span>
         </div>
         <div class="slogan-item">
-          <i class="fas fa-hands-helping"></i>
+          <i class="fas fa-hands-helping" aria-hidden="true"></i>
           <span>행정은 참여로</span>
         </div>
       </div>
@@ -107,7 +111,7 @@
 
       <div class="profile-card">
         <div class="profile-photo">
-          <img src="assets/news1.jpg" alt="이상호" class="profile-img">
+          <img src="assets/news1.jpg" alt="이상호 후보 프로필 사진" class="profile-img">
         </div>
         <div class="profile-info">
           <h3>이상호 <span class="age-tag">1979년생</span></h3>
@@ -117,7 +121,7 @@
 
       <!-- 학력 -->
       <div class="timeline-section">
-        <h3 class="subsection-title"><i class="fas fa-graduation-cap"></i> 학력</h3>
+        <h3 class="subsection-title"><i class="fas fa-graduation-cap" aria-hidden="true"></i> 학력</h3>
         <ul class="timeline">
           <li class="timeline-item">
             <span class="timeline-dot"></span>
@@ -137,17 +141,25 @@
               <strong>양정고등학교</strong> 졸업
             </div>
           </li>
+          <li class="timeline-item">
+            <span class="timeline-dot"></span>
+            <div class="timeline-content">
+              <strong>국립부경대학교</strong>
+              <p>정치외교학과 학사 · 정치언론학 석사</p>
+            </div>
+          </li>
         </ul>
       </div>
 
       <!-- 경력 -->
       <div class="timeline-section">
-        <h3 class="subsection-title"><i class="fas fa-briefcase"></i> 주요 경력</h3>
+        <h3 class="subsection-title"><i class="fas fa-briefcase" aria-hidden="true"></i> 주요 경력</h3>
         <ul class="timeline">
           <li class="timeline-item">
             <span class="timeline-dot"></span>
             <div class="timeline-content">
               <strong>제17대 국회의원 비서관</strong>
+              <p>열린우리당</p>
             </div>
           </li>
           <li class="timeline-item">
@@ -168,6 +180,12 @@
             <div class="timeline-content">
               <strong>제21대 대선 부산선대위 전략기획본부장</strong>
               <p>더불어민주당 당 대표 1급 포상 수상</p>
+            </div>
+          </li>
+          <li class="timeline-item">
+            <span class="timeline-dot"></span>
+            <div class="timeline-content">
+              <strong>제22대 부산진구(을) 국회의원선거 예비후보</strong>
             </div>
           </li>
           <li class="timeline-item current">
@@ -191,10 +209,9 @@
       </h2>
 
       <div class="pledge-cards">
-        <!-- 공약 1: 돌봄 -->
-        <div class="pledge-card" data-aos="fade-up">
+        <div class="pledge-card">
           <div class="pledge-icon welfare">
-            <i class="fas fa-hand-holding-heart"></i>
+            <i class="fas fa-hand-holding-heart" aria-hidden="true"></i>
           </div>
           <div class="pledge-number">01</div>
           <h3 class="pledge-title">촘촘한 돌봄 복지</h3>
@@ -207,26 +224,24 @@
           </ul>
         </div>
 
-        <!-- 공약 2: 경제 -->
-        <div class="pledge-card" data-aos="fade-up">
+        <div class="pledge-card">
           <div class="pledge-icon economy">
-            <i class="fas fa-store"></i>
+            <i class="fas fa-store" aria-hidden="true"></i>
           </div>
           <div class="pledge-number">02</div>
           <h3 class="pledge-title">기회의 지역경제</h3>
           <p class="pledge-desc">경제는 기회로! 골목경제 살리기</p>
           <ul class="pledge-details">
+            <li>부전역복합환승센터 완성 (KTX·BuTX·도심공항)</li>
             <li>전통시장·소상공인 지원 확대</li>
             <li>청년 창업 지원 및 일자리 창출</li>
-            <li>지역 상권 활성화 프로젝트</li>
-            <li>중소기업 성장 지원 기반 마련</li>
+            <li>도심균형발전과 상권 재생</li>
           </ul>
         </div>
 
-        <!-- 공약 3: 참여 행정 -->
-        <div class="pledge-card" data-aos="fade-up">
+        <div class="pledge-card">
           <div class="pledge-icon admin">
-            <i class="fas fa-users"></i>
+            <i class="fas fa-users" aria-hidden="true"></i>
           </div>
           <div class="pledge-number">03</div>
           <h3 class="pledge-title">주민 참여 행정</h3>
@@ -239,10 +254,9 @@
           </ul>
         </div>
 
-        <!-- 공약 4: 교육·문화 -->
-        <div class="pledge-card" data-aos="fade-up">
+        <div class="pledge-card">
           <div class="pledge-icon culture">
-            <i class="fas fa-book-reader"></i>
+            <i class="fas fa-book-reader" aria-hidden="true"></i>
           </div>
           <div class="pledge-number">04</div>
           <h3 class="pledge-title">교육·문화 도시</h3>
@@ -255,10 +269,9 @@
           </ul>
         </div>
 
-        <!-- 공약 5: 안전·환경 -->
-        <div class="pledge-card" data-aos="fade-up">
+        <div class="pledge-card">
           <div class="pledge-icon safety">
-            <i class="fas fa-shield-alt"></i>
+            <i class="fas fa-shield-alt" aria-hidden="true"></i>
           </div>
           <div class="pledge-number">05</div>
           <h3 class="pledge-title">안전하고 깨끗한 도시</h3>
@@ -282,31 +295,28 @@
         현장에서 만나는 이상호
       </h2>
 
-      <div class="gallery-tabs">
-        <button class="gallery-tab active" data-filter="all">전체</button>
-        <button class="gallery-tab" data-filter="campaign">선거운동</button>
-        <button class="gallery-tab" data-filter="community">주민소통</button>
-        <button class="gallery-tab" data-filter="activity">정치활동</button>
+      <div class="gallery-tabs" role="tablist" aria-label="사진 분류">
+        <button class="gallery-tab active" data-filter="all" role="tab" aria-selected="true">전체</button>
+        <button class="gallery-tab" data-filter="campaign" role="tab" aria-selected="false">선거운동</button>
+        <button class="gallery-tab" data-filter="community" role="tab" aria-selected="false">주민소통</button>
+        <button class="gallery-tab" data-filter="activity" role="tab" aria-selected="false">정치활동</button>
       </div>
 
       <div class="gallery-grid" id="galleryGrid">
         <div class="gallery-item" data-category="activity">
-          <img src="assets/gallery/photo1.jpg" alt="이상호 최고균형발전상 수상">
-        </div>
-        <div class="gallery-item" data-category="campaign">
-          <img src="assets/gallery/photo2.jpg" alt="이상호 부산진구청장 출마 관련">
-        </div>
-        <div class="gallery-item" data-category="campaign">
-          <img src="assets/gallery/photo3.jpg" alt="이상호 선거운동">
-        </div>
-        <div class="gallery-item" data-category="community">
-          <img src="assets/gallery/photo4.jpg" alt="이상호 선거사무소 당원과 함께">
+          <img src="assets/gallery/photo1.jpg" alt="이상호 문화예술대상 수상" loading="lazy">
         </div>
         <div class="gallery-item" data-category="activity">
-          <img src="assets/gallery/photo5.jpg" alt="이상호 부산진구청장 출마예정 기자회견">
+          <img src="assets/gallery/photo2.jpg" alt="이상호 박형준 시장 사퇴촉구 합동 기자회견" loading="lazy">
         </div>
         <div class="gallery-item" data-category="activity">
-          <img src="assets/gallery/photo6.jpg" alt="이상호 박형준 시장 사퇴 촉구 기자회견">
+          <img src="assets/gallery/photo3.jpg" alt="이상호 봉하마을 노무현 대통령 묘역 참배" loading="lazy">
+        </div>
+        <div class="gallery-item" data-category="campaign">
+          <img src="assets/gallery/photo4.jpg" alt="이상호 부전역 새해 인사" loading="lazy">
+        </div>
+        <div class="gallery-item" data-category="campaign">
+          <img src="assets/gallery/photo5.jpg" alt="이상호 더불어민주당 부산진구청장 프로필" loading="lazy">
         </div>
       </div>
     </div>
@@ -323,9 +333,9 @@
       <div class="video-list">
         <div class="video-card">
           <div class="video-wrapper">
-            <div class="video-placeholder" data-video-id="cSlO5oNLzPk">
-              <img src="https://img.youtube.com/vi/cSlO5oNLzPk/hqdefault.jpg" alt="영상 썸네일" class="video-thumb">
-              <i class="fas fa-play-circle"></i>
+            <div class="video-placeholder" data-video-id="cSlO5oNLzPk" role="button" aria-label="영상 재생: 부산·경남 행정통합 추진">
+              <img src="https://img.youtube.com/vi/cSlO5oNLzPk/hqdefault.jpg" alt="" class="video-thumb" loading="lazy">
+              <i class="fas fa-play-circle" aria-hidden="true"></i>
             </div>
           </div>
           <div class="video-info">
@@ -336,9 +346,9 @@
 
         <div class="video-card">
           <div class="video-wrapper">
-            <div class="video-placeholder" data-video-id="NQooNKL91I0">
-              <img src="https://img.youtube.com/vi/NQooNKL91I0/hqdefault.jpg" alt="영상 썸네일" class="video-thumb">
-              <i class="fas fa-play-circle"></i>
+            <div class="video-placeholder" data-video-id="NQooNKL91I0" role="button" aria-label="영상 재생: 이상호 직격">
+              <img src="https://img.youtube.com/vi/NQooNKL91I0/hqdefault.jpg" alt="" class="video-thumb" loading="lazy">
+              <i class="fas fa-play-circle" aria-hidden="true"></i>
             </div>
           </div>
           <div class="video-info">
@@ -349,9 +359,9 @@
 
         <div class="video-card">
           <div class="video-wrapper">
-            <div class="video-placeholder" data-video-id="TReQWsiZXs8">
-              <img src="https://img.youtube.com/vi/TReQWsiZXs8/hqdefault.jpg" alt="영상 썸네일" class="video-thumb">
-              <i class="fas fa-play-circle"></i>
+            <div class="video-placeholder" data-video-id="TReQWsiZXs8" role="button" aria-label="영상 재생: 우리 친구 이상호 화이팅">
+              <img src="https://img.youtube.com/vi/TReQWsiZXs8/hqdefault.jpg" alt="" class="video-thumb" loading="lazy">
+              <i class="fas fa-play-circle" aria-hidden="true"></i>
             </div>
           </div>
           <div class="video-info">
@@ -362,9 +372,9 @@
 
         <div class="video-card">
           <div class="video-wrapper">
-            <div class="video-placeholder" data-video-id="vg6cEX9Gv7c">
-              <img src="https://img.youtube.com/vi/vg6cEX9Gv7c/hqdefault.jpg" alt="영상 썸네일" class="video-thumb">
-              <i class="fas fa-play-circle"></i>
+            <div class="video-placeholder" data-video-id="vg6cEX9Gv7c" role="button" aria-label="영상 재생: 박형준 부산시장 사퇴 촉구">
+              <img src="https://img.youtube.com/vi/vg6cEX9Gv7c/hqdefault.jpg" alt="" class="video-thumb" loading="lazy">
+              <i class="fas fa-play-circle" aria-hidden="true"></i>
             </div>
           </div>
           <div class="video-info">
@@ -376,7 +386,7 @@
     </div>
   </section>
 
-  <!-- 응원 한마디 섹션 -->
+  <!-- 응원 섹션 -->
   <section class="section support" id="support">
     <div class="container">
       <h2 class="section-title">
@@ -385,7 +395,7 @@
       </h2>
       <div class="support-banner">
         <div class="support-icon">
-          <i class="fas fa-fist-raised"></i>
+          <i class="fas fa-fist-raised" aria-hidden="true"></i>
         </div>
         <p class="support-text">
           부산진구의 변화,<br>
@@ -394,11 +404,11 @@
         <div class="support-share">
           <p>이 페이지를 공유해주세요</p>
           <div class="share-buttons">
-            <button class="share-btn kakao" onclick="shareKakao()">
-              <i class="fas fa-comment"></i> 카카오톡
+            <button class="share-btn kakao" onclick="shareKakao()" aria-label="카카오톡으로 공유">
+              <i class="fas fa-comment" aria-hidden="true"></i> 카카오톡
             </button>
-            <button class="share-btn copy" onclick="copyLink()">
-              <i class="fas fa-link"></i> 링크복사
+            <button class="share-btn copy" onclick="copyLink()" aria-label="링크 복사">
+              <i class="fas fa-link" aria-hidden="true"></i> 링크복사
             </button>
           </div>
         </div>
@@ -415,29 +425,29 @@
       </h2>
 
       <div class="contact-cards">
-        <a href="tel:051-000-0000" class="contact-card">
+        <a href="tel:010-4582-4106" class="contact-card">
           <div class="contact-icon">
-            <i class="fas fa-phone-alt"></i>
+            <i class="fas fa-phone-alt" aria-hidden="true"></i>
           </div>
           <div class="contact-info">
             <h4>전화</h4>
-            <p>051-000-0000</p>
+            <p>010-4582-4106</p>
           </div>
         </a>
 
-        <a href="mailto:sangho@example.com" class="contact-card">
+        <a href="mailto:jininews@gmail.com" class="contact-card">
           <div class="contact-icon">
-            <i class="fas fa-envelope"></i>
+            <i class="fas fa-envelope" aria-hidden="true"></i>
           </div>
           <div class="contact-info">
             <h4>이메일</h4>
-            <p>sangho@example.com</p>
+            <p>jininews@gmail.com</p>
           </div>
         </a>
 
         <a href="#" class="contact-card" id="mapLink">
           <div class="contact-icon">
-            <i class="fas fa-map-marker-alt"></i>
+            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
           </div>
           <div class="contact-info">
             <h4>선거사무소</h4>
@@ -445,13 +455,13 @@
           </div>
         </a>
 
-        <a href="#" class="contact-card">
+        <a href="https://www.instagram.com/leesangho1979" class="contact-card" target="_blank">
           <div class="contact-icon">
-            <i class="fas fa-hashtag"></i>
+            <i class="fab fa-instagram" aria-hidden="true"></i>
           </div>
           <div class="contact-info">
-            <h4>SNS</h4>
-            <p>@leesangho_busanjin</p>
+            <h4>인스타그램</h4>
+            <p>@leesangho1979</p>
           </div>
         </a>
       </div>
@@ -470,14 +480,12 @@
     </div>
   </footer>
 
-  <!-- 맨 위로 가기 버튼 -->
-  <button class="scroll-top" id="scrollTop" aria-label="맨 위로">
-    <i class="fas fa-arrow-up"></i>
+  <button class="scroll-top" id="scrollTop" aria-label="맨 위로 스크롤">
+    <i class="fas fa-arrow-up" aria-hidden="true"></i>
   </button>
 
-  <!-- 링크 복사 토스트 -->
-  <div class="toast" id="toast">
-    <i class="fas fa-check-circle"></i> 링크가 복사되었습니다!
+  <div class="toast" id="toast" role="alert" aria-live="polite">
+    <i class="fas fa-check-circle" aria-hidden="true"></i> 링크가 복사되었습니다!
   </div>
 
   <script src="script.js"></script>

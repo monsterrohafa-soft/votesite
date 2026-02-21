@@ -129,82 +129,66 @@ img { max-width: 100%; height: auto; display: block; }
 
 /* 상단 바 */
 .hero-top {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 14px 0 0;
-  font-size: 13px;
-  font-weight: 500;
-  opacity: 0.9;
+  position: relative; z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; padding: 14px 0 0;
+  font-size: 13px; font-weight: 500; opacity: 0.9;
 }
 
 .party-name-tag {
   background: rgba(255,255,255,0.18);
-  padding: 4px 14px;
-  border-radius: 50px;
-  font-weight: 700;
-  font-size: 12px;
-  letter-spacing: 1px;
+  padding: 4px 14px; border-radius: 50px;
+  font-weight: 700; font-size: 12px; letter-spacing: 1px;
 }
-
-.hero-divider { opacity: 0.4; }
-
-.hero-position { font-weight: 400; }
 
 /* 중앙 - 사진 + 이름 */
 .hero-center {
-  position: relative;
-  z-index: 2;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
+  position: relative; z-index: 2; flex: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 16px;
 }
 
 .hero-photo-area {
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 4px solid rgba(255,255,255,0.3);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  flex-shrink: 0;
+  width: 140px; height: 180px; border-radius: var(--radius);
+  overflow: hidden; border: 3px solid rgba(255,255,255,0.3);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3); flex-shrink: 0;
 }
-
-.hero-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
+.hero-img { width: 100%; height: 100%; object-fit: cover; }
 .hero-text { text-align: center; }
 
+.hero-badges {
+  display: flex; gap: 8px; justify-content: center; margin-bottom: 12px;
+}
+.hero-badge {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  padding: 4px 14px; border-radius: 50px;
+  font-size: 12px; font-weight: 700; letter-spacing: 1px;
+}
+
 .candidate-name {
-  font-size: 48px;
-  font-weight: 900;
-  letter-spacing: -2px;
-  line-height: 1;
-  margin-bottom: 10px;
-  text-shadow: 0 2px 16px rgba(0,0,0,0.3);
+  font-size: 56px; font-weight: 900; letter-spacing: -3px;
+  line-height: 1; margin-bottom: 6px;
+  text-shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+
+.hero-title-sub {
+  font-size: 14px; font-weight: 500; opacity: 0.8;
+  letter-spacing: 2px; margin-bottom: 12px;
+}
+
+.hero-divider-line {
+  width: 40px; height: 2px;
+  background: rgba(255,255,255,0.4);
+  margin: 0 auto 12px;
 }
 
 .slogan-main {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 22px; font-weight: 800;
   color: var(--accent-sky);
-  margin-bottom: 2px;
+  margin-bottom: 4px; letter-spacing: -0.5px;
 }
-
-.slogan-sub {
-  font-size: 15px;
-  font-weight: 400;
-  opacity: 0.8;
-}
+.slogan-sub { font-size: 15px; font-weight: 400; opacity: 0.7; letter-spacing: 1px; }
 
 /* CTA 버튼 */
 .hero-cta {
@@ -601,9 +585,13 @@ img { max-width: 100%; height: auto; display: block; }
   right: 20px;
   font-size: 36px;
   font-weight: 900;
-  color: var(--bg-light);
   line-height: 1;
 }
+.pledge-card:nth-child(1) .pledge-number { color: rgba(211,47,47,0.15); }
+.pledge-card:nth-child(2) .pledge-number { color: rgba(79,195,247,0.2); }
+.pledge-card:nth-child(3) .pledge-number { color: rgba(255,143,0,0.2); }
+.pledge-card:nth-child(4) .pledge-number { color: rgba(124,77,255,0.2); }
+.pledge-card:nth-child(5) .pledge-number { color: rgba(67,160,71,0.2); }
 
 .pledge-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
 
@@ -987,21 +975,23 @@ img { max-width: 100%; height: auto; display: block; }
 /* ==================
    반응형
    ================== */
-@media (min-width: 768px) {
-  .container { max-width: 640px; }
-  .candidate-name { font-size: 60px; }
-  .slogan-main { font-size: 24px; }
-  .hero-photo-area { width: 200px; height: 200px; }
-  .gallery-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
-}
-
-/* 작은 화면 (SE 등) */
 @media (max-height: 667px) {
-  .hero-photo-area { width: 120px; height: 120px; }
-  .candidate-name { font-size: 40px; }
-  .slogan-main { font-size: 17px; }
+  .hero-photo-area { width: 110px; height: 140px; }
+  .candidate-name { font-size: 44px; }
+  .slogan-main { font-size: 18px; }
   .slogan-sub { font-size: 13px; }
   .btn { padding: 10px 22px; font-size: 14px; }
+  .hero-center { gap: 12px; }
+  .hero-badges { margin-bottom: 8px; }
+  .hero-title-sub { margin-bottom: 8px; }
+}
+
+@media (min-width: 768px) {
+  .container { max-width: 640px; }
+  .hero-photo-area { width: 180px; height: 230px; }
+  .candidate-name { font-size: 68px; }
+  .slogan-main { font-size: 26px; }
+  .gallery-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
 }
 
 @media (min-width: 1024px) {
