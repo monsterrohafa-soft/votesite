@@ -6,6 +6,7 @@
   <meta name="description" content="진보당 노정현 - 부산 연제구청장 예비후보 | 주민이 주인 되는 정치, 낡은 구도를 넘어서는 연제">
   <meta property="og:title" content="노정현 | 연제구청장 예비후보">
   <meta property="og:description" content="주민이 주인 되는 정치 - 진보당 노정현">
+  <meta property="og:image" content="assets/news1.jpg">
   <meta property="og:type" content="website">
   <title>노정현 | 연제구청장 예비후보 - 진보당</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -48,6 +49,7 @@
   <section class="hero" id="hero">
     <div class="hero-top">
       <span class="party-name-tag">진보당</span>
+      <div id="dday"></div>
     </div>
     <div class="hero-center">
       <div class="hero-photo-area">
@@ -312,9 +314,10 @@
 
       <div class="gallery-tabs">
         <button class="gallery-tab active" data-filter="all">전체</button>
-        <button class="gallery-tab" data-filter="campaign">선거운동</button>
-        <button class="gallery-tab" data-filter="community">주민소통</button>
         <button class="gallery-tab" data-filter="activity">의정활동</button>
+        <button class="gallery-tab" data-filter="campaign">선거운동</button>
+        <button class="gallery-tab" data-filter="event">행사</button>
+        <button class="gallery-tab" data-filter="media">언론</button>
       </div>
 
       <div class="gallery-grid" id="galleryGrid">
@@ -337,6 +340,17 @@
           <img src="assets/news1.jpg" alt="노정현 진보당 부산시당위원장">
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- 일정 섹션 -->
+  <section class="section schedule" id="schedule" style="display:none;">
+    <div class="container">
+      <h2 class="section-title">
+        <span class="title-accent">일정</span>
+        다가오는 일정
+      </h2>
+      <div class="schedule-list"></div>
     </div>
   </section>
 
@@ -510,5 +524,6 @@
   </div>
 
   <script src="script.js"></script>
+  <script src="/shared/dynamic-loader.js" data-code="njh"></script>
 </body>
 </html>

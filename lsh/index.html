@@ -6,6 +6,7 @@
   <meta name="description" content="더불어민주당 이상호 - 부산진구청장 예비후보 | 기본사회가 강한 도시, 진짜 사람중심 부산진구">
   <meta property="og:title" content="이상호 | 부산진구청장 예비후보">
   <meta property="og:description" content="기본사회가 강한 도시, 진짜 사람중심 부산진구 - 더불어민주당 이상호">
+  <meta property="og:image" content="assets/news1.jpg">
   <meta property="og:type" content="website">
   <title>이상호 | 부산진구청장 예비후보 - 더불어민주당</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -48,6 +49,7 @@
   <section class="hero" id="hero">
     <div class="hero-top">
       <span class="party-name-tag">더불어민주당</span>
+      <div id="dday"></div>
     </div>
     <div class="hero-center">
       <div class="hero-photo-area">
@@ -297,9 +299,10 @@
 
       <div class="gallery-tabs" role="tablist" aria-label="사진 분류">
         <button class="gallery-tab active" data-filter="all" role="tab" aria-selected="true">전체</button>
+        <button class="gallery-tab" data-filter="activity" role="tab" aria-selected="false">의정활동</button>
         <button class="gallery-tab" data-filter="campaign" role="tab" aria-selected="false">선거운동</button>
-        <button class="gallery-tab" data-filter="community" role="tab" aria-selected="false">주민소통</button>
-        <button class="gallery-tab" data-filter="activity" role="tab" aria-selected="false">정치활동</button>
+        <button class="gallery-tab" data-filter="event" role="tab" aria-selected="false">행사</button>
+        <button class="gallery-tab" data-filter="media" role="tab" aria-selected="false">언론</button>
       </div>
 
       <div class="gallery-grid" id="galleryGrid">
@@ -319,6 +322,17 @@
           <img src="assets/gallery/photo5.jpg" alt="이상호 더불어민주당 부산진구청장 프로필" loading="lazy">
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- 일정 섹션 -->
+  <section class="section schedule" id="schedule" style="display:none;">
+    <div class="container">
+      <h2 class="section-title">
+        <span class="title-accent">일정</span>
+        다가오는 일정
+      </h2>
+      <div class="schedule-list"></div>
     </div>
   </section>
 
@@ -489,5 +503,6 @@
   </div>
 
   <script src="script.js"></script>
+  <script src="/shared/dynamic-loader.js" data-code="lsh"></script>
 </body>
 </html>

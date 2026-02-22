@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>관리자 페이지</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; }
+
+    /* 로그인 */
+    .login-wrap { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+    .login-box { background: #fff; border-radius: 16px; padding: 40px 32px; width: 100%; max-width: 400px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+    .login-box h1 { font-size: 22px; margin-bottom: 8px; text-align: center; }
+    .login-box p { color: #888; font-size: 14px; text-align: center; margin-bottom: 28px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #555; }
+    .form-group input, .form-group select { width: 100%; padding: 12px 14px; border: 1px solid #ddd; border-radius: 10px; font-size: 15px; outline: none; transition: border 0.2s; background: #fff; }
+    .form-group input:focus, .form-group select:focus { border-color: #333; }
+    .btn { width: 100%; padding: 14px; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+    .btn-primary { background: #1a1a1a; color: #fff; margin-top: 8px; }
+    .btn-primary:hover { opacity: 0.85; }
+    .error-msg { color: #e53e3e; font-size: 13px; text-align: center; margin-top: 12px; display: none; }
+
+    /* 대시보드 */
+    .dashboard { display: none; max-width: 800px; margin: 0 auto; padding: 20px; }
+    .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding: 20px; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .dash-header h2 { font-size: 18px; }
+    .dash-header span { color: #888; font-size: 13px; }
+    .btn-logout { padding: 8px 16px; border: 1px solid #ddd; border-radius: 8px; background: #fff; font-size: 13px; cursor: pointer; }
+    .btn-logout:hover { background: #f5f5f5; }
+
+    /* 탭 */
+    .tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+    .tab-btn { flex: 1; min-width: 70px; padding: 10px 8px; border: 1px solid #ddd; border-radius: 10px; background: #fff; font-size: 13px; font-weight: 600; cursor: pointer; text-align: center; transition: all 0.2s; }
+    .tab-btn.active { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* 통계 카드 */
+    .stat-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    .stat-card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); text-align: center; }
+    .stat-card .number { font-size: 32px; font-weight: 800; color: #1a1a1a; }
+    .stat-card .label { font-size: 13px; color: #888; margin-top: 4px; }
+    .stat-chart { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .stat-chart h3 { font-size: 14px; margin-bottom: 16px; color: #555; }
+    .chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 120px; }
+    .chart-bar { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
+    .chart-bar .bar { width: 100%; background: #1a1a1a; border-radius: 4px 4px 0 0; min-height: 4px; transition: height 0.3s; }
+    .chart-bar .bar-label { font-size: 10px; color: #888; margin-top: 4px; }
+    .chart-bar .bar-count { font-size: 11px; font-weight: 600; margin-bottom: 2px; }
+
+    /* 사진 관리 */
+    .upload-section { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .upload-section h3 { font-size: 15px; margin-bottom: 16px; }
+    .upload-options { display: flex; gap: 12px; margin-bottom: 16px; align-items: flex-end; }
+    .upload-options .form-group { flex: 1; margin-bottom: 0; }
+    .upload-area { border: 2px dashed #ddd; border-radius: 12px; padding: 32px 20px; text-align: center; cursor: pointer; transition: border-color 0.2s; }
+    .upload-area:hover, .upload-area.dragover { border-color: #1a1a1a; background: #fafafa; }
+    .upload-area p { color: #888; font-size: 14px; }
+    .upload-area .icon { font-size: 36px; margin-bottom: 8px; }
+    .upload-area .compress-info { font-size: 11px; color: #aaa; margin-top: 6px; }
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+    .gallery-card { position: relative; border-radius: 10px; overflow: hidden; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .gallery-card img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+    .gallery-card .overlay { position: absolute; top: 0; right: 0; padding: 6px; }
+    .gallery-card .cat-badge { position: absolute; top: 6px; left: 6px; background: rgba(0,0,0,0.6); color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 10px; }
+    .btn-delete { width: 28px; height: 28px; border: none; border-radius: 50%; background: rgba(0,0,0,0.6); color: #fff; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .btn-delete:hover { background: #e53e3e; }
+    .gallery-card .alt-text { padding: 6px 8px; font-size: 11px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* 일정 관리 */
+    .schedule-form { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .schedule-form h3 { font-size: 15px; margin-bottom: 16px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .form-row.full { grid-template-columns: 1fr; }
+    .schedule-list { display: flex; flex-direction: column; gap: 10px; }
+    .schedule-card { display: flex; justify-content: space-between; align-items: center; background: #fff; border-radius: 10px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .schedule-card .info { flex: 1; }
+    .schedule-card .date { font-size: 13px; color: #888; margin-bottom: 4px; }
+    .schedule-card .title { font-weight: 600; font-size: 15px; }
+    .schedule-card .location { font-size: 13px; color: #666; margin-top: 2px; }
+    .btn-sm { padding: 8px 14px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .btn-add { background: #1a1a1a; color: #fff; }
+    .btn-add:hover { opacity: 0.85; }
+
+    /* QR */
+    .qr-section { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); text-align: center; }
+    .qr-section h3 { font-size: 15px; margin-bottom: 8px; }
+    .qr-section .url-text { font-size: 12px; color: #888; margin-bottom: 16px; word-break: break-all; }
+    .qr-canvas { margin: 0 auto 16px; }
+    .btn-download { display: inline-block; padding: 10px 24px; background: #1a1a1a; color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: none; }
+    .btn-download:hover { opacity: 0.85; }
+
+    .empty-state { text-align: center; padding: 40px; color: #aaa; font-size: 14px; }
+    .loading { text-align: center; padding: 20px; color: #888; }
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #1a1a1a; color: #fff; padding: 12px 24px; border-radius: 10px; font-size: 14px; transition: transform 0.3s ease; z-index: 999; }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .uploading { pointer-events: none; opacity: 0.5; }
+  </style>
+</head>
+<body>
+
+<!-- 로그인 -->
+<div class="login-wrap" id="loginView">
+  <div class="login-box">
+    <h1>관리자 로그인</h1>
+    <p>후보 코드와 비밀번호를 입력하세요</p>
+    <div class="form-group">
+      <label>후보 코드</label>
+      <input type="text" id="loginCode" placeholder="예: jdm" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label>비밀번호</label>
+      <input type="password" id="loginPw" placeholder="비밀번호 입력">
+    </div>
+    <button class="btn btn-primary" onclick="doLogin()">로그인</button>
+    <div class="error-msg" id="loginError"></div>
+  </div>
+</div>
+
+<!-- 대시보드 -->
+<div class="dashboard" id="dashView">
+  <div class="dash-header">
+    <div>
+      <h2 id="dashName"></h2>
+      <span id="dashParty"></span>
+    </div>
+    <button class="btn-logout" onclick="doLogout()">로그아웃</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="stats" onclick="switchTab('stats')">통계</button>
+    <button class="tab-btn" data-tab="gallery" onclick="switchTab('gallery')">사진</button>
+    <button class="tab-btn" data-tab="schedule" onclick="switchTab('schedule')">일정</button>
+    <button class="tab-btn" data-tab="qr" onclick="switchTab('qr')">QR코드</button>
+  </div>
+
+  <!-- 통계 탭 -->
+  <div class="tab-content active" id="tab-stats">
+    <div class="stat-cards">
+      <div class="stat-card">
+        <div class="number" id="statTotal">-</div>
+        <div class="label">총 방문자</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="statToday">-</div>
+        <div class="label">오늘 방문자</div>
+      </div>
+    </div>
+    <div class="stat-chart">
+      <h3>최근 7일 방문자</h3>
+      <div class="chart-bars" id="chartBars"></div>
+    </div>
+  </div>
+
+  <!-- 사진 탭 -->
+  <div class="tab-content" id="tab-gallery">
+    <div class="upload-section">
+      <h3>사진 업로드</h3>
+      <div class="upload-options">
+        <div class="form-group">
+          <label>카테고리</label>
+          <select id="uploadCategory">
+            <option value="activity">의정활동</option>
+            <option value="campaign">선거운동</option>
+            <option value="event">행사</option>
+            <option value="media">언론/미디어</option>
+          </select>
+        </div>
+      </div>
+      <div class="upload-area" id="uploadArea">
+        <div class="icon">+</div>
+        <p>사진을 드래그하거나 클릭하여 업로드</p>
+        <div class="compress-info">자동 압축: 최대 1200px, JPG 85% 품질로 변환</div>
+      </div>
+    </div>
+    <input type="file" id="fileInput" accept="image/*" multiple hidden>
+    <div id="galleryList" class="gallery-grid"></div>
+  </div>
+
+  <!-- 일정 탭 -->
+  <div class="tab-content" id="tab-schedule">
+    <div class="schedule-form">
+      <h3>새 일정 추가</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>날짜</label>
+          <input type="date" id="schDate">
+        </div>
+        <div class="form-group">
+          <label>시간</label>
+          <input type="time" id="schTime">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label>제목</label>
+          <input type="text" id="schTitle" placeholder="예: 거리유세">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label>장소</label>
+          <input type="text" id="schLocation" placeholder="예: 서면역 앞">
+        </div>
+      </div>
+      <button class="btn-sm btn-add" onclick="addSchedule()">일정 추가</button>
+    </div>
+    <div id="scheduleList" class="schedule-list"></div>
+  </div>
+
+  <!-- QR코드 탭 -->
+  <div class="tab-content" id="tab-qr">
+    <div class="qr-section">
+      <h3>홈페이지 QR코드</h3>
+      <div class="url-text" id="qrUrl"></div>
+      <canvas id="qrCanvas" class="qr-canvas" width="480" height="480" style="width:240px;height:240px;"></canvas>
+      <br>
+      <button class="btn-download" onclick="downloadQR()">QR코드 다운로드 (PNG)</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = '/api';
+let token = '';
+let code = '';
+
+// URL 경로에서 코드 추출: /lhs/admin → lhs, 또는 ?code=lhs
+const pathMatch = location.pathname.match(/^\/([^/]+)\/admin/);
+const params = new URLSearchParams(location.search);
+const initCode = pathMatch ? pathMatch[1] : params.get('code');
+if (initCode) {
+  document.getElementById('loginCode').value = initCode;
+}
+
+// ========== 로그인 ==========
+async function doLogin() {
+  const codeVal = document.getElementById('loginCode').value.trim();
+  const pw = document.getElementById('loginPw').value;
+  const errEl = document.getElementById('loginError');
+  errEl.style.display = 'none';
+
+  if (!codeVal || !pw) {
+    errEl.textContent = '모든 항목을 입력하세요';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/auth`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: codeVal, password: pw }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      errEl.textContent = data.error;
+      errEl.style.display = 'block';
+      return;
+    }
+    token = data.token;
+    code = codeVal;
+    document.getElementById('dashName').textContent = data.name;
+    document.getElementById('dashParty').textContent = data.party;
+    document.getElementById('loginView').style.display = 'none';
+    document.getElementById('dashView').style.display = 'block';
+    loadStats();
+    loadGallery();
+    loadSchedule();
+    generateQR();
+  } catch (e) {
+    errEl.textContent = '서버 연결에 실패했습니다';
+    errEl.style.display = 'block';
+  }
+}
+
+function doLogout() {
+  token = '';
+  code = '';
+  document.getElementById('loginView').style.display = '';
+  document.getElementById('dashView').style.display = 'none';
+  document.getElementById('loginPw').value = '';
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === `tab-${tab}`));
+}
+
+document.getElementById('loginPw').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+// ========== 통계 ==========
+async function loadStats() {
+  try {
+    const res = await fetch(`${API}/visit?code=${code}`);
+    const data = await res.json();
+    document.getElementById('statTotal').textContent = data.total.toLocaleString();
+    document.getElementById('statToday').textContent = data.today.toLocaleString();
+
+    const bars = document.getElementById('chartBars');
+    const max = Math.max(...data.daily.map(d => d.count), 1);
+    bars.innerHTML = data.daily.reverse().map(d => {
+      const h = Math.max((d.count / max) * 100, 4);
+      const label = d.date.slice(5);
+      return `
+        <div class="chart-bar">
+          <div class="bar-count">${d.count}</div>
+          <div class="bar" style="height:${h}px"></div>
+          <div class="bar-label">${label}</div>
+        </div>
+      `;
+    }).join('');
+  } catch {}
+}
+
+// ========== 사진 관리 + 이미지 압축 ==========
+const uploadArea = document.getElementById('uploadArea');
+const fileInput = document.getElementById('fileInput');
+
+uploadArea.addEventListener('click', () => fileInput.click());
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+uploadArea.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadArea.classList.remove('dragover');
+  handleFiles(e.dataTransfer.files);
+});
+fileInput.addEventListener('change', () => handleFiles(fileInput.files));
+
+// 이미지 압축 (Canvas API)
+function compressImage(file, maxWidth, quality) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      let w = img.width;
+      let h = img.height;
+      if (w > maxWidth) {
+        h = Math.round(h * maxWidth / w);
+        w = maxWidth;
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      canvas.toBlob(resolve, 'image/jpeg', quality);
+    };
+    img.src = URL.createObjectURL(file);
+  });
+}
+
+async function handleFiles(files) {
+  const category = document.getElementById('uploadCategory').value;
+  uploadArea.classList.add('uploading');
+  uploadArea.querySelector('p').textContent = '업로드 중...';
+
+  for (const file of files) {
+    if (!file.type.startsWith('image/')) continue;
+    try {
+      // 이미지 압축 (1200px, 85% quality)
+      const compressed = await compressImage(file, 1200, 0.85);
+
+      const res = await fetch(`${API}/gallery-upload`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'image/jpeg',
+          'Authorization': `Bearer ${token}`,
+          'X-Alt': file.name.replace(/\.[^.]+$/, ''),
+          'X-Category': category,
+        },
+        body: compressed,
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        showToast(data.error || '업로드 실패');
+        continue;
+      }
+      showToast('업로드 완료');
+    } catch {
+      showToast('업로드 중 오류 발생');
+    }
+  }
+
+  uploadArea.classList.remove('uploading');
+  uploadArea.querySelector('p').textContent = '사진을 드래그하거나 클릭하여 업로드';
+  fileInput.value = '';
+  loadGallery();
+}
+
+const CAT_LABELS = { activity: '의정활동', campaign: '선거운동', event: '행사', media: '언론' };
+
+async function loadGallery() {
+  const container = document.getElementById('galleryList');
+  container.innerHTML = '<div class="loading">불러오는 중...</div>';
+  try {
+    const res = await fetch(`${API}/gallery?code=${code}`);
+    const items = await res.json();
+    if (!items.length) {
+      container.innerHTML = '<div class="empty-state">등록된 사진이 없습니다</div>';
+      return;
+    }
+    container.innerHTML = items.map(item => `
+      <div class="gallery-card">
+        <img src="${item.url}" alt="${item.alt || ''}" loading="lazy">
+        <span class="cat-badge">${CAT_LABELS[item.category] || '활동'}</span>
+        <div class="overlay">
+          <button class="btn-delete" onclick="deletePhoto('${item.id}')" title="삭제">&times;</button>
+        </div>
+        <div class="alt-text">${item.alt || ''}</div>
+      </div>
+    `).join('');
+  } catch {
+    container.innerHTML = '<div class="empty-state">불러오기 실패</div>';
+  }
+}
+
+async function deletePhoto(id) {
+  if (!confirm('이 사진을 삭제하시겠습니까?')) return;
+  try {
+    const res = await fetch(`${API}/gallery?id=${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    if (res.ok) { showToast('삭제 완료'); loadGallery(); }
+  } catch { showToast('삭제 실패'); }
+}
+
+// ========== 일정 관리 ==========
+async function loadSchedule() {
+  const container = document.getElementById('scheduleList');
+  container.innerHTML = '<div class="loading">불러오는 중...</div>';
+  try {
+    const res = await fetch(`${API}/schedule?code=${code}`);
+    const items = await res.json();
+    if (!items.length) {
+      container.innerHTML = '<div class="empty-state">등록된 일정이 없습니다</div>';
+      return;
+    }
+    container.innerHTML = items.map(item => {
+      const d = new Date(item.date);
+      const dateStr = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+      return `
+        <div class="schedule-card">
+          <div class="info">
+            <div class="date">${dateStr}${item.time ? ' ' + item.time : ''}</div>
+            <div class="title">${item.title}</div>
+            ${item.location ? `<div class="location">${item.location}</div>` : ''}
+          </div>
+          <button class="btn-delete" onclick="deleteSchedule('${item.id}')" title="삭제">&times;</button>
+        </div>
+      `;
+    }).join('');
+  } catch { container.innerHTML = '<div class="empty-state">불러오기 실패</div>'; }
+}
+
+async function addSchedule() {
+  const date = document.getElementById('schDate').value;
+  const time = document.getElementById('schTime').value;
+  const title = document.getElementById('schTitle').value.trim();
+  const location = document.getElementById('schLocation').value.trim();
+  if (!date || !title) { showToast('날짜와 제목은 필수입니다'); return; }
+  try {
+    const res = await fetch(`${API}/schedule`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ date, time, title, location }),
+    });
+    if (res.ok) {
+      showToast('일정 추가 완료');
+      ['schDate','schTime','schTitle','schLocation'].forEach(id => document.getElementById(id).value = '');
+      loadSchedule();
+    }
+  } catch { showToast('일정 추가 실패'); }
+}
+
+async function deleteSchedule(id) {
+  if (!confirm('이 일정을 삭제하시겠습니까?')) return;
+  try {
+    const res = await fetch(`${API}/schedule?id=${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    if (res.ok) { showToast('삭제 완료'); loadSchedule(); }
+  } catch { showToast('삭제 실패'); }
+}
+
+// ========== QR코드 ==========
+let qrInstance = null;
+
+function generateQR() {
+  const siteUrl = `${location.origin}/${code}/`;
+  document.getElementById('qrUrl').textContent = siteUrl;
+
+  qrInstance = new QRious({
+    element: document.getElementById('qrCanvas'),
+    value: siteUrl,
+    size: 480,
+    level: 'H',
+    foreground: '#1a1a1a',
+    background: '#ffffff',
+    padding: 0
+  });
+}
+
+function downloadQR() {
+  const canvas = document.getElementById('qrCanvas');
+  if (!canvas) { showToast('QR코드를 찾을 수 없습니다'); return; }
+  const link = document.createElement('a');
+  link.download = `qrcode_${code}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+// 토스트
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>

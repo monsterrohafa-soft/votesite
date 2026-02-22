@@ -130,8 +130,8 @@ img { max-width: 100%; height: auto; display: block; }
 /* 상단 바 */
 .hero-top {
   position: relative; z-index: 2;
-  display: flex; align-items: center; justify-content: center;
-  gap: 10px; padding: 14px 0 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; padding: 14px 0 0;
   font-size: 13px; font-weight: 500; opacity: 0.9;
 }
 
@@ -1043,3 +1043,26 @@ img { max-width: 100%; height: auto; display: block; }
     box-shadow: var(--shadow);
   }
 }
+
+/* D-day 카운트다운 */
+#dday { text-align: center; padding: 4px 0 0; }
+.dday-label { font-size: 12px; color: rgba(255,255,255,0.55); font-weight: 600; letter-spacing: 2px; }
+.dday-number { font-size: 52px; font-weight: 900; color: #fff; letter-spacing: -3px; line-height: 1; text-shadow: 0 4px 24px rgba(0,0,0,0.4); animation: ddayGlow 3s ease-in-out infinite; }
+.dday-prevote { font-size: 12px; color: #FFD700; font-weight: 700; margin-top: 4px; animation: ddayPulse 1.5s ease-in-out infinite; }
+@keyframes ddayGlow { 0%,100% { text-shadow: 0 4px 24px rgba(0,0,0,0.4); } 50% { text-shadow: 0 4px 32px rgba(255,255,255,0.25), 0 0 60px rgba(255,255,255,0.1); } }
+@keyframes ddayPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+@media (max-height: 667px) { .dday-number { font-size: 40px; } }
+@media (min-width: 768px) { .dday-number { font-size: 64px; } }
+
+/* 일정 섹션 */
+.schedule-list { display: flex; flex-direction: column; gap: 12px; }
+.schedule-item { display: flex; gap: 16px; background: #fff; border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
+.schedule-item.past { opacity: 0.5; }
+.schedule-date { display: flex; flex-direction: column; align-items: center; min-width: 52px; padding: 8px; background: var(--bg-light); border-radius: 10px; }
+.schedule-month { font-size: 11px; color: var(--text-light); font-weight: 600; }
+.schedule-day { font-size: 22px; font-weight: 800; color: var(--text); line-height: 1.2; }
+.schedule-weekday { font-size: 11px; color: var(--text-light); }
+.schedule-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.schedule-title { font-size: 15px; font-weight: 700; color: var(--text); }
+.schedule-time { font-size: 13px; color: var(--text-light); margin-top: 2px; }
+.schedule-location { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
