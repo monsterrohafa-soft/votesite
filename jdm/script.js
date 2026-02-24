@@ -141,7 +141,7 @@ function initYouTubeEmbed() {
 /* 스크롤 페이드 애니메이션 */
 function initFadeAnimations() {
   const targets = document.querySelectorAll(
-    '.pledge-card, .contact-card, .video-card, .timeline-section, .message-card, .profile-card, .support-banner'
+    '.pledge-card, .contact-card, .video-card, .timeline-section, .profile-card, .support-banner'
   );
 
   targets.forEach((el) => el.classList.add('fade-in'));

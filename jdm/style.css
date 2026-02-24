@@ -211,18 +211,6 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .slogan-item i { color: var(--accent); font-size: 16px; }
 
-/* 핵심 메시지 */
-.message { padding: 48px 0; }
-.message-card {
-  background: linear-gradient(135deg, var(--bg-party), #FFF0F0);
-  border-radius: var(--radius-lg); padding: 36px 24px;
-  text-align: center; position: relative;
-  border: 1px solid rgba(230,30,43,0.1);
-}
-.message-quote { font-size: 64px; font-weight: 900; color: var(--primary); opacity: 0.15; line-height: 0.5; margin-bottom: 8px; }
-.message-text { font-size: 18px; font-weight: 500; color: var(--text); line-height: 1.8; margin-bottom: 16px; }
-.message-author { font-size: 14px; font-weight: 700; color: var(--primary); }
-
 /* 섹션 공통 */
 .section { padding: 60px 0; }
 .section:nth-child(even) { background: var(--bg-light); }

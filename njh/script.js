@@ -159,7 +159,7 @@ function initYouTubeEmbed() {
    ================== */
 function initFadeAnimations() {
   const targets = document.querySelectorAll(
-    '.pledge-card, .contact-card, .video-card, .timeline-section, .message-card, .profile-card, .support-banner, .about-highlight'
+    '.pledge-card, .contact-card, .video-card, .timeline-section, .profile-card, .support-banner, .about-highlight'
   );
 
   targets.forEach((el) => el.classList.add('fade-in'));
