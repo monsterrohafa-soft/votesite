@@ -1,6 +1,6 @@
 /* =============================================
    Votesite Dynamic Loader
-   갤러리/일정/D-day/방문자수 동적 렌더링
+   갤러리/일정/공약/연락처/영상/D-day/방문자수 동적 렌더링
    ============================================= */
 
 (function () {
@@ -13,6 +13,9 @@
   document.addEventListener('DOMContentLoaded', () => {
     loadDynamicGallery();
     loadDynamicSchedule();
+    loadDynamicPledges();
+    loadDynamicContacts();
+    loadDynamicVideos();
     initDday();
     trackVisit();
   });
@@ -172,6 +175,154 @@
 
     } catch {
       section.style.display = 'none';
+    }
+  }
+
+  /* 동적 공약 로드 */
+  async function loadDynamicPledges() {
+    const section = document.getElementById('pledges');
+    if (!section) return;
+
+    const container = section.querySelector('.pledge-cards');
+    if (!container) return;
+
+    const staticHTML = container.innerHTML;
+
+    try {
+      const res = await fetch(`${API}/pledges?code=${code}`);
+      if (!res.ok) throw new Error('API error');
+      const items = await res.json();
+
+      if (!items || items.length === 0) return;
+
+      container.innerHTML = items.map((item, i) => `
+        <div class="pledge-card">
+          <div class="pledge-icon">
+            <i class="${item.icon || 'fas fa-bullhorn'}" aria-hidden="true"></i>
+          </div>
+          <div class="pledge-number">${String(i + 1).padStart(2, '0')}</div>
+          <h3 class="pledge-title">${item.title}</h3>
+          ${item.desc ? `<p class="pledge-desc">${item.desc}</p>` : ''}
+          ${item.details && item.details.length ? `
+            <ul class="pledge-details">
+              ${item.details.map(d => `<li>${d}</li>`).join('')}
+            </ul>
+          ` : ''}
+        </div>
+      `).join('');
+
+    } catch {
+      container.innerHTML = staticHTML;
+    }
+  }
+
+  /* 동적 연락처 로드 */
+  async function loadDynamicContacts() {
+    const section = document.getElementById('contact');
+    if (!section) return;
+
+    const container = section.querySelector('.contact-cards');
+    if (!container) return;
+
+    const staticHTML = container.innerHTML;
+
+    const iconMap = {
+      phone: 'fas fa-phone-alt',
+      email: 'fas fa-envelope',
+      address: 'fas fa-map-marker-alt',
+      instagram: 'fab fa-instagram',
+      facebook: 'fab fa-facebook-f',
+      youtube: 'fab fa-youtube',
+      blog: 'fas fa-blog',
+    };
+
+    function getHref(item) {
+      if (item.url) return item.url;
+      if (item.type === 'phone') return `tel:${item.value.replace(/[^0-9+]/g, '')}`;
+      if (item.type === 'email') return `mailto:${item.value}`;
+      return '#';
+    }
+
+    try {
+      const res = await fetch(`${API}/contacts?code=${code}`);
+      if (!res.ok) throw new Error('API error');
+      const items = await res.json();
+
+      if (!items || items.length === 0) return;
+
+      container.innerHTML = items.map(item => {
+        const icon = iconMap[item.type] || 'fas fa-link';
+        const href = getHref(item);
+        const target = (item.url || ['instagram', 'facebook', 'youtube', 'blog'].includes(item.type)) ? ' target="_blank"' : '';
+
+        return `
+          <a href="${href}" class="contact-card"${target}>
+            <div class="contact-icon">
+              <i class="${icon}" aria-hidden="true"></i>
+            </div>
+            <div class="contact-info">
+              <h4>${item.label || item.type}</h4>
+              <p>${item.value}</p>
+            </div>
+          </a>
+        `;
+      }).join('');
+
+    } catch {
+      container.innerHTML = staticHTML;
+    }
+  }
+
+  /* 동적 영상 로드 */
+  async function loadDynamicVideos() {
+    const section = document.getElementById('video');
+    if (!section) return;
+
+    const container = section.querySelector('.video-list');
+    if (!container) return;
+
+    const staticHTML = container.innerHTML;
+
+    try {
+      const res = await fetch(`${API}/videos?code=${code}`);
+      if (!res.ok) throw new Error('API error');
+      const items = await res.json();
+
+      if (!items || items.length === 0) return;
+
+      container.innerHTML = items.map(item => `
+        <div class="video-card">
+          <div class="video-wrapper">
+            <div class="video-placeholder" data-video-id="${item.videoId}" role="button" aria-label="영상 재생: ${item.title || ''}">
+              <img src="https://img.youtube.com/vi/${item.videoId}/hqdefault.jpg" alt="" class="video-thumb" loading="lazy">
+              <i class="fas fa-play-circle" aria-hidden="true"></i>
+            </div>
+          </div>
+          <div class="video-info">
+            <h4>${item.title || ''}</h4>
+            ${item.desc ? `<p>${item.desc}</p>` : ''}
+          </div>
+        </div>
+      `).join('');
+
+      // 유튜브 클릭 이벤트 재바인딩
+      container.querySelectorAll('.video-placeholder').forEach(placeholder => {
+        const videoId = placeholder.dataset.videoId;
+        if (!videoId) return;
+        placeholder.addEventListener('click', () => {
+          const wrapper = placeholder.parentElement;
+          const iframe = document.createElement('iframe');
+          iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`;
+          iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+          iframe.allowFullscreen = true;
+          iframe.title = '유튜브 영상';
+          wrapper.innerHTML = '';
+          wrapper.appendChild(iframe);
+        });
+      });
+
+    } catch {
+      container.innerHTML = staticHTML;
     }
   }
 })();

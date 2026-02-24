@@ -98,6 +98,46 @@
     .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #1a1a1a; color: #fff; padding: 12px 24px; border-radius: 10px; font-size: 14px; transition: transform 0.3s ease; z-index: 999; }
     .toast.show { transform: translateX(-50%) translateY(0); }
     .uploading { pointer-events: none; opacity: 0.5; }
+
+    /* 공약 관리 */
+    .pledge-form { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .pledge-form h3 { font-size: 15px; margin-bottom: 16px; }
+    .pledge-form textarea { width: 100%; padding: 12px 14px; border: 1px solid #ddd; border-radius: 10px; font-size: 14px; outline: none; resize: vertical; min-height: 80px; font-family: inherit; }
+    .pledge-form textarea:focus { border-color: #333; }
+    .pledge-list { display: flex; flex-direction: column; gap: 12px; }
+    .pledge-card { background: #fff; border-radius: 12px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); position: relative; }
+    .pledge-card .pledge-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+    .pledge-card .pledge-title { font-size: 16px; font-weight: 700; }
+    .pledge-card .pledge-desc { font-size: 13px; color: #888; margin-bottom: 8px; }
+    .pledge-card .pledge-details { font-size: 13px; color: #555; padding-left: 16px; }
+    .pledge-card .pledge-details li { margin-bottom: 4px; }
+    .pledge-card .pledge-actions { display: flex; gap: 6px; }
+    .btn-edit { width: 28px; height: 28px; border: 1px solid #ddd; border-radius: 50%; background: #fff; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .btn-edit:hover { background: #f0f0f0; }
+
+    /* 연락처 관리 */
+    .contact-form { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .contact-form h3 { font-size: 15px; margin-bottom: 16px; }
+    .contact-list { display: flex; flex-direction: column; gap: 10px; }
+    .contact-card { display: flex; justify-content: space-between; align-items: center; background: #fff; border-radius: 10px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .contact-card .contact-info { display: flex; align-items: center; gap: 12px; flex: 1; }
+    .contact-card .contact-icon { width: 40px; height: 40px; border-radius: 50%; background: #f5f5f5; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #555; }
+    .contact-card .contact-detail { flex: 1; }
+    .contact-card .contact-type { font-size: 11px; color: #aaa; text-transform: uppercase; }
+    .contact-card .contact-value { font-size: 14px; font-weight: 600; }
+    .contact-card .contact-actions { display: flex; gap: 6px; }
+
+    /* 영상 관리 */
+    .video-form { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .video-form h3 { font-size: 15px; margin-bottom: 16px; }
+    .video-list-admin { display: flex; flex-direction: column; gap: 12px; }
+    .video-card-admin { display: flex; gap: 14px; background: #fff; border-radius: 10px; padding: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .video-card-admin .thumb { width: 120px; height: 68px; border-radius: 8px; overflow: hidden; flex-shrink: 0; background: #eee; }
+    .video-card-admin .thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .video-card-admin .video-info { flex: 1; }
+    .video-card-admin .video-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .video-card-admin .video-desc { font-size: 12px; color: #888; }
+    .video-card-admin .video-actions { display: flex; gap: 6px; align-self: flex-start; }
   </style>
 </head>
 <body>
@@ -134,6 +174,9 @@
     <button class="tab-btn active" data-tab="stats" onclick="switchTab('stats')">통계</button>
     <button class="tab-btn" data-tab="gallery" onclick="switchTab('gallery')">사진</button>
     <button class="tab-btn" data-tab="schedule" onclick="switchTab('schedule')">일정</button>
+    <button class="tab-btn" data-tab="pledges" onclick="switchTab('pledges')">공약</button>
+    <button class="tab-btn" data-tab="contacts" onclick="switchTab('contacts')">연락처</button>
+    <button class="tab-btn" data-tab="videos" onclick="switchTab('videos')">영상</button>
     <button class="tab-btn" data-tab="qr" onclick="switchTab('qr')">QR코드</button>
   </div>
 
@@ -211,6 +254,131 @@
     <div id="scheduleList" class="schedule-list"></div>
   </div>
 
+  <!-- 공약 탭 -->
+  <div class="tab-content" id="tab-pledges">
+    <div class="pledge-form" id="pledgeFormWrap">
+      <h3 id="pledgeFormTitle">새 공약 추가</h3>
+      <input type="hidden" id="pledgeEditId">
+      <div class="form-row full">
+        <div class="form-group">
+          <label>아이콘</label>
+          <select id="pledgeIcon">
+            <option value="fas fa-rocket">🚀 산업/미래</option>
+            <option value="fas fa-hand-holding-heart">❤️ 복지/돌봄</option>
+            <option value="fas fa-route">🛣️ 교통</option>
+            <option value="fas fa-palette">🎨 문화/관광</option>
+            <option value="fas fa-brain">🧠 AI/스마트</option>
+            <option value="fas fa-shield-alt">🛡️ 안전</option>
+            <option value="fas fa-graduation-cap">🎓 교육</option>
+            <option value="fas fa-store">🏪 경제/일자리</option>
+            <option value="fas fa-users">👥 행정/참여</option>
+            <option value="fas fa-bullhorn">📢 기타</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label>제목</label>
+          <input type="text" id="pledgeTitle" placeholder="예: 미래산업 관문">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label>설명</label>
+          <input type="text" id="pledgeDesc" placeholder="예: 일자리가 넘치는 역동적인 도시">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label>세부 항목 (한 줄에 하나씩)</label>
+          <textarea id="pledgeDetails" placeholder="AI 기반 혁신산업 유치&#10;청년 창업 지원&#10;소상공인 디지털 전환"></textarea>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-sm btn-add" id="pledgeSubmitBtn" onclick="submitPledge()">공약 추가</button>
+        <button class="btn-sm" id="pledgeCancelBtn" onclick="cancelPledgeEdit()" style="display:none;background:#ddd;">취소</button>
+      </div>
+    </div>
+    <div id="pledgeList" class="pledge-list"></div>
+  </div>
+
+  <!-- 연락처 탭 -->
+  <div class="tab-content" id="tab-contacts">
+    <div class="contact-form" id="contactFormWrap">
+      <h3 id="contactFormTitle">새 연락처 추가</h3>
+      <input type="hidden" id="contactEditId">
+      <div class="form-row">
+        <div class="form-group">
+          <label>타입</label>
+          <select id="contactType">
+            <option value="phone">📞 전화</option>
+            <option value="email">📧 이메일</option>
+            <option value="address">📍 주소</option>
+            <option value="instagram">📷 인스타그램</option>
+            <option value="facebook">👤 페이스북</option>
+            <option value="youtube">▶️ 유튜브</option>
+            <option value="blog">📝 블로그</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>라벨</label>
+          <input type="text" id="contactLabel" placeholder="예: 선거사무소">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label>값</label>
+          <input type="text" id="contactValue" placeholder="예: 010-1234-5678">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label>링크 URL (선택)</label>
+          <input type="text" id="contactUrl" placeholder="예: tel:010-1234-5678 또는 https://...">
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-sm btn-add" id="contactSubmitBtn" onclick="submitContact()">연락처 추가</button>
+        <button class="btn-sm" id="contactCancelBtn" onclick="cancelContactEdit()" style="display:none;background:#ddd;">취소</button>
+      </div>
+    </div>
+    <div id="contactList" class="contact-list"></div>
+  </div>
+
+  <!-- 영상 탭 -->
+  <div class="tab-content" id="tab-videos">
+    <div class="video-form" id="videoFormWrap">
+      <h3 id="videoFormTitle">새 영상 추가</h3>
+      <input type="hidden" id="videoEditId">
+      <div class="form-row full">
+        <div class="form-group">
+          <label>유튜브 URL 또는 영상 ID</label>
+          <input type="text" id="videoUrl" placeholder="예: https://youtu.be/abc123 또는 abc123">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label>제목</label>
+          <input type="text" id="videoTitle" placeholder="영상 제목">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label>설명 (선택)</label>
+          <input type="text" id="videoDesc" placeholder="영상 설명">
+        </div>
+      </div>
+      <div id="videoPreview" style="margin-bottom:12px;display:none;">
+        <img id="videoThumb" style="width:200px;border-radius:8px;" alt="미리보기">
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-sm btn-add" id="videoSubmitBtn" onclick="submitVideo()">영상 추가</button>
+        <button class="btn-sm" id="videoCancelBtn" onclick="cancelVideoEdit()" style="display:none;background:#ddd;">취소</button>
+      </div>
+    </div>
+    <div id="videoList" class="video-list-admin"></div>
+  </div>
+
   <!-- QR코드 탭 -->
   <div class="tab-content" id="tab-qr">
     <div class="qr-section">
@@ -272,6 +440,9 @@ async function doLogin() {
     loadStats();
     loadGallery();
     loadSchedule();
+    loadPledges();
+    loadContacts();
+    loadVideos();
     generateQR();
   } catch (e) {
     errEl.textContent = '서버 연결에 실패했습니다';
@@ -485,6 +656,324 @@ async function deleteSchedule(id) {
       headers: { 'Authorization': `Bearer ${token}` },
     });
     if (res.ok) { showToast('삭제 완료'); loadSchedule(); }
+  } catch { showToast('삭제 실패'); }
+}
+
+// ========== 공약 관리 ==========
+let editingPledgeId = null;
+
+async function loadPledges() {
+  const container = document.getElementById('pledgeList');
+  container.innerHTML = '<div class="loading">불러오는 중...</div>';
+  try {
+    const res = await fetch(`${API}/pledges?code=${code}`);
+    const items = await res.json();
+    if (!items.length) {
+      container.innerHTML = '<div class="empty-state">등록된 공약이 없습니다</div>';
+      return;
+    }
+    container.innerHTML = items.map(item => `
+      <div class="pledge-card">
+        <div class="pledge-header">
+          <div>
+            <div class="pledge-title"><i class="${item.icon || 'fas fa-bullhorn'}" style="margin-right:6px;opacity:0.5;"></i>${item.title}</div>
+            <div class="pledge-desc">${item.desc || ''}</div>
+          </div>
+          <div class="pledge-actions">
+            <button class="btn-edit" onclick="editPledge('${item.id}')" title="수정">✏️</button>
+            <button class="btn-delete" onclick="deletePledge('${item.id}')" title="삭제">&times;</button>
+          </div>
+        </div>
+        ${item.details && item.details.length ? `<ul class="pledge-details">${item.details.map(d => `<li>${d}</li>`).join('')}</ul>` : ''}
+      </div>
+    `).join('');
+  } catch { container.innerHTML = '<div class="empty-state">불러오기 실패</div>'; }
+}
+
+async function submitPledge() {
+  const title = document.getElementById('pledgeTitle').value.trim();
+  const desc = document.getElementById('pledgeDesc').value.trim();
+  const icon = document.getElementById('pledgeIcon').value;
+  const detailsRaw = document.getElementById('pledgeDetails').value.trim();
+  const details = detailsRaw ? detailsRaw.split('\n').map(s => s.trim()).filter(Boolean) : [];
+  if (!title) { showToast('제목은 필수입니다'); return; }
+
+  const editId = document.getElementById('pledgeEditId').value;
+  const method = editId ? 'PUT' : 'POST';
+  const body = editId ? { id: editId, title, desc, icon, details } : { title, desc, icon, details };
+
+  try {
+    const res = await fetch(`${API}/pledges`, {
+      method,
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify(body),
+    });
+    if (res.ok) {
+      showToast(editId ? '공약 수정 완료' : '공약 추가 완료');
+      cancelPledgeEdit();
+      loadPledges();
+    }
+  } catch { showToast('저장 실패'); }
+}
+
+async function editPledge(id) {
+  try {
+    const res = await fetch(`${API}/pledges?code=${code}`);
+    const items = await res.json();
+    const item = items.find(p => p.id === id);
+    if (!item) return;
+    document.getElementById('pledgeEditId').value = id;
+    document.getElementById('pledgeTitle').value = item.title || '';
+    document.getElementById('pledgeDesc').value = item.desc || '';
+    document.getElementById('pledgeIcon').value = item.icon || 'fas fa-bullhorn';
+    document.getElementById('pledgeDetails').value = (item.details || []).join('\n');
+    document.getElementById('pledgeFormTitle').textContent = '공약 수정';
+    document.getElementById('pledgeSubmitBtn').textContent = '공약 수정';
+    document.getElementById('pledgeCancelBtn').style.display = '';
+    document.getElementById('pledgeFormWrap').scrollIntoView({ behavior: 'smooth' });
+  } catch {}
+}
+
+function cancelPledgeEdit() {
+  document.getElementById('pledgeEditId').value = '';
+  document.getElementById('pledgeTitle').value = '';
+  document.getElementById('pledgeDesc').value = '';
+  document.getElementById('pledgeIcon').value = 'fas fa-rocket';
+  document.getElementById('pledgeDetails').value = '';
+  document.getElementById('pledgeFormTitle').textContent = '새 공약 추가';
+  document.getElementById('pledgeSubmitBtn').textContent = '공약 추가';
+  document.getElementById('pledgeCancelBtn').style.display = 'none';
+}
+
+async function deletePledge(id) {
+  if (!confirm('이 공약을 삭제하시겠습니까?')) return;
+  try {
+    const res = await fetch(`${API}/pledges?id=${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    if (res.ok) { showToast('삭제 완료'); loadPledges(); }
+  } catch { showToast('삭제 실패'); }
+}
+
+// ========== 연락처 관리 ==========
+const CONTACT_ICONS = { phone: 'fas fa-phone-alt', email: 'fas fa-envelope', address: 'fas fa-map-marker-alt', instagram: 'fab fa-instagram', facebook: 'fab fa-facebook', youtube: 'fab fa-youtube', blog: 'fas fa-pen' };
+const CONTACT_LABELS = { phone: '전화', email: '이메일', address: '주소', instagram: '인스타그램', facebook: '페이스북', youtube: '유튜브', blog: '블로그' };
+
+async function loadContacts() {
+  const container = document.getElementById('contactList');
+  container.innerHTML = '<div class="loading">불러오는 중...</div>';
+  try {
+    const res = await fetch(`${API}/contacts?code=${code}`);
+    const items = await res.json();
+    if (!items.length) {
+      container.innerHTML = '<div class="empty-state">등록된 연락처가 없습니다</div>';
+      return;
+    }
+    container.innerHTML = items.map(item => `
+      <div class="contact-card">
+        <div class="contact-info">
+          <div class="contact-icon"><i class="${CONTACT_ICONS[item.type] || 'fas fa-link'}"></i></div>
+          <div class="contact-detail">
+            <div class="contact-type">${CONTACT_LABELS[item.type] || item.type}${item.label ? ' · ' + item.label : ''}</div>
+            <div class="contact-value">${item.value}</div>
+          </div>
+        </div>
+        <div class="contact-actions">
+          <button class="btn-edit" onclick="editContact('${item.id}')" title="수정">✏️</button>
+          <button class="btn-delete" onclick="deleteContact('${item.id}')" title="삭제">&times;</button>
+        </div>
+      </div>
+    `).join('');
+  } catch { container.innerHTML = '<div class="empty-state">불러오기 실패</div>'; }
+}
+
+async function submitContact() {
+  const type = document.getElementById('contactType').value;
+  const label = document.getElementById('contactLabel').value.trim();
+  const value = document.getElementById('contactValue').value.trim();
+  const url = document.getElementById('contactUrl').value.trim();
+  if (!value) { showToast('값은 필수입니다'); return; }
+
+  const editId = document.getElementById('contactEditId').value;
+  const method = editId ? 'PUT' : 'POST';
+  const body = editId ? { id: editId, type, label, value, url } : { type, label, value, url };
+
+  try {
+    const res = await fetch(`${API}/contacts`, {
+      method,
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify(body),
+    });
+    if (res.ok) {
+      showToast(editId ? '연락처 수정 완료' : '연락처 추가 완료');
+      cancelContactEdit();
+      loadContacts();
+    }
+  } catch { showToast('저장 실패'); }
+}
+
+async function editContact(id) {
+  try {
+    const res = await fetch(`${API}/contacts?code=${code}`);
+    const items = await res.json();
+    const item = items.find(c => c.id === id);
+    if (!item) return;
+    document.getElementById('contactEditId').value = id;
+    document.getElementById('contactType').value = item.type || 'phone';
+    document.getElementById('contactLabel').value = item.label || '';
+    document.getElementById('contactValue').value = item.value || '';
+    document.getElementById('contactUrl').value = item.url || '';
+    document.getElementById('contactFormTitle').textContent = '연락처 수정';
+    document.getElementById('contactSubmitBtn').textContent = '연락처 수정';
+    document.getElementById('contactCancelBtn').style.display = '';
+    document.getElementById('contactFormWrap').scrollIntoView({ behavior: 'smooth' });
+  } catch {}
+}
+
+function cancelContactEdit() {
+  document.getElementById('contactEditId').value = '';
+  document.getElementById('contactType').value = 'phone';
+  document.getElementById('contactLabel').value = '';
+  document.getElementById('contactValue').value = '';
+  document.getElementById('contactUrl').value = '';
+  document.getElementById('contactFormTitle').textContent = '새 연락처 추가';
+  document.getElementById('contactSubmitBtn').textContent = '연락처 추가';
+  document.getElementById('contactCancelBtn').style.display = 'none';
+}
+
+async function deleteContact(id) {
+  if (!confirm('이 연락처를 삭제하시겠습니까?')) return;
+  try {
+    const res = await fetch(`${API}/contacts?id=${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    if (res.ok) { showToast('삭제 완료'); loadContacts(); }
+  } catch { showToast('삭제 실패'); }
+}
+
+// ========== 영상 관리 ==========
+function extractVideoId(input) {
+  if (!input) return '';
+  // youtu.be/xxx, youtube.com/watch?v=xxx, youtube.com/embed/xxx
+  const patterns = [
+    /youtu\.be\/([^?&]+)/,
+    /[?&]v=([^?&]+)/,
+    /\/embed\/([^?&]+)/,
+    /^([a-zA-Z0-9_-]{11})$/
+  ];
+  for (const p of patterns) {
+    const m = input.match(p);
+    if (m) return m[1];
+  }
+  return input.trim();
+}
+
+// 유튜브 URL 입력 시 썸네일 미리보기
+document.getElementById('videoUrl').addEventListener('input', function() {
+  const vid = extractVideoId(this.value);
+  const preview = document.getElementById('videoPreview');
+  const thumb = document.getElementById('videoThumb');
+  if (vid && vid.length >= 8) {
+    thumb.src = `https://img.youtube.com/vi/${vid}/hqdefault.jpg`;
+    preview.style.display = 'block';
+  } else {
+    preview.style.display = 'none';
+  }
+});
+
+async function loadVideos() {
+  const container = document.getElementById('videoList');
+  container.innerHTML = '<div class="loading">불러오는 중...</div>';
+  try {
+    const res = await fetch(`${API}/videos?code=${code}`);
+    const items = await res.json();
+    if (!items.length) {
+      container.innerHTML = '<div class="empty-state">등록된 영상이 없습니다</div>';
+      return;
+    }
+    container.innerHTML = items.map(item => `
+      <div class="video-card-admin">
+        <div class="thumb">
+          <img src="https://img.youtube.com/vi/${item.videoId}/hqdefault.jpg" alt="" loading="lazy">
+        </div>
+        <div class="video-info">
+          <div class="video-title">${item.title || item.videoId}</div>
+          <div class="video-desc">${item.desc || ''}</div>
+        </div>
+        <div class="video-actions">
+          <button class="btn-edit" onclick="editVideo('${item.id}')" title="수정">✏️</button>
+          <button class="btn-delete" onclick="deleteVideo('${item.id}')" title="삭제">&times;</button>
+        </div>
+      </div>
+    `).join('');
+  } catch { container.innerHTML = '<div class="empty-state">불러오기 실패</div>'; }
+}
+
+async function submitVideo() {
+  const rawUrl = document.getElementById('videoUrl').value.trim();
+  const videoId = extractVideoId(rawUrl);
+  const title = document.getElementById('videoTitle').value.trim();
+  const desc = document.getElementById('videoDesc').value.trim();
+  if (!videoId) { showToast('유튜브 URL 또는 영상 ID를 입력하세요'); return; }
+
+  const editId = document.getElementById('videoEditId').value;
+  const method = editId ? 'PUT' : 'POST';
+  const body = editId ? { id: editId, videoId, title, desc } : { videoId, title, desc };
+
+  try {
+    const res = await fetch(`${API}/videos`, {
+      method,
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify(body),
+    });
+    if (res.ok) {
+      showToast(editId ? '영상 수정 완료' : '영상 추가 완료');
+      cancelVideoEdit();
+      loadVideos();
+    }
+  } catch { showToast('저장 실패'); }
+}
+
+async function editVideo(id) {
+  try {
+    const res = await fetch(`${API}/videos?code=${code}`);
+    const items = await res.json();
+    const item = items.find(v => v.id === id);
+    if (!item) return;
+    document.getElementById('videoEditId').value = id;
+    document.getElementById('videoUrl').value = item.videoId || '';
+    document.getElementById('videoTitle').value = item.title || '';
+    document.getElementById('videoDesc').value = item.desc || '';
+    // 썸네일 미리보기 트리거
+    document.getElementById('videoUrl').dispatchEvent(new Event('input'));
+    document.getElementById('videoFormTitle').textContent = '영상 수정';
+    document.getElementById('videoSubmitBtn').textContent = '영상 수정';
+    document.getElementById('videoCancelBtn').style.display = '';
+    document.getElementById('videoFormWrap').scrollIntoView({ behavior: 'smooth' });
+  } catch {}
+}
+
+function cancelVideoEdit() {
+  document.getElementById('videoEditId').value = '';
+  document.getElementById('videoUrl').value = '';
+  document.getElementById('videoTitle').value = '';
+  document.getElementById('videoDesc').value = '';
+  document.getElementById('videoPreview').style.display = 'none';
+  document.getElementById('videoFormTitle').textContent = '새 영상 추가';
+  document.getElementById('videoSubmitBtn').textContent = '영상 추가';
+  document.getElementById('videoCancelBtn').style.display = 'none';
+}
+
+async function deleteVideo(id) {
+  if (!confirm('이 영상을 삭제하시겠습니까?')) return;
+  try {
+    const res = await fetch(`${API}/videos?id=${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    if (res.ok) { showToast('삭제 완료'); loadVideos(); }
   } catch { showToast('삭제 실패'); }
 }
 
