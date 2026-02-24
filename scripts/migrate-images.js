@@ -15,7 +15,7 @@ const redis = new Redis({
   token: process.env.KV_REST_API_TOKEN,
 });
 
-const candidates = ['lsh', 'njh', 'jdm', 'lhs'];
+const candidates = ['lsh', 'njh', 'jdm', 'lhs', 'css'];
 const PROJECT_ROOT = new URL('..', import.meta.url).pathname;
 
 // 후보별 사진 메타데이터 (category + alt)
@@ -53,6 +53,14 @@ const photoMeta = {
     { alt: '지역 행사', category: 'event' },
     { alt: '언론 활동', category: 'media' },
     { alt: '현장 방문', category: 'activity' },
+  ],
+  css: [
+    { alt: 'KBC 인터뷰', category: 'media' },
+    { alt: '더불어민주당 부대변인 임명장 수여식', category: 'activity' },
+    { alt: '광산구청장 출마 선언 MBC 뉴스', category: 'campaign' },
+    { alt: '출판기념회 다시 노무현 바보 차승세', category: 'event' },
+    { alt: '민주당 평당원 최고위원 도전 MBC 뉴스', category: 'media' },
+    { alt: '광산구청장 출마선언 기자회견 현장', category: 'campaign' },
   ],
 };
 
