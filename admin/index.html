@@ -138,6 +138,11 @@
     .video-card-admin .video-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
     .video-card-admin .video-desc { font-size: 12px; color: #888; }
     .video-card-admin .video-actions { display: flex; gap: 6px; align-self: flex-start; }
+
+    /* 기사 관리 */
+    .news-card-admin { display: flex; align-items: center; justify-content: space-between; padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; }
+    .news-card-admin .news-info { display: flex; align-items: center; flex: 1; min-width: 0; }
+    .news-card-admin .news-actions { display: flex; gap: 4px; flex-shrink: 0; }
   </style>
 </head>
 <body>
@@ -177,6 +182,7 @@
     <button class="tab-btn" data-tab="pledges" onclick="switchTab('pledges')">공약</button>
     <button class="tab-btn" data-tab="contacts" onclick="switchTab('contacts')">연락처</button>
     <button class="tab-btn" data-tab="videos" onclick="switchTab('videos')">영상</button>
+    <button class="tab-btn" data-tab="news" onclick="switchTab('news')">기사</button>
     <button class="tab-btn" data-tab="qr" onclick="switchTab('qr')">QR코드</button>
   </div>
 
@@ -383,6 +389,48 @@
     </div>
   </div>
 
+  <!-- 기사 탭 -->
+  <div class="tab-content" id="tab-news">
+    <div id="newsList" class="news-list"></div>
+    <button class="btn-sm btn-add" id="newsAddBtn" onclick="showNewsForm()" style="margin-top:12px;">+ 새 기사 추가</button>
+    <div class="news-form" id="newsFormWrap" style="display:none;margin-top:16px;">
+      <h3 id="newsFormTitle">새 기사 추가</h3>
+      <input type="hidden" id="newsEditId">
+      <div class="form-row full">
+        <div class="form-group">
+          <label>기사 제목</label>
+          <input type="text" id="newsTitle" placeholder="예: 차승세, 광산구청장 출마 선언">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>언론사</label>
+          <input type="text" id="newsSource" placeholder="예: 프레시안">
+        </div>
+        <div class="form-group">
+          <label>날짜</label>
+          <input type="date" id="newsDate">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label>기사 URL</label>
+          <input type="text" id="newsUrl" placeholder="https://...">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label>대표 이미지 URL (선택)</label>
+          <input type="text" id="newsImageUrl" placeholder="https://... (비워두면 기본 아이콘 표시)">
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-sm btn-add" id="newsSubmitBtn" onclick="submitNews()">기사 추가</button>
+        <button class="btn-sm" id="newsCancelBtn" onclick="cancelNewsEdit()" style="background:#ddd;">취소</button>
+      </div>
+    </div>
+  </div>
+
   <!-- QR코드 탭 -->
   <div class="tab-content" id="tab-qr">
     <div class="qr-section">
@@ -447,6 +495,7 @@ async function doLogin() {
     loadPledges();
     loadContacts();
     loadVideos();
+    loadNews();
     generateQR();
   } catch (e) {
     errEl.textContent = '서버 연결에 실패했습니다';
@@ -1039,6 +1088,113 @@ async function deleteVideo(id) {
       headers: { 'Authorization': `Bearer ${token}` },
     });
     if (res.ok) { showToast('삭제 완료'); loadVideos(); }
+  } catch { showToast('삭제 실패'); }
+}
+
+// ========== 기사 관리 ==========
+async function loadNews() {
+  const container = document.getElementById('newsList');
+  container.innerHTML = '<div class="loading">불러오는 중...</div>';
+  try {
+    const res = await fetch(`${API}/news?code=${code}`);
+    const items = await res.json();
+    if (!items.length) {
+      container.innerHTML = '<div class="empty-state">등록된 기사가 없습니다</div>';
+      return;
+    }
+    container.innerHTML = items.map(item => `
+      <div class="news-card-admin">
+        <div class="news-info">
+          ${item.imageUrl ? `<img src="${item.imageUrl}" alt="" style="width:60px;height:40px;object-fit:cover;border-radius:4px;margin-right:10px;">` : `<div style="width:60px;height:40px;background:#f0f0f0;border-radius:4px;display:flex;align-items:center;justify-content:center;margin-right:10px;flex-shrink:0;"><i class="fas fa-newspaper" style="color:#aaa;"></i></div>`}
+          <div>
+            <div class="news-title" style="font-weight:600;font-size:14px;">${item.title}</div>
+            <div style="font-size:12px;color:#888;">${item.source || ''}${item.date ? ' · ' + item.date : ''}</div>
+          </div>
+        </div>
+        <div class="news-actions">
+          <a href="${item.url}" target="_blank" class="btn-edit" title="기사 보기" style="text-decoration:none;">🔗</a>
+          <button class="btn-edit" onclick="editNews('${item.id}')" title="수정">✏️</button>
+          <button class="btn-delete" onclick="deleteNews('${item.id}')" title="삭제">&times;</button>
+        </div>
+      </div>
+    `).join('');
+  } catch { container.innerHTML = '<div class="empty-state">불러오기 실패</div>'; }
+}
+
+function showNewsForm() {
+  cancelNewsEdit();
+  document.getElementById('newsFormWrap').style.display = '';
+  document.getElementById('newsAddBtn').style.display = 'none';
+  document.getElementById('newsFormWrap').scrollIntoView({ behavior: 'smooth' });
+}
+
+async function submitNews() {
+  const title = document.getElementById('newsTitle').value.trim();
+  const source = document.getElementById('newsSource').value.trim();
+  const url = document.getElementById('newsUrl').value.trim();
+  const date = document.getElementById('newsDate').value;
+  const imageUrl = document.getElementById('newsImageUrl').value.trim();
+  if (!title || !url) { showToast('제목과 URL은 필수입니다'); return; }
+
+  const editId = document.getElementById('newsEditId').value;
+  const method = editId ? 'PUT' : 'POST';
+  const body = editId ? { id: editId, title, source, url, date, imageUrl } : { title, source, url, date, imageUrl };
+
+  try {
+    const res = await fetch(`${API}/news`, {
+      method,
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify(body),
+    });
+    if (res.ok) {
+      showToast(editId ? '기사 수정 완료' : '기사 추가 완료');
+      cancelNewsEdit();
+      loadNews();
+    }
+  } catch { showToast('저장 실패'); }
+}
+
+async function editNews(id) {
+  try {
+    const res = await fetch(`${API}/news?code=${code}`);
+    const items = await res.json();
+    const item = items.find(n => n.id === id);
+    if (!item) return;
+    document.getElementById('newsEditId').value = id;
+    document.getElementById('newsTitle').value = item.title || '';
+    document.getElementById('newsSource').value = item.source || '';
+    document.getElementById('newsUrl').value = item.url || '';
+    document.getElementById('newsDate').value = item.date || '';
+    document.getElementById('newsImageUrl').value = item.imageUrl || '';
+    document.getElementById('newsFormTitle').textContent = '기사 수정';
+    document.getElementById('newsSubmitBtn').textContent = '수정 저장';
+    document.getElementById('newsFormWrap').style.display = '';
+    document.getElementById('newsAddBtn').style.display = 'none';
+    document.getElementById('newsFormWrap').scrollIntoView({ behavior: 'smooth' });
+  } catch {}
+}
+
+function cancelNewsEdit() {
+  document.getElementById('newsEditId').value = '';
+  document.getElementById('newsTitle').value = '';
+  document.getElementById('newsSource').value = '';
+  document.getElementById('newsUrl').value = '';
+  document.getElementById('newsDate').value = '';
+  document.getElementById('newsImageUrl').value = '';
+  document.getElementById('newsFormTitle').textContent = '새 기사 추가';
+  document.getElementById('newsSubmitBtn').textContent = '기사 추가';
+  document.getElementById('newsFormWrap').style.display = 'none';
+  document.getElementById('newsAddBtn').style.display = '';
+}
+
+async function deleteNews(id) {
+  if (!confirm('이 기사를 삭제하시겠습니까?')) return;
+  try {
+    const res = await fetch(`${API}/news?id=${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    if (res.ok) { showToast('삭제 완료'); loadNews(); }
   } catch { showToast('삭제 실패'); }
 }
 

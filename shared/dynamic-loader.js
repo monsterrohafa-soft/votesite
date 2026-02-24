@@ -15,6 +15,7 @@
     loadDynamicSchedule();
     loadDynamicPledges();
     loadDynamicContacts();
+    loadDynamicNews();
     loadDynamicVideos();
     initDday();
     trackVisit();
@@ -270,6 +271,43 @@
 
     } catch {
       container.innerHTML = staticHTML;
+    }
+  }
+
+  /* 동적 관련기사 로드 */
+  async function loadDynamicNews() {
+    const section = document.getElementById('news');
+    if (!section) return;
+
+    const container = section.querySelector('.news-list');
+    if (!container) return;
+
+    try {
+      const res = await fetch(`${API}/news?code=${code}`);
+      if (!res.ok) throw new Error('API error');
+      const items = await res.json();
+
+      if (!items || items.length === 0) {
+        section.style.display = 'none';
+        return;
+      }
+
+      section.style.display = '';
+      container.innerHTML = items.map(item => `
+        <a href="${item.url}" class="news-card" target="_blank" rel="noopener">
+          ${item.imageUrl
+            ? `<img src="${item.imageUrl}" alt="" class="news-thumb" loading="lazy">`
+            : `<div class="news-icon-placeholder"><i class="fas fa-newspaper" aria-hidden="true"></i></div>`}
+          <div class="news-card-body">
+            <div class="news-card-title">${item.title}</div>
+            <div class="news-card-meta">${item.source || ''}${item.date ? ' · ' + item.date : ''}</div>
+          </div>
+          <i class="fas fa-chevron-right news-card-arrow" aria-hidden="true"></i>
+        </a>
+      `).join('');
+
+    } catch {
+      section.style.display = 'none';
     }
   }
 
