@@ -370,6 +370,7 @@
       </div>
       <div id="videoPreview" style="margin-bottom:12px;display:none;">
         <img id="videoThumb" style="width:200px;border-radius:8px;" alt="미리보기">
+        <span id="videoInfoLoading" style="display:none;margin-left:8px;font-size:12px;color:#888;">제목/설명 불러오는 중...</span>
       </div>
       <div style="display:flex;gap:8px;">
         <button class="btn-sm btn-add" id="videoSubmitBtn" onclick="submitVideo()">영상 추가</button>
@@ -870,16 +871,48 @@ function extractVideoId(input) {
   return input.trim();
 }
 
-// 유튜브 URL 입력 시 썸네일 미리보기
+// 유튜브 URL 입력 시 썸네일 미리보기 + 제목/설명 자동 불러오기
+let _ytInfoTimer = null;
+let _ytLastFetchedId = '';
 document.getElementById('videoUrl').addEventListener('input', function() {
   const vid = extractVideoId(this.value);
   const preview = document.getElementById('videoPreview');
   const thumb = document.getElementById('videoThumb');
+  const loading = document.getElementById('videoInfoLoading');
   if (vid && vid.length >= 8) {
     thumb.src = `https://img.youtube.com/vi/${vid}/hqdefault.jpg`;
     preview.style.display = 'block';
+    // Debounced auto-fetch title/description
+    clearTimeout(_ytInfoTimer);
+    _ytInfoTimer = setTimeout(async () => {
+      if (_ytLastFetchedId === vid) return;
+      _ytLastFetchedId = vid;
+      const titleEl = document.getElementById('videoTitle');
+      const descEl = document.getElementById('videoDesc');
+      // Only fetch if at least one field is empty
+      if (titleEl.value.trim() && descEl.value.trim()) return;
+      loading.style.display = 'inline';
+      try {
+        const res = await fetch(`${API}/youtube-info?videoId=${encodeURIComponent(vid)}`);
+        if (res.ok) {
+          const info = await res.json();
+          if (!titleEl.value.trim() && info.title) {
+            titleEl.value = info.title;
+          }
+          if (!descEl.value.trim() && info.description) {
+            descEl.value = info.description;
+          }
+        }
+      } catch (e) {
+        // Silently fail - user can manually enter title/description
+      } finally {
+        loading.style.display = 'none';
+      }
+    }, 300);
   } else {
     preview.style.display = 'none';
+    clearTimeout(_ytInfoTimer);
+    _ytLastFetchedId = '';
   }
 });
 
@@ -961,6 +994,7 @@ function cancelVideoEdit() {
   document.getElementById('videoTitle').value = '';
   document.getElementById('videoDesc').value = '';
   document.getElementById('videoPreview').style.display = 'none';
+  _ytLastFetchedId = '';
   document.getElementById('videoFormTitle').textContent = '새 영상 추가';
   document.getElementById('videoSubmitBtn').textContent = '영상 추가';
   document.getElementById('videoCancelBtn').style.display = 'none';
