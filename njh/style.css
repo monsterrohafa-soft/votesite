@@ -774,43 +774,8 @@ img { max-width: 100%; height: auto; display: block; }
 /* video-notice 제거됨 */
 
 /* ==================
-   응원 섹션
+   공유 버튼
    ================== */
-.support-banner {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  border-radius: var(--radius-lg);
-  padding: 40px 24px;
-  text-align: center;
-  color: white;
-}
-
-.support-icon {
-  width: 64px;
-  height: 64px;
-  background: rgba(255,255,255,0.15);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 20px;
-  font-size: 28px;
-}
-
-.support-text {
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 1.6;
-  margin-bottom: 24px;
-}
-
-.support-text strong {
-  font-weight: 900;
-  font-size: 24px;
-  color: var(--accent-sky);
-}
-
-.support-share p { font-size: 14px; opacity: 0.8; margin-bottom: 12px; }
-
 .share-buttons {
   display: flex;
   gap: 12px;
@@ -834,9 +799,9 @@ img { max-width: 100%; height: auto; display: block; }
 .share-btn.kakao { background: #FEE500; color: #3C1E1E; }
 
 .share-btn.copy {
-  background: rgba(255,255,255,0.2);
-  color: white;
-  border: 1px solid rgba(255,255,255,0.3);
+  background: #F5F5F5;
+  color: var(--text);
+  border: 1px solid var(--border);
 }
 
 .share-btn:hover { transform: translateY(-2px); }

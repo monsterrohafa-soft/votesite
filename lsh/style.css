@@ -345,22 +345,11 @@ img { max-width: 100%; height: auto; display: block; }
 .video-info h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; line-height: 1.4; }
 .video-info p { font-size: 13px; color: var(--text-light); }
 
-/* 응원 */
-.support-banner {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 60%, #001A3D 100%);
-  border-radius: var(--radius-lg); padding: 44px 28px;
-  text-align: center; color: white;
-  position: relative; overflow: hidden;
-}
-.support-banner::before { content: ''; position: absolute; top: -50%; right: -30%; width: 60%; height: 120%; background: radial-gradient(circle, rgba(255,215,0,0.06) 0%, transparent 60%); pointer-events: none; }
-.support-icon { width: 68px; height: 68px; background: rgba(255,255,255,0.12); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 22px; font-size: 28px; border: 1px solid rgba(255,255,255,0.08); }
-.support-text { font-size: 20px; font-weight: 500; line-height: 1.7; margin-bottom: 28px; }
-.support-text strong { font-weight: 900; font-size: 26px; color: var(--accent); }
-.support-share p { font-size: 14px; opacity: 0.7; margin-bottom: 14px; }
+/* 공유 버튼 */
 .share-buttons { display: flex; gap: 12px; justify-content: center; }
 .share-btn { display: inline-flex; align-items: center; gap: 6px; padding: 11px 22px; border-radius: 50px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; transition: transform 0.25s ease, box-shadow 0.25s ease; -webkit-tap-highlight-color: transparent; min-height: 44px; }
 .share-btn.kakao { background: #FEE500; color: #3C1E1E; }
-.share-btn.copy { background: rgba(255,255,255,0.12); color: white; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(4px); }
+.share-btn.copy { background: #F5F5F5; color: var(--text); border: 1px solid var(--border); }
 .share-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
 
 /* 연락처 */

@@ -338,20 +338,11 @@ img { max-width: 100%; height: auto; display: block; }
 .video-info h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
 .video-info p { font-size: 13px; color: var(--text-light); }
 
-/* 응원 */
-.support-banner {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  border-radius: var(--radius-lg); padding: 40px 24px;
-  text-align: center; color: white;
-}
-.support-icon { width: 64px; height: 64px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; }
-.support-text { font-size: 20px; font-weight: 500; line-height: 1.6; margin-bottom: 24px; }
-.support-text strong { font-weight: 900; font-size: 24px; }
-.support-share p { font-size: 14px; opacity: 0.8; margin-bottom: 12px; }
+/* 공유 버튼 */
 .share-buttons { display: flex; gap: 12px; justify-content: center; }
 .share-btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: 50px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; transition: var(--transition); -webkit-tap-highlight-color: transparent; }
 .share-btn.kakao { background: #FEE500; color: #3C1E1E; }
-.share-btn.copy { background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); }
+.share-btn.copy { background: #F5F5F5; color: var(--text); border: 1px solid var(--border); }
 .share-btn:hover { transform: translateY(-2px); }
 
 /* 연락처 */
