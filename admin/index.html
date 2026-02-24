@@ -414,13 +414,16 @@
       </div>
       <div class="form-row full">
         <div class="form-group">
-          <label>기사 URL</label>
+          <label>기사 URL <span id="newsMetaLoading" style="display:none;font-size:12px;color:#888;font-weight:400;">(메타 정보 불러오는 중...)</span></label>
           <input type="text" id="newsUrl" placeholder="https://...">
         </div>
       </div>
+      <div id="newsPreview" style="display:none;margin-bottom:12px;padding:10px;background:#f8f8f8;border-radius:8px;display:none;">
+        <img id="newsPreviewImg" style="width:120px;height:80px;object-fit:cover;border-radius:6px;" alt="미리보기">
+      </div>
       <div class="form-row full">
         <div class="form-group">
-          <label>대표 이미지 URL (선택)</label>
+          <label>대표 이미지 URL (자동 입력됨)</label>
           <input type="text" id="newsImageUrl" placeholder="https://... (비워두면 기본 아이콘 표시)">
         </div>
       </div>
@@ -1092,6 +1095,53 @@ async function deleteVideo(id) {
 }
 
 // ========== 기사 관리 ==========
+let _newsMetaTimer = null;
+document.getElementById('newsUrl').addEventListener('input', function() {
+  clearTimeout(_newsMetaTimer);
+  const url = this.value.trim();
+  if (!url || !url.startsWith('http')) {
+    document.getElementById('newsPreview').style.display = 'none';
+    return;
+  }
+  _newsMetaTimer = setTimeout(async () => {
+    const loading = document.getElementById('newsMetaLoading');
+    loading.style.display = '';
+    try {
+      const res = await fetch(`${API}/news-meta?url=${encodeURIComponent(url)}`);
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      // 빈 필드만 자동 채움
+      if (data.title && !document.getElementById('newsTitle').value.trim()) {
+        document.getElementById('newsTitle').value = data.title;
+      }
+      if (data.source && !document.getElementById('newsSource').value.trim()) {
+        document.getElementById('newsSource').value = data.source;
+      }
+      if (data.imageUrl && !document.getElementById('newsImageUrl').value.trim()) {
+        document.getElementById('newsImageUrl').value = data.imageUrl;
+      }
+      // 이미지 미리보기
+      if (data.imageUrl) {
+        document.getElementById('newsPreviewImg').src = data.imageUrl;
+        document.getElementById('newsPreview').style.display = 'block';
+      }
+    } catch {}
+    loading.style.display = 'none';
+  }, 500);
+});
+
+// 이미지 URL 수동 변경 시 미리보기 갱신
+document.getElementById('newsImageUrl').addEventListener('input', function() {
+  const url = this.value.trim();
+  const preview = document.getElementById('newsPreview');
+  if (url) {
+    document.getElementById('newsPreviewImg').src = url;
+    preview.style.display = 'block';
+  } else {
+    preview.style.display = 'none';
+  }
+});
+
 async function loadNews() {
   const container = document.getElementById('newsList');
   container.innerHTML = '<div class="loading">불러오는 중...</div>';
@@ -1181,6 +1231,7 @@ function cancelNewsEdit() {
   document.getElementById('newsUrl').value = '';
   document.getElementById('newsDate').value = '';
   document.getElementById('newsImageUrl').value = '';
+  document.getElementById('newsPreview').style.display = 'none';
   document.getElementById('newsFormTitle').textContent = '새 기사 추가';
   document.getElementById('newsSubmitBtn').textContent = '기사 추가';
   document.getElementById('newsFormWrap').style.display = 'none';
