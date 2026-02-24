@@ -256,7 +256,9 @@
 
   <!-- 공약 탭 -->
   <div class="tab-content" id="tab-pledges">
-    <div class="pledge-form" id="pledgeFormWrap">
+    <div id="pledgeList" class="pledge-list"></div>
+    <button class="btn-sm btn-add" id="pledgeAddBtn" onclick="showPledgeForm()" style="margin-top:12px;">+ 새 공약 추가</button>
+    <div class="pledge-form" id="pledgeFormWrap" style="display:none;margin-top:16px;">
       <h3 id="pledgeFormTitle">새 공약 추가</h3>
       <input type="hidden" id="pledgeEditId">
       <div class="form-row full">
@@ -296,15 +298,16 @@
       </div>
       <div style="display:flex;gap:8px;">
         <button class="btn-sm btn-add" id="pledgeSubmitBtn" onclick="submitPledge()">공약 추가</button>
-        <button class="btn-sm" id="pledgeCancelBtn" onclick="cancelPledgeEdit()" style="display:none;background:#ddd;">취소</button>
+        <button class="btn-sm" id="pledgeCancelBtn" onclick="cancelPledgeEdit()" style="background:#ddd;">취소</button>
       </div>
     </div>
-    <div id="pledgeList" class="pledge-list"></div>
   </div>
 
   <!-- 연락처 탭 -->
   <div class="tab-content" id="tab-contacts">
-    <div class="contact-form" id="contactFormWrap">
+    <div id="contactList" class="contact-list"></div>
+    <button class="btn-sm btn-add" id="contactAddBtn" onclick="showContactForm()" style="margin-top:12px;">+ 새 연락처 추가</button>
+    <div class="contact-form" id="contactFormWrap" style="display:none;margin-top:16px;">
       <h3 id="contactFormTitle">새 연락처 추가</h3>
       <input type="hidden" id="contactEditId">
       <div class="form-row">
@@ -339,15 +342,16 @@
       </div>
       <div style="display:flex;gap:8px;">
         <button class="btn-sm btn-add" id="contactSubmitBtn" onclick="submitContact()">연락처 추가</button>
-        <button class="btn-sm" id="contactCancelBtn" onclick="cancelContactEdit()" style="display:none;background:#ddd;">취소</button>
+        <button class="btn-sm" id="contactCancelBtn" onclick="cancelContactEdit()" style="background:#ddd;">취소</button>
       </div>
     </div>
-    <div id="contactList" class="contact-list"></div>
   </div>
 
   <!-- 영상 탭 -->
   <div class="tab-content" id="tab-videos">
-    <div class="video-form" id="videoFormWrap">
+    <div id="videoList" class="video-list-admin"></div>
+    <button class="btn-sm btn-add" id="videoAddBtn" onclick="showVideoForm()" style="margin-top:12px;">+ 새 영상 추가</button>
+    <div class="video-form" id="videoFormWrap" style="display:none;margin-top:16px;">
       <h3 id="videoFormTitle">새 영상 추가</h3>
       <input type="hidden" id="videoEditId">
       <div class="form-row full">
@@ -374,10 +378,9 @@
       </div>
       <div style="display:flex;gap:8px;">
         <button class="btn-sm btn-add" id="videoSubmitBtn" onclick="submitVideo()">영상 추가</button>
-        <button class="btn-sm" id="videoCancelBtn" onclick="cancelVideoEdit()" style="display:none;background:#ddd;">취소</button>
+        <button class="btn-sm" id="videoCancelBtn" onclick="cancelVideoEdit()" style="background:#ddd;">취소</button>
       </div>
     </div>
-    <div id="videoList" class="video-list-admin"></div>
   </div>
 
   <!-- QR코드 탭 -->
@@ -661,8 +664,6 @@ async function deleteSchedule(id) {
 }
 
 // ========== 공약 관리 ==========
-let editingPledgeId = null;
-
 async function loadPledges() {
   const container = document.getElementById('pledgeList');
   container.innerHTML = '<div class="loading">불러오는 중...</div>';
@@ -673,12 +674,15 @@ async function loadPledges() {
       container.innerHTML = '<div class="empty-state">등록된 공약이 없습니다</div>';
       return;
     }
-    container.innerHTML = items.map(item => `
+    container.innerHTML = items.map((item, i) => `
       <div class="pledge-card">
         <div class="pledge-header">
-          <div>
-            <div class="pledge-title"><i class="${item.icon || 'fas fa-bullhorn'}" style="margin-right:6px;opacity:0.5;"></i>${item.title}</div>
-            <div class="pledge-desc">${item.desc || ''}</div>
+          <div style="display:flex;align-items:flex-start;gap:10px;">
+            <span style="background:var(--primary,#004EA2);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;">${String(i + 1).padStart(2, '0')}</span>
+            <div>
+              <div class="pledge-title"><i class="${item.icon || 'fas fa-bullhorn'}" style="margin-right:6px;opacity:0.5;"></i>${item.title}</div>
+              <div class="pledge-desc">${item.desc || ''}</div>
+            </div>
           </div>
           <div class="pledge-actions">
             <button class="btn-edit" onclick="editPledge('${item.id}')" title="수정">✏️</button>
@@ -689,6 +693,13 @@ async function loadPledges() {
       </div>
     `).join('');
   } catch { container.innerHTML = '<div class="empty-state">불러오기 실패</div>'; }
+}
+
+function showPledgeForm() {
+  cancelPledgeEdit();
+  document.getElementById('pledgeFormWrap').style.display = '';
+  document.getElementById('pledgeAddBtn').style.display = 'none';
+  document.getElementById('pledgeFormWrap').scrollIntoView({ behavior: 'smooth' });
 }
 
 async function submitPledge() {
@@ -729,8 +740,9 @@ async function editPledge(id) {
     document.getElementById('pledgeIcon').value = item.icon || 'fas fa-bullhorn';
     document.getElementById('pledgeDetails').value = (item.details || []).join('\n');
     document.getElementById('pledgeFormTitle').textContent = '공약 수정';
-    document.getElementById('pledgeSubmitBtn').textContent = '공약 수정';
-    document.getElementById('pledgeCancelBtn').style.display = '';
+    document.getElementById('pledgeSubmitBtn').textContent = '수정 저장';
+    document.getElementById('pledgeFormWrap').style.display = '';
+    document.getElementById('pledgeAddBtn').style.display = 'none';
     document.getElementById('pledgeFormWrap').scrollIntoView({ behavior: 'smooth' });
   } catch {}
 }
@@ -743,7 +755,8 @@ function cancelPledgeEdit() {
   document.getElementById('pledgeDetails').value = '';
   document.getElementById('pledgeFormTitle').textContent = '새 공약 추가';
   document.getElementById('pledgeSubmitBtn').textContent = '공약 추가';
-  document.getElementById('pledgeCancelBtn').style.display = 'none';
+  document.getElementById('pledgeFormWrap').style.display = 'none';
+  document.getElementById('pledgeAddBtn').style.display = '';
 }
 
 async function deletePledge(id) {
@@ -814,6 +827,13 @@ async function submitContact() {
   } catch { showToast('저장 실패'); }
 }
 
+function showContactForm() {
+  cancelContactEdit();
+  document.getElementById('contactFormWrap').style.display = '';
+  document.getElementById('contactAddBtn').style.display = 'none';
+  document.getElementById('contactFormWrap').scrollIntoView({ behavior: 'smooth' });
+}
+
 async function editContact(id) {
   try {
     const res = await fetch(`${API}/contacts?code=${code}`);
@@ -826,8 +846,9 @@ async function editContact(id) {
     document.getElementById('contactValue').value = item.value || '';
     document.getElementById('contactUrl').value = item.url || '';
     document.getElementById('contactFormTitle').textContent = '연락처 수정';
-    document.getElementById('contactSubmitBtn').textContent = '연락처 수정';
-    document.getElementById('contactCancelBtn').style.display = '';
+    document.getElementById('contactSubmitBtn').textContent = '수정 저장';
+    document.getElementById('contactFormWrap').style.display = '';
+    document.getElementById('contactAddBtn').style.display = 'none';
     document.getElementById('contactFormWrap').scrollIntoView({ behavior: 'smooth' });
   } catch {}
 }
@@ -840,7 +861,8 @@ function cancelContactEdit() {
   document.getElementById('contactUrl').value = '';
   document.getElementById('contactFormTitle').textContent = '새 연락처 추가';
   document.getElementById('contactSubmitBtn').textContent = '연락처 추가';
-  document.getElementById('contactCancelBtn').style.display = 'none';
+  document.getElementById('contactFormWrap').style.display = 'none';
+  document.getElementById('contactAddBtn').style.display = '';
 }
 
 async function deleteContact(id) {
@@ -969,6 +991,13 @@ async function submitVideo() {
   } catch { showToast('저장 실패'); }
 }
 
+function showVideoForm() {
+  cancelVideoEdit();
+  document.getElementById('videoFormWrap').style.display = '';
+  document.getElementById('videoAddBtn').style.display = 'none';
+  document.getElementById('videoFormWrap').scrollIntoView({ behavior: 'smooth' });
+}
+
 async function editVideo(id) {
   try {
     const res = await fetch(`${API}/videos?code=${code}`);
@@ -982,8 +1011,9 @@ async function editVideo(id) {
     // 썸네일 미리보기 트리거
     document.getElementById('videoUrl').dispatchEvent(new Event('input'));
     document.getElementById('videoFormTitle').textContent = '영상 수정';
-    document.getElementById('videoSubmitBtn').textContent = '영상 수정';
-    document.getElementById('videoCancelBtn').style.display = '';
+    document.getElementById('videoSubmitBtn').textContent = '수정 저장';
+    document.getElementById('videoFormWrap').style.display = '';
+    document.getElementById('videoAddBtn').style.display = 'none';
     document.getElementById('videoFormWrap').scrollIntoView({ behavior: 'smooth' });
   } catch {}
 }
@@ -997,7 +1027,8 @@ function cancelVideoEdit() {
   _ytLastFetchedId = '';
   document.getElementById('videoFormTitle').textContent = '새 영상 추가';
   document.getElementById('videoSubmitBtn').textContent = '영상 추가';
-  document.getElementById('videoCancelBtn').style.display = 'none';
+  document.getElementById('videoFormWrap').style.display = 'none';
+  document.getElementById('videoAddBtn').style.display = '';
 }
 
 async function deleteVideo(id) {
