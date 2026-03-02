@@ -139,6 +139,25 @@
     .video-card-admin .video-desc { font-size: 12px; color: #888; }
     .video-card-admin .video-actions { display: flex; gap: 6px; align-self: flex-start; }
 
+    /* 메인이미지 관리 */
+    .hero-manage-section { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .hero-manage-section h3 { font-size: 15px; margin-bottom: 8px; }
+    .hero-desc { font-size: 13px; color: #888; margin-bottom: 20px; }
+    .hero-preview-wrap { margin-bottom: 20px; }
+    .hero-preview-box { position: relative; width: 100%; max-width: 400px; aspect-ratio: 3/4; border-radius: 12px; overflow: hidden; background: #f5f5f5; border: 1px solid #eee; }
+    .hero-preview-box img { width: 100%; height: 100%; object-fit: cover; display: none; }
+    .hero-preview-box img.visible { display: block; }
+    .hero-preview-empty { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #aaa; }
+    .hero-preview-empty .icon { font-size: 48px; margin-bottom: 8px; }
+    .hero-preview-empty p { font-size: 14px; }
+    .hero-upload-area { border: 2px dashed #ddd; border-radius: 12px; padding: 24px 20px; text-align: center; cursor: pointer; transition: border-color 0.2s; }
+    .hero-upload-area:hover, .hero-upload-area.dragover { border-color: #1a1a1a; background: #fafafa; }
+    .hero-upload-area .icon { font-size: 36px; margin-bottom: 8px; }
+    .hero-upload-area p { color: #888; font-size: 14px; }
+    .hero-upload-info { font-size: 11px; color: #aaa; margin-top: 6px; }
+    .btn-restore { background: #fff; border: 1px solid #e53e3e; color: #e53e3e; padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .btn-restore:hover { background: #e53e3e; color: #fff; }
+
     /* 기사 관리 */
     .news-card-admin { display: flex; align-items: center; justify-content: space-between; padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; }
     .news-card-admin .news-info { display: flex; align-items: center; flex: 1; min-width: 0; }
@@ -177,6 +196,7 @@
 
   <div class="tabs">
     <button class="tab-btn active" data-tab="stats" onclick="switchTab('stats')">통계</button>
+    <button class="tab-btn" data-tab="hero" onclick="switchTab('hero')">메인이미지</button>
     <button class="tab-btn" data-tab="gallery" onclick="switchTab('gallery')">사진</button>
     <button class="tab-btn" data-tab="schedule" onclick="switchTab('schedule')">일정</button>
     <button class="tab-btn" data-tab="pledges" onclick="switchTab('pledges')">공약</button>
@@ -201,6 +221,32 @@
     <div class="stat-chart">
       <h3>최근 7일 방문자</h3>
       <div class="chart-bars" id="chartBars"></div>
+    </div>
+  </div>
+
+  <!-- 메인이미지 탭 -->
+  <div class="tab-content" id="tab-hero">
+    <div class="hero-manage-section">
+      <h3>메인 히어로 이미지 관리</h3>
+      <p class="hero-desc">홈페이지 상단에 표시되는 대표 이미지를 변경합니다.</p>
+      <div class="hero-preview-wrap">
+        <div class="hero-preview-box" id="heroPreviewBox">
+          <img id="heroPreviewImg" src="" alt="메인 이미지 미리보기">
+          <div class="hero-preview-empty" id="heroPreviewEmpty">
+            <div class="icon">🖼</div>
+            <p>현재 기본 이미지 사용 중</p>
+          </div>
+        </div>
+      </div>
+      <div class="hero-actions">
+        <div class="hero-upload-area" id="heroUploadArea">
+          <div class="icon">+</div>
+          <p>이미지를 드래그하거나 클릭하여 업로드</p>
+          <div class="hero-upload-info">JPG, PNG, WebP / 최대 2MB / 자동 압축: 1600px, 85%</div>
+        </div>
+        <input type="file" id="heroFileInput" accept="image/jpeg,image/png,image/webp" hidden>
+        <button class="btn-sm btn-restore" id="heroRestoreBtn" onclick="restoreHeroImage()" style="display:none;margin-top:12px;">기본 이미지로 복원</button>
+      </div>
     </div>
   </div>
 
@@ -493,6 +539,7 @@ async function doLogin() {
     document.getElementById('loginView').style.display = 'none';
     document.getElementById('dashView').style.display = 'block';
     loadStats();
+    loadHero();
     loadGallery();
     loadSchedule();
     loadPledges();
@@ -543,6 +590,135 @@ async function loadStats() {
       `;
     }).join('');
   } catch {}
+}
+
+// ========== 메인이미지 관리 ==========
+const heroUploadArea = document.getElementById('heroUploadArea');
+const heroFileInput = document.getElementById('heroFileInput');
+
+heroUploadArea.addEventListener('click', () => heroFileInput.click());
+heroUploadArea.addEventListener('dragover', e => { e.preventDefault(); heroUploadArea.classList.add('dragover'); });
+heroUploadArea.addEventListener('dragleave', () => heroUploadArea.classList.remove('dragover'));
+heroUploadArea.addEventListener('drop', e => {
+  e.preventDefault();
+  heroUploadArea.classList.remove('dragover');
+  if (e.dataTransfer.files.length > 0) handleHeroFile(e.dataTransfer.files[0]);
+});
+heroFileInput.addEventListener('change', () => {
+  if (heroFileInput.files.length > 0) handleHeroFile(heroFileInput.files[0]);
+});
+
+// 히어로 이미지 압축 (1600px, 85% quality)
+function compressHeroImage(file, maxWidth, quality) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      let w = img.width;
+      let h = img.height;
+      if (w > maxWidth) {
+        h = Math.round(h * maxWidth / w);
+        w = maxWidth;
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      canvas.toBlob(resolve, 'image/jpeg', quality);
+    };
+    img.src = URL.createObjectURL(file);
+  });
+}
+
+async function handleHeroFile(file) {
+  if (!file.type.startsWith('image/')) {
+    showToast('이미지 파일만 업로드 가능합니다');
+    return;
+  }
+
+  // 원본 크기 체크 전 압축 수행 (압축 후 2MB 이하면 OK)
+  heroUploadArea.classList.add('uploading');
+  heroUploadArea.querySelector('p').textContent = '업로드 중...';
+
+  try {
+    const compressed = await compressHeroImage(file, 1600, 0.85);
+
+    if (compressed.size > 2 * 1024 * 1024) {
+      showToast('압축 후에도 2MB를 초과합니다. 더 작은 이미지를 사용해주세요.');
+      heroUploadArea.classList.remove('uploading');
+      heroUploadArea.querySelector('p').textContent = '이미지를 드래그하거나 클릭하여 업로드';
+      return;
+    }
+
+    const res = await fetch(`${API}/hero`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'image/jpeg',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: compressed,
+    });
+
+    if (!res.ok) {
+      const data = await res.json();
+      showToast(data.error || '업로드 실패');
+    } else {
+      showToast('메인 이미지 변경 완료');
+      loadHero();
+    }
+  } catch {
+    showToast('업로드 중 오류 발생');
+  }
+
+  heroUploadArea.classList.remove('uploading');
+  heroUploadArea.querySelector('p').textContent = '이미지를 드래그하거나 클릭하여 업로드';
+  heroFileInput.value = '';
+}
+
+async function loadHero() {
+  const previewImg = document.getElementById('heroPreviewImg');
+  const previewEmpty = document.getElementById('heroPreviewEmpty');
+  const restoreBtn = document.getElementById('heroRestoreBtn');
+
+  try {
+    const res = await fetch(`${API}/hero?code=${code}`);
+    const data = await res.json();
+
+    if (data && data.url) {
+      previewImg.src = data.url;
+      previewImg.classList.add('visible');
+      previewEmpty.style.display = 'none';
+      restoreBtn.style.display = '';
+    } else {
+      previewImg.classList.remove('visible');
+      previewImg.src = '';
+      previewEmpty.style.display = '';
+      restoreBtn.style.display = 'none';
+    }
+  } catch {
+    previewImg.classList.remove('visible');
+    previewImg.src = '';
+    previewEmpty.style.display = '';
+    restoreBtn.style.display = 'none';
+  }
+}
+
+async function restoreHeroImage() {
+  if (!confirm('기본 이미지로 복원하시겠습니까?\n업로드한 메인 이미지가 삭제됩니다.')) return;
+
+  try {
+    const res = await fetch(`${API}/hero`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    if (res.ok) {
+      showToast('기본 이미지로 복원 완료');
+      loadHero();
+    } else {
+      showToast('복원 실패');
+    }
+  } catch {
+    showToast('복원 중 오류 발생');
+  }
 }
 
 // ========== 사진 관리 + 이미지 압축 ==========

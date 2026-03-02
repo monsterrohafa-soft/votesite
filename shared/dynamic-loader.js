@@ -11,6 +11,7 @@
   const API = '/api';
 
   document.addEventListener('DOMContentLoaded', () => {
+    loadDynamicHero();
     loadDynamicGallery();
     loadDynamicSchedule();
     loadDynamicPledges();
@@ -20,6 +21,24 @@
     initDday();
     trackVisit();
   });
+
+  /* 히어로 이미지 동적 교체 */
+  async function loadDynamicHero() {
+    try {
+      const res = await fetch(`${API}/hero?code=${code}`);
+      if (!res.ok) return;
+      const data = await res.json();
+      if (!data || !data.url) return;
+
+      // .hero-img (일반 후보) 또는 .hero-poster-img (포스터형) 찾기
+      const heroImg = document.querySelector('.hero-img') || document.querySelector('.hero-poster-img');
+      if (heroImg) {
+        heroImg.src = data.url;
+      }
+    } catch {
+      // 데이터 없으면 기존 정적 이미지 유지
+    }
+  }
 
   /* D-day 카운트다운 */
   function initDday() {

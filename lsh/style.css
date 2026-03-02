@@ -105,11 +105,9 @@ img { max-width: 100%; height: auto; display: block; }
   pointer-events: none;
 }
 
-.hero-top {
-  position: relative; z-index: 2;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 2px; padding: 14px 0 0;
-  font-size: 13px; font-weight: 500; opacity: 0.9;
+.hero-meta {
+  display: flex; justify-content: center; align-items: center;
+  gap: 12px; margin-bottom: 12px;
 }
 
 .party-name-tag {

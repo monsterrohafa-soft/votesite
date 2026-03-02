@@ -39,10 +39,11 @@ votesite/
 │   ├── news-meta.js      URL → og:image/title/source
 │   ├── youtube-info.js   videoId → title/desc
 │   ├── upload.js         Vercel Blob 업로드
+│   ├── hero.js           메인 이미지 관리
 │   ├── dday.js           D-day 설정
 │   └── stats.js          조회수/공유수
-├── admin/            ← 관리자 SPA (8탭: 통계/사진/일정/공약/연락처/기사/영상/QR)
-├── shared/           ← dynamic-loader.js (갤러리/일정/공약/연락처/뉴스/영상 동적 로딩)
+├── admin/            ← 관리자 SPA (9탭: 통계/메인이미지/사진/일정/공약/연락처/기사/영상/QR)
+├── shared/           ← dynamic-loader.js (히어로이미지/갤러리/일정/공약/연락처/뉴스/영상 동적 로딩)
 ├── scripts/          ← seed.js, seed-content.js, seed-news-all.js
 ├── [후보코드]/       ← 후보별 사이트
 │   ├── index.html
@@ -66,6 +67,7 @@ ${code}:pledges   → [{ id, icon, title, desc, details[], order }]
 ${code}:contacts  → [{ id, type, label, value, url, order }]
 ${code}:videos    → [{ id, videoId, title, desc, order }]
 ${code}:news      → [{ id, title, source, url, date, imageUrl, order }]
+${code}:hero      → { url, updatedAt }
 ${code}:dday      → { targetDate, label }
 ${code}:stats     → { views, shares }
 ```
