@@ -15,7 +15,7 @@ const redis = new Redis({
   token: process.env.KV_REST_API_TOKEN,
 });
 
-const candidates = ['lsh', 'njh', 'jdm', 'lhs', 'css'];
+const candidates = ['lsh', 'njh', 'jdm', 'lhs', 'css', 'ysh', 'yjg', 'jws'];
 const PROJECT_ROOT = new URL('..', import.meta.url).pathname;
 
 // 후보별 사진 메타데이터 (category + alt)
@@ -61,6 +61,37 @@ const photoMeta = {
     { alt: '출판기념회 다시 노무현 바보 차승세', category: 'event' },
     { alt: '민주당 평당원 최고위원 도전 MBC 뉴스', category: 'media' },
     { alt: '광산구청장 출마선언 기자회견 현장', category: 'campaign' },
+  ],
+  ysh: [
+    { alt: '안성시 현장 방문', category: 'activity' },
+    { alt: '선거 활동', category: 'campaign' },
+    { alt: '지역 행사', category: 'event' },
+    { alt: '언론 활동', category: 'media' },
+    { alt: '주민 만남', category: 'campaign' },
+  ],
+  yjg: [
+    { alt: '대전 서구 활동', category: 'activity' },
+    { alt: '출마선언 기자회견', category: 'campaign' },
+    { alt: '한민시장 출마선언', category: 'campaign' },
+    { alt: '지역 행사 참석', category: 'event' },
+    { alt: '조국혁신당 활동', category: 'activity' },
+    { alt: '언론 인터뷰', category: 'media' },
+    { alt: '창업 활동', category: 'event' },
+    { alt: '정치 입문', category: 'campaign' },
+    { alt: '시민 활동', category: 'activity' },
+    { alt: '미디어 출연', category: 'media' },
+  ],
+  jws: [
+    { alt: '사하구청장 출마 서류 제출', category: 'campaign' },
+    { alt: '보궐선거 유세 현장', category: 'campaign' },
+    { alt: 'Btv 뉴스 인터뷰', category: 'media' },
+    { alt: '신평 한신아파트 현수막', category: 'campaign' },
+    { alt: '공식 프로필 사진', category: 'media' },
+    { alt: '사상하단선 피해보상 주민간담회', category: 'event' },
+    { alt: '부산시의회 발언', category: 'activity' },
+    { alt: '싱크홀 방지 간담회', category: 'event' },
+    { alt: '시의회 회의 전경', category: 'activity' },
+    { alt: '퐁피두 분관 철회 기자회견', category: 'activity' },
   ],
 };
 

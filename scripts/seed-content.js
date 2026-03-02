@@ -131,6 +131,26 @@ const candidateData = {
     ],
   },
 
+  jws: {
+    pledges: [
+      { icon: 'fas fa-city', title: '도시재생 · 주거환경', desc: '낙후된 주거환경을 개선하고 삶의 질을 높이겠습니다', details: ['다대동 한진 부지 공공성 확보 및 개발', '노후 주거환경 정비 및 도시재생', '공공임대주택 공급 확대', '생활 SOC 인프라 확충'] },
+      { icon: 'fas fa-shield-alt', title: '안전 · 도시 인프라', desc: '시민 안전을 최우선으로, 든든한 도시를 만들겠습니다', details: ['하수관로 현대화 및 침수 예방', '건설 하자·지반침하 근본 대책 마련', 'CCTV 확충 및 안전 인프라 강화', '보행자 중심 도로 환경 개선'] },
+      { icon: 'fas fa-leaf', title: '해양 · 환경', desc: '을숙도와 낙동강 생태를 지키는 친환경 사하구', details: ['을숙도 생태공원 보전 및 활성화', '낙동강 하구 해양환경 보호', '탄소중립 실천 마을 만들기', '공원·녹지 확충'] },
+      { icon: 'fas fa-hand-holding-heart', title: '복지 · 교육', desc: '누구도 소외되지 않는 따뜻한 사하구', details: ['사회적경제 활성화로 일자리 창출', '어르신·장애인 맞춤형 돌봄 강화', '아이 키우기 좋은 보육 환경 조성', '평생교육 인프라 확충'] },
+      { icon: 'fas fa-palette', title: '문화 · 관광', desc: '사하구만의 매력으로 활기찬 지역을 만들겠습니다', details: ['삼정 더파크 동물원 정상화', '감천문화마을 관광 활성화', '지역 문화·예술 공간 확충', '전통시장·소상공인 지원 강화'] },
+    ],
+    contacts: [
+      { type: 'phone', label: '전화', value: '010-2561-3401', url: 'tel:010-2561-3401' },
+      { type: 'address', label: '출마 지역', value: '부산광역시 사하구 사하구청장' },
+    ],
+    videos: [
+      { videoId: 'spyvDIwWKOE', title: "'을숙도 장비' 전원석 \"사하구청장 검증 서류 제출\"", desc: '사하구청장 출마 비전 발표' },
+      { videoId: '5HJOBo2iqyk', title: '찾아가는 정책 인터뷰 - 전원석 부산시의원', desc: '대한민국유권자총연맹' },
+      { videoId: '07Ew5RqKfqM', title: '부산시의원 보궐선거 민주당 전원석 당선', desc: '부산MBC 뉴스투데이' },
+      { videoId: 'VuDeOhAmbxo', title: '"퐁피두 분관 즉각 철회하라" - 전원석 시의원', desc: '부산MBC 뉴스데스크' },
+    ],
+  },
+
   yjg: {
     pledges: [
       { icon: 'fas fa-store', title: '서구경제혁신', desc: '소상공인과 자영업자의 목소리를 서구 행정의 최우선 가치로', details: ['시장 상인·소상공인 디지털 전환 지원', '실제 매출이 오르는 행정 실현', '청년 창업 지원 및 스타트업 생태계 구축', '대전 서구 창업 일자리 혁신도시 조성'] },

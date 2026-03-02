@@ -48,6 +48,13 @@ const allNews = {
     { title: '윤성환 국민의힘 안성 당협위 부위원장, 경기도의원 출마 선언', source: '스마트비즈', url: 'https://www.smartbizn.com/news/articleView.html?idxno=135010', date: '2026-02-05' },
     { title: '안성 6.3 지방선거 30·40대 정치 신인 대거 도전···지역 정치 세대교체 신호탄', source: '스마트에프엔', url: 'https://www.smartfn.co.kr/news/articleView.html?idxno=132134', date: '2026-01-20' },
   ],
+  jws: [
+    { title: "'을숙도 장비' 전원석, 사하구청장 출마 수면 위로", source: '이투데이', url: 'https://www.etoday.co.kr/news/view/2545633', date: '2026-01-15' },
+    { title: '전원석 시의원 "다대 한진 부지, 1,700억 공공기여 이행 검증 촉구"', source: '이투데이', url: 'https://www.etoday.co.kr/news/view/2522989', date: '2025-11-10' },
+    { title: '전원석 시의원, 하수관로·건설 하자 등 부산 도시 문제 전방위 질타', source: '아주경제', url: 'https://www.ajunews.com/view/20250901152141875', date: '2025-09-01' },
+    { title: '전원석 의원 "삼정 더파크 동물원, 껍데기뿐인 재개장 안 돼"', source: '내외일보', url: 'https://www.naewoeilbo.com/news/articleView.html?idxno=2298410', date: '2026-01-20' },
+    { title: '"부산 사하구, 민주당 국회의원·시의원 동시 배출 목표"', source: '뉴시스', url: 'https://www.newsis.com/view/NISX20240316_0002663103', date: '2024-03-16' },
+  ],
   yjg: [
     { title: "유지곤 \"낡은 엔진 떼고, 대전 서구 재창업하겠다\"", source: '굿모닝충청', url: 'https://www.goodmorningcc.com/news/articleView.html?idxno=441412', date: '2026-02-23' },
     { title: '조국혁신당 유지곤, 대전 한민시장서 서구청장 출마 선언', source: '굿모닝충청', url: 'https://www.goodmorningcc.com/news/articleView.html?idxno=441117', date: '2026-02-21' },
