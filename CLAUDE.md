@@ -11,7 +11,7 @@
 **자동 트리거**: "후보 추가", "선거 홈페이지", "votesite", "유세 페이지" 요청 시 skill 자동 실행.
 **정적 콘텐츠 수정**: OG 태그, hero, about 섹션 등은 Skills로 수정 (SKILL.md 참조)
 
-## 현재 후보 (5명)
+## 현재 후보 (6명)
 
 | 코드 | 이름 | 정당 | 지역 |
 |------|------|------|------|
@@ -20,6 +20,7 @@
 | jdm | 정동만 | 국민의힘 | 기장군 |
 | lhs | 이헌승 | 국민의힘 | 부산진구을 |
 | css | 차승세 | 더불어민주당 | 해운대구을 |
+| ysh | 윤성환 | 국민의힘 | 안성시 제2선거구 |
 
 ## 프로젝트 구조
 
@@ -80,11 +81,14 @@ ${code}:stats     → { views, shares }
 ## 배포
 
 ```bash
+git remote set-url origin git@github.com:monsterrohafa-soft/votesite.git  # SSH 사용 (HTTPS 인증 안됨)
 git add [후보코드]/ scripts/seed.js
 git commit -m "add: [후보이름] ([정당])"
 git push origin main
 npx vercel --prod --yes
 ```
+
+**주의**: HTTPS push 안됨 → SSH remote 필수. skills 실행 시 반드시 git push + vercel deploy까지 완료할 것.
 
 배포 URL: `https://votesite-phi.vercel.app/{code}/`
 Admin URL: `https://votesite-phi.vercel.app/admin/`
