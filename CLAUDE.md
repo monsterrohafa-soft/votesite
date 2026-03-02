@@ -96,3 +96,15 @@ npx vercel --prod --yes
 
 배포 URL: `https://votesite-phi.vercel.app/{code}/`
 Admin URL: `https://votesite-phi.vercel.app/admin/`
+
+## 용량 체크 (배포 후 필수)
+
+배포 후 `du -sh .git` 및 `du -ch */assets | tail -1`로 용량 확인.
+
+| 서비스 | ⚠️ 경고 | 🚨 위험 | 한도 |
+|--------|---------|---------|------|
+| Git 레포 (.git) | 500MB | 800MB | 권장 1GB |
+| 이미지 합계 | 200MB | 400MB | - |
+| Vercel Blob | 50GB | 80GB | Pro 100GB |
+
+임계값 초과 시 사용자에게 경고 메시지 출력. 위험 기준 초과 시 이미지 Blob 이전 권장.
