@@ -15,7 +15,7 @@ const redis = new Redis({
   token: process.env.KV_REST_API_TOKEN,
 });
 
-const candidates = ['lsh', 'njh', 'jdm', 'lhs', 'css', 'ysh', 'yjg', 'jws'];
+const candidates = ['lsh', 'njh', 'jdm', 'lhs', 'css', 'ysh', 'yjg', 'jws', 'jhh'];
 const PROJECT_ROOT = new URL('..', import.meta.url).pathname;
 
 // 후보별 사진 메타데이터 (category + alt)
@@ -92,6 +92,18 @@ const photoMeta = {
     { alt: '싱크홀 방지 간담회', category: 'event' },
     { alt: '시의회 회의 전경', category: 'activity' },
     { alt: '퐁피두 분관 철회 기자회견', category: 'activity' },
+  ],
+  jhh: [
+    { alt: '국회 의정활동', category: 'activity' },
+    { alt: '국회 질의', category: 'activity' },
+    { alt: '서울시장 출마선언', category: 'campaign' },
+    { alt: '유세 현장', category: 'campaign' },
+    { alt: '출판기념회', category: 'event' },
+    { alt: '행사 참석', category: 'event' },
+    { alt: '3대특검 대응특위', category: 'activity' },
+    { alt: '기자회견', category: 'media' },
+    { alt: '인터뷰', category: 'media' },
+    { alt: '당대회 참석', category: 'event' },
   ],
 };
 

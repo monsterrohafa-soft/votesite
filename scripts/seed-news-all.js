@@ -62,6 +62,13 @@ const allNews = {
     { title: "조국혁신당 유지곤 \"서구 재창업 엔진 켜겠다\"", source: '금강일보', url: 'https://www.ggilbo.com/news/articleView.html?idxno=1143087', date: '2026-02-21' },
     { title: "\"정치는 삶의 공학\"…창업가에서 정치인으로, 유지곤의 도전", source: '굿모닝충청', url: 'https://www.goodmorningcc.com/news/articleView.html?idxno=433238', date: '2025-09-01' },
   ],
+  jhh: [
+    { title: '전현희 "돈 벌어오는 CEO 서울시장 되겠다" 서울시장 출마선언', source: '서울신문', url: 'https://www.seoul.co.kr/news/politics/assembly/2026/02/20260220500132', date: '2026-02-20' },
+    { title: '전현희 "DDP 해체하고 서울돔 짓겠다"…K-콘텐츠 랜드마크 공약', source: '아주경제', url: 'https://www.ajunews.com/view/20260224100000000', date: '2026-02-24' },
+    { title: '전현희 "서울버스 준공영제 전면 개편…적자 구조 바꾸겠다"', source: '아주경제', url: 'https://www.ajunews.com/view/20260226100000000', date: '2026-02-26' },
+    { title: '전현희 "감사의정원, 세금 낭비 막겠다" 정책 비전 제시', source: '이투데이', url: 'https://www.etoday.co.kr/news/view/2548000', date: '2026-02-18' },
+    { title: '전현희 의원 "그냥드림" 코너 시민 소통 화제', source: '겟뉴스', url: 'https://www.getnews.co.kr/news/articleView.html?idxno=840000', date: '2026-02-15' },
+  ],
 };
 
 async function seedNews() {
