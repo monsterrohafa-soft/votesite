@@ -43,6 +43,11 @@ const allNews = {
     { title: '4선 이헌승, 국민의힘 원내대표 출마…김성원·송언석과 3파전', source: '헤럴드경제', url: 'https://biz.heraldcorp.com/article/10509217', date: '2025-06-14' },
     { title: '4선 이헌승 의원, 국민의힘 원내대표 선거 출마‥3파전', source: 'MBC', url: 'https://imnews.imbc.com/news/2025/politics/article/6725584_36711.html', date: '2025-06-14' },
   ],
+  ysh: [
+    { title: '윤성환 "멈춰 선 동안성, 이제는 뚫겠다"… 경기도의원 안성 제2선거구 출마 선언', source: '경기신문', url: 'https://www.kgnews.co.kr/news/article.html?no=883722', date: '2026-02-05' },
+    { title: '윤성환 국민의힘 안성 당협위 부위원장, 경기도의원 출마 선언', source: '스마트비즈', url: 'https://www.smartbizn.com/news/articleView.html?idxno=135010', date: '2026-02-05' },
+    { title: '안성 6.3 지방선거 30·40대 정치 신인 대거 도전···지역 정치 세대교체 신호탄', source: '스마트에프엔', url: 'https://www.smartfn.co.kr/news/articleView.html?idxno=132134', date: '2026-01-20' },
+  ],
 };
 
 async function seedNews() {

@@ -24,6 +24,7 @@ const candidates = [
   { code: 'jdm', name: '정동만', party: '국민의힘', password: '1234' },
   { code: 'lhs', name: '이헌승', party: '국민의힘', password: '1234' },
   { code: 'css', name: '차승세', party: '더불어민주당', password: '1234' },
+  { code: 'ysh', name: '윤성환', party: '국민의힘', password: '1234' },
 ];
 
 async function seed() {
