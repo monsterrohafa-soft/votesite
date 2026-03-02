@@ -81,11 +81,9 @@ img { max-width: 100%; height: auto; display: block; }
   overflow: hidden;
 }
 
-.hero-top {
-  position: absolute; top: 0; left: 0; right: 0;
-  z-index: 10;
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 12px 16px;
+.hero-meta {
+  display: flex; justify-content: center; align-items: center;
+  gap: 12px; margin-bottom: 12px;
 }
 
 .party-name-tag {
