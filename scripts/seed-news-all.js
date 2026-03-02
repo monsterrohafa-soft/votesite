@@ -48,6 +48,13 @@ const allNews = {
     { title: '윤성환 국민의힘 안성 당협위 부위원장, 경기도의원 출마 선언', source: '스마트비즈', url: 'https://www.smartbizn.com/news/articleView.html?idxno=135010', date: '2026-02-05' },
     { title: '안성 6.3 지방선거 30·40대 정치 신인 대거 도전···지역 정치 세대교체 신호탄', source: '스마트에프엔', url: 'https://www.smartfn.co.kr/news/articleView.html?idxno=132134', date: '2026-01-20' },
   ],
+  yjg: [
+    { title: "유지곤 \"낡은 엔진 떼고, 대전 서구 재창업하겠다\"", source: '굿모닝충청', url: 'https://www.goodmorningcc.com/news/articleView.html?idxno=441412', date: '2026-02-23' },
+    { title: '조국혁신당 유지곤, 대전 한민시장서 서구청장 출마 선언', source: '굿모닝충청', url: 'https://www.goodmorningcc.com/news/articleView.html?idxno=441117', date: '2026-02-21' },
+    { title: '유지곤 조국혁신당 위원장, 대전 서구청장 출마 공식화', source: '충청투데이', url: 'https://www.cctoday.co.kr/news/articleView.html?idxno=2226031', date: '2026-02-23' },
+    { title: "조국혁신당 유지곤 \"서구 재창업 엔진 켜겠다\"", source: '금강일보', url: 'https://www.ggilbo.com/news/articleView.html?idxno=1143087', date: '2026-02-21' },
+    { title: "\"정치는 삶의 공학\"…창업가에서 정치인으로, 유지곤의 도전", source: '굿모닝충청', url: 'https://www.goodmorningcc.com/news/articleView.html?idxno=433238', date: '2025-09-01' },
+  ],
 };
 
 async function seedNews() {

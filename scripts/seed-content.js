@@ -131,6 +131,24 @@ const candidateData = {
     ],
   },
 
+  yjg: {
+    pledges: [
+      { icon: 'fas fa-store', title: '서구경제혁신', desc: '소상공인과 자영업자의 목소리를 서구 행정의 최우선 가치로', details: ['시장 상인·소상공인 디지털 전환 지원', '실제 매출이 오르는 행정 실현', '청년 창업 지원 및 스타트업 생태계 구축', '대전 서구 창업 일자리 혁신도시 조성'] },
+      { icon: 'fas fa-hand-holding-heart', title: '서구복지혁신', desc: '복지와 기술이 융합된 따뜻한 서구를 만들겠습니다', details: ['복지·기술 융합 스마트 돌봄 시스템 구축', '어르신·장애인 맞춤형 복지 강화', '아이 키우기 좋은 보육 환경 조성', '취약계층 긴급복지 지원 체계 확대'] },
+      { icon: 'fas fa-cogs', title: '서구행정혁신', desc: '관성적 관리 행정을 끝내고 현장과 데이터로 성과를 만들겠습니다', details: ['데이터 기반 성과 중심 행정 전환', '주민 참여형 예산·정책 결정 확대', '투명한 행정 정보 공개 및 소통 강화', '창업가 정신으로 구정 혁신'] },
+    ],
+    contacts: [
+      { type: 'address', label: '출마 지역', value: '대전광역시 서구 서구청장' },
+      { type: 'instagram', label: '인스타그램', value: '@j_i_g_o_n_y', url: 'https://www.instagram.com/j_i_g_o_n_y/' },
+    ],
+    videos: [
+      { videoId: '1ZzqZZRiPxk', title: '유지곤 창업가 서구청장 기자간담회', desc: '대전 서구청장 출마 비전 발표' },
+      { videoId: 'HU2TdWopbvs', title: '여성 장애인의 정치 - 조국혁신당 유지곤 강연', desc: '조국혁신당 전국장애인위원회 부위원장' },
+      { videoId: 'Qg1T9b54gMA', title: 'CMB 명불허전人 - 유지곤 대표 편', desc: '불꽃연출가에서 창업가로, 유지곤의 이야기' },
+      { videoId: 'zP0EQT0QynU', title: 'KBS 세상의아침 - 대전갑천 불꽃프로포즈', desc: '레전드 불꽃 프로포즈 영상' },
+    ],
+  },
+
   css: {
     pledges: [
       { icon: 'fas fa-rocket', title: '미래산업 관문', desc: '일자리가 넘치는 역동적인 도시', details: ['AI 기반 혁신산업 유치 및 일자리 창출', '자율주행·미래 모빌리티 실증 거점 조성', '청년 창업 지원 및 스타트업 생태계 구축', '소상공인·전통시장 디지털 전환 지원'] },
