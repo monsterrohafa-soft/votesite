@@ -12,6 +12,8 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     loadDynamicHero();
+    loadDynamicEducation();
+    loadDynamicCareer();
     loadDynamicGallery();
     loadDynamicSchedule();
     loadDynamicPledges();
@@ -83,6 +85,79 @@
     try {
       await fetch(`${API}/visit?code=${code}`, { method: 'POST' });
     } catch {}
+  }
+
+  /* 동적 학력 로드 */
+  async function loadDynamicEducation() {
+    const sections = document.querySelectorAll('.timeline-section');
+    let eduSection = null;
+    for (const s of sections) {
+      const title = s.querySelector('.subsection-title');
+      if (title && title.textContent.includes('학력')) { eduSection = s; break; }
+    }
+    if (!eduSection) return;
+
+    const list = eduSection.querySelector('.timeline');
+    if (!list) return;
+
+    const staticHTML = list.innerHTML;
+
+    try {
+      const res = await fetch(`${API}/profile?code=${code}&type=education`);
+      if (!res.ok) throw new Error('API error');
+      const items = await res.json();
+
+      if (!items || items.length === 0) return;
+
+      list.innerHTML = items.map(item => `
+        <li class="timeline-item">
+          <span class="timeline-dot"></span>
+          <div class="timeline-content">
+            <strong>${item.title}</strong>
+          </div>
+        </li>
+      `).join('');
+
+    } catch {
+      list.innerHTML = staticHTML;
+    }
+  }
+
+  /* 동적 경력 로드 */
+  async function loadDynamicCareer() {
+    const sections = document.querySelectorAll('.timeline-section');
+    let careerSection = null;
+    for (const s of sections) {
+      const title = s.querySelector('.subsection-title');
+      if (title && title.textContent.includes('경력')) { careerSection = s; break; }
+    }
+    if (!careerSection) return;
+
+    const list = careerSection.querySelector('.timeline');
+    if (!list) return;
+
+    const staticHTML = list.innerHTML;
+
+    try {
+      const res = await fetch(`${API}/profile?code=${code}&type=career`);
+      if (!res.ok) throw new Error('API error');
+      const items = await res.json();
+
+      if (!items || items.length === 0) return;
+
+      list.innerHTML = items.map(item => `
+        <li class="timeline-item${item.isCurrent ? ' current' : ''}">
+          <span class="timeline-dot"></span>
+          <div class="timeline-content">
+            <strong>${item.title}</strong>
+            ${item.isCurrent ? '<span class="badge">현재</span>' : ''}
+          </div>
+        </li>
+      `).join('');
+
+    } catch {
+      list.innerHTML = staticHTML;
+    }
   }
 
   /* 동적 갤러리 로드 */

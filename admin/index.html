@@ -162,6 +162,18 @@
     .news-card-admin { display: flex; align-items: center; justify-content: space-between; padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; }
     .news-card-admin .news-info { display: flex; align-items: center; flex: 1; min-width: 0; }
     .news-card-admin .news-actions { display: flex; gap: 4px; flex-shrink: 0; }
+
+    /* 프로필(학력/경력) 관리 */
+    .profile-section { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .profile-section h3 { font-size: 15px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .profile-list { display: flex; flex-direction: column; gap: 8px; }
+    .profile-item { display: flex; justify-content: space-between; align-items: center; background: #f8f8f8; border-radius: 10px; padding: 14px 16px; }
+    .profile-item .item-info { flex: 1; }
+    .profile-item .item-title { font-size: 14px; font-weight: 600; }
+    .profile-item .badge-current { display: inline-block; background: #1a1a1a; color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
+    .profile-item .item-actions { display: flex; gap: 6px; }
+    .profile-form { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .profile-form h3 { font-size: 15px; margin-bottom: 16px; }
   </style>
 </head>
 <body>
@@ -196,6 +208,7 @@
 
   <div class="tabs">
     <button class="tab-btn active" data-tab="stats" onclick="switchTab('stats')">통계</button>
+    <button class="tab-btn" data-tab="profile" onclick="switchTab('profile')">프로필</button>
     <button class="tab-btn" data-tab="hero" onclick="switchTab('hero')">메인이미지</button>
     <button class="tab-btn" data-tab="gallery" onclick="switchTab('gallery')">사진</button>
     <button class="tab-btn" data-tab="schedule" onclick="switchTab('schedule')">일정</button>
@@ -221,6 +234,57 @@
     <div class="stat-chart">
       <h3>최근 7일 방문자</h3>
       <div class="chart-bars" id="chartBars"></div>
+    </div>
+  </div>
+
+  <!-- 프로필 탭 -->
+  <div class="tab-content" id="tab-profile">
+    <!-- 학력 섹션 -->
+    <div class="profile-section">
+      <h3>🎓 학력</h3>
+      <div id="eduList" class="profile-list"></div>
+      <button class="btn-sm btn-add" id="eduAddBtn" onclick="showEduForm()" style="margin-top:12px;">+ 학력 추가</button>
+      <div class="profile-form" id="eduFormWrap" style="display:none;margin-top:16px;">
+        <h3 id="eduFormTitle">학력 추가</h3>
+        <input type="hidden" id="eduEditId">
+        <div class="form-row full">
+          <div class="form-group">
+            <label>학력 내용</label>
+            <input type="text" id="eduTitle" placeholder="예: 서울대학교 외교학과">
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-sm btn-add" id="eduSubmitBtn" onclick="submitEducation()">학력 추가</button>
+          <button class="btn-sm" onclick="cancelEduEdit()" style="background:#ddd;">취소</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 경력 섹션 -->
+    <div class="profile-section">
+      <h3>💼 경력</h3>
+      <div id="careerList" class="profile-list"></div>
+      <button class="btn-sm btn-add" id="careerAddBtn" onclick="showCareerForm()" style="margin-top:12px;">+ 경력 추가</button>
+      <div class="profile-form" id="careerFormWrap" style="display:none;margin-top:16px;">
+        <h3 id="careerFormTitle">경력 추가</h3>
+        <input type="hidden" id="careerEditId">
+        <div class="form-row full">
+          <div class="form-group">
+            <label>경력 내용</label>
+            <input type="text" id="careerTitle" placeholder="예: 행정안전부 지방행정정책관">
+          </div>
+        </div>
+        <div class="form-row full">
+          <div class="form-group" style="display:flex;align-items:center;gap:8px;">
+            <input type="checkbox" id="careerIsCurrent" style="width:auto;">
+            <label for="careerIsCurrent" style="margin:0;font-size:14px;">현재 직책</label>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-sm btn-add" id="careerSubmitBtn" onclick="submitCareer()">경력 추가</button>
+          <button class="btn-sm" onclick="cancelCareerEdit()" style="background:#ddd;">취소</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -539,6 +603,8 @@ async function doLogin() {
     document.getElementById('loginView').style.display = 'none';
     document.getElementById('dashView').style.display = 'block';
     loadStats();
+    loadEducation();
+    loadCareer();
     loadHero();
     loadGallery();
     loadSchedule();
@@ -590,6 +656,189 @@ async function loadStats() {
       `;
     }).join('');
   } catch {}
+}
+
+// ========== 학력 관리 ==========
+async function loadEducation() {
+  const container = document.getElementById('eduList');
+  container.innerHTML = '<div class="loading">불러오는 중...</div>';
+  try {
+    const res = await fetch(`${API}/profile?code=${code}&type=education`);
+    const items = await res.json();
+    if (!items.length) {
+      container.innerHTML = '<div class="empty-state">등록된 학력이 없습니다</div>';
+      return;
+    }
+    container.innerHTML = items.map(item => `
+      <div class="profile-item">
+        <div class="item-info">
+          <div class="item-title">${item.title}</div>
+        </div>
+        <div class="item-actions">
+          <button class="btn-edit" onclick="editEducation('${item.id}')" title="수정">✏️</button>
+          <button class="btn-delete" onclick="deleteEducation('${item.id}')" title="삭제">&times;</button>
+        </div>
+      </div>
+    `).join('');
+  } catch { container.innerHTML = '<div class="empty-state">불러오기 실패</div>'; }
+}
+
+function showEduForm() {
+  cancelEduEdit();
+  document.getElementById('eduFormWrap').style.display = '';
+  document.getElementById('eduAddBtn').style.display = 'none';
+  document.getElementById('eduFormWrap').scrollIntoView({ behavior: 'smooth' });
+}
+
+async function submitEducation() {
+  const title = document.getElementById('eduTitle').value.trim();
+  if (!title) { showToast('학력 내용을 입력하세요'); return; }
+
+  const editId = document.getElementById('eduEditId').value;
+  const method = editId ? 'PUT' : 'POST';
+  const body = editId ? { id: editId, title } : { title };
+
+  try {
+    const res = await fetch(`${API}/profile?type=education`, {
+      method,
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify(body),
+    });
+    if (res.ok) {
+      showToast(editId ? '학력 수정 완료' : '학력 추가 완료');
+      cancelEduEdit();
+      loadEducation();
+    }
+  } catch { showToast('저장 실패'); }
+}
+
+async function editEducation(id) {
+  try {
+    const res = await fetch(`${API}/profile?code=${code}&type=education`);
+    const items = await res.json();
+    const item = items.find(e => e.id === id);
+    if (!item) return;
+    document.getElementById('eduEditId').value = id;
+    document.getElementById('eduTitle').value = item.title || '';
+    document.getElementById('eduFormTitle').textContent = '학력 수정';
+    document.getElementById('eduSubmitBtn').textContent = '수정 저장';
+    document.getElementById('eduFormWrap').style.display = '';
+    document.getElementById('eduAddBtn').style.display = 'none';
+    document.getElementById('eduFormWrap').scrollIntoView({ behavior: 'smooth' });
+  } catch {}
+}
+
+function cancelEduEdit() {
+  document.getElementById('eduEditId').value = '';
+  document.getElementById('eduTitle').value = '';
+  document.getElementById('eduFormTitle').textContent = '학력 추가';
+  document.getElementById('eduSubmitBtn').textContent = '학력 추가';
+  document.getElementById('eduFormWrap').style.display = 'none';
+  document.getElementById('eduAddBtn').style.display = '';
+}
+
+async function deleteEducation(id) {
+  if (!confirm('이 학력을 삭제하시겠습니까?')) return;
+  try {
+    const res = await fetch(`${API}/profile?type=education&id=${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    if (res.ok) { showToast('삭제 완료'); loadEducation(); }
+  } catch { showToast('삭제 실패'); }
+}
+
+// ========== 경력 관리 ==========
+async function loadCareer() {
+  const container = document.getElementById('careerList');
+  container.innerHTML = '<div class="loading">불러오는 중...</div>';
+  try {
+    const res = await fetch(`${API}/profile?code=${code}&type=career`);
+    const items = await res.json();
+    if (!items.length) {
+      container.innerHTML = '<div class="empty-state">등록된 경력이 없습니다</div>';
+      return;
+    }
+    container.innerHTML = items.map(item => `
+      <div class="profile-item">
+        <div class="item-info">
+          <div class="item-title">${item.title}${item.isCurrent ? '<span class="badge-current">현재</span>' : ''}</div>
+        </div>
+        <div class="item-actions">
+          <button class="btn-edit" onclick="editCareer('${item.id}')" title="수정">✏️</button>
+          <button class="btn-delete" onclick="deleteCareer('${item.id}')" title="삭제">&times;</button>
+        </div>
+      </div>
+    `).join('');
+  } catch { container.innerHTML = '<div class="empty-state">불러오기 실패</div>'; }
+}
+
+function showCareerForm() {
+  cancelCareerEdit();
+  document.getElementById('careerFormWrap').style.display = '';
+  document.getElementById('careerAddBtn').style.display = 'none';
+  document.getElementById('careerFormWrap').scrollIntoView({ behavior: 'smooth' });
+}
+
+async function submitCareer() {
+  const title = document.getElementById('careerTitle').value.trim();
+  if (!title) { showToast('경력 내용을 입력하세요'); return; }
+  const isCurrent = document.getElementById('careerIsCurrent').checked;
+
+  const editId = document.getElementById('careerEditId').value;
+  const method = editId ? 'PUT' : 'POST';
+  const body = editId ? { id: editId, title, isCurrent } : { title, isCurrent };
+
+  try {
+    const res = await fetch(`${API}/profile?type=career`, {
+      method,
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify(body),
+    });
+    if (res.ok) {
+      showToast(editId ? '경력 수정 완료' : '경력 추가 완료');
+      cancelCareerEdit();
+      loadCareer();
+    }
+  } catch { showToast('저장 실패'); }
+}
+
+async function editCareer(id) {
+  try {
+    const res = await fetch(`${API}/profile?code=${code}&type=career`);
+    const items = await res.json();
+    const item = items.find(c => c.id === id);
+    if (!item) return;
+    document.getElementById('careerEditId').value = id;
+    document.getElementById('careerTitle').value = item.title || '';
+    document.getElementById('careerIsCurrent').checked = !!item.isCurrent;
+    document.getElementById('careerFormTitle').textContent = '경력 수정';
+    document.getElementById('careerSubmitBtn').textContent = '수정 저장';
+    document.getElementById('careerFormWrap').style.display = '';
+    document.getElementById('careerAddBtn').style.display = 'none';
+    document.getElementById('careerFormWrap').scrollIntoView({ behavior: 'smooth' });
+  } catch {}
+}
+
+function cancelCareerEdit() {
+  document.getElementById('careerEditId').value = '';
+  document.getElementById('careerTitle').value = '';
+  document.getElementById('careerIsCurrent').checked = false;
+  document.getElementById('careerFormTitle').textContent = '경력 추가';
+  document.getElementById('careerSubmitBtn').textContent = '경력 추가';
+  document.getElementById('careerFormWrap').style.display = 'none';
+  document.getElementById('careerAddBtn').style.display = '';
+}
+
+async function deleteCareer(id) {
+  if (!confirm('이 경력을 삭제하시겠습니까?')) return;
+  try {
+    const res = await fetch(`${API}/profile?type=career&id=${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    if (res.ok) { showToast('삭제 완료'); loadCareer(); }
+  } catch { showToast('삭제 실패'); }
 }
 
 // ========== 메인이미지 관리 ==========

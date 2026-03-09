@@ -235,6 +235,149 @@ const candidateData = {
   },
 };
 
+// 학력/경력 데이터 (프로필 탭용)
+const allEducation = {
+  lsh: [
+    { title: '양정초등학교' },
+    { title: '동의중학교' },
+    { title: '양정고등학교' },
+    { title: '국립부경대학교' },
+  ],
+  njh: [
+    { title: '동명초등학교' },
+    { title: '연산중학교' },
+    { title: '양정고등학교' },
+    { title: '부산대학교 경영학과' },
+  ],
+  jdm: [
+    { title: '장안중학교' },
+    { title: '부산대학교사범대학부설고등학교' },
+    { title: '대구대학교 산업복지학과' },
+    { title: '부산대학교 경영대학원 경영학 석사' },
+  ],
+  lhs: [
+    { title: '개금국민학교' },
+    { title: '부산개성중학교' },
+    { title: '금성고등학교' },
+    { title: '고려대학교 사회학과' },
+    { title: '노스웨스턴대학교 대학원 사회학 석사' },
+    { title: '조지워싱턴대학교 대학원 정치관리학 석사' },
+    { title: '한국해양대학교 대학원 무역학 박사과정 수료' },
+  ],
+  css: [
+    { title: '국제고등학교' },
+    { title: '조선대학교 경제학과' },
+  ],
+  ysh: [],
+  yjg: [
+    { title: '대전도마초등학교 · 대전도마중학교' },
+    { title: '대전공업고등학교' },
+    { title: '한양대학교 공과대학 응용시스템학 공학사' },
+    { title: 'KAIST 문술미래전략대학원 석사과정' },
+  ],
+  jws: [
+    { title: '부산 수성초등학교 · 초량중학교' },
+    { title: '동아고등학교' },
+    { title: '부경대학교 경제학사' },
+    { title: '부경대학교 국제대학원 정치학 석사' },
+    { title: '동아대학교 국제전문대학원 국제학 박사' },
+  ],
+  jhh: [
+    { title: '충렬국민학교 · 통영여중 · 데레사여고' },
+    { title: '서울대학교 치과대학' },
+    { title: '고려대학교 법무대학원' },
+  ],
+  ssw: [
+    { title: '북이초 · 내수중 · 청주 세광고' },
+    { title: '서울대학교 외교학과' },
+    { title: '서울대학교 행정대학원 (석사)' },
+    { title: 'KDI 국제정책대학원 (석사)' },
+    { title: '행정고시 합격 (37회)' },
+  ],
+};
+
+const allCareer = {
+  lsh: [
+    { title: '제17대 국회의원 비서관' },
+    { title: '문재인정부 대통령비서실 행정관' },
+    { title: '부산광역시 정무보좌관' },
+    { title: '제21대 대선 부산선대위 전략기획본부장' },
+    { title: '제22대 부산진구(을) 국회의원선거 예비후보' },
+    { title: '더불어민주당 정책위원회 부의장', isCurrent: true },
+  ],
+  njh: [
+    { title: '부산대학교 등록금 인하 투쟁' },
+    { title: '제6대 부산 연제구의회 의원' },
+    { title: '제7대 부산 연제구의회 의원' },
+    { title: '제22대 총선 부산 연제 야권단일후보' },
+    { title: '진보당 부산시당위원장', isCurrent: true },
+  ],
+  jdm: [
+    { title: '부산기장 청년회의소 회장' },
+    { title: '제6대 기장군의회 의원' },
+    { title: '제7대 부산광역시의회 의원' },
+    { title: '제21대 국회의원' },
+    { title: '국민의힘 부산시당 위원장' },
+    { title: '제22대 국회의원(부산 기장군)', isCurrent: true },
+  ],
+  lhs: [
+    { title: '대한민국 육군 카투사 병장 만기전역' },
+    { title: '건국대학교 겸임교수' },
+    { title: '부산광역시청 대외협력보좌관' },
+    { title: '제19대 국회의원' },
+    { title: '새누리당 부산시당 위원장' },
+    { title: '제21대 국회 국토교통위원회 위원장' },
+    { title: '제21대 국회 국방위원회 위원장' },
+    { title: '대통령직인수위 부산엑스포유치TF 팀장' },
+    { title: '제22대 국회의원 (4선)', isCurrent: true },
+  ],
+  css: [
+    { title: '광주 광산구청 비서실장' },
+    { title: '광주광역시 정무특별보좌관' },
+    { title: '국회의원 조오섭 보좌관' },
+    { title: '사람사는세상 노무현재단 광주시민학교장' },
+    { title: '제21대 대선 중앙선대위 조직팀장' },
+    { title: '더불어민주당 중앙당 부대변인' },
+    { title: '더불어민주당 당대표 정무특보', isCurrent: true },
+  ],
+  ysh: [
+    { title: '국민의힘 안성시 당협위 부위원장', isCurrent: true },
+  ],
+  yjg: [
+    { title: '유지곤폭죽연구소 창업' },
+    { title: '대한민국 대표 불꽃축제 연출' },
+    { title: '방송 50여회 출연' },
+    { title: '와디즈 크라우드펀딩 베스트메이커' },
+    { title: '카이로보틱스 창업' },
+    { title: '조국혁신당 대전 서구 지역위원장', isCurrent: true },
+  ],
+  jws: [
+    { title: '최인호 국회의원 보좌관' },
+    { title: '부산 사하구의원 (6대·7대 재선)' },
+    { title: '사하구의회 의장' },
+    { title: '국립한국해양대학교 · 동아대학교 겸임교수' },
+    { title: '더불어민주당 중앙당 사회적경제위원회 부위원장' },
+    { title: '부산광역시의원 (사하구2)', isCurrent: true },
+  ],
+  jhh: [
+    { title: '치과의사 · 제38회 사법시험 합격' },
+    { title: '제18대 국회의원 (비례대표)' },
+    { title: '제20대 국회의원 (강남 을)' },
+    { title: '국민권익위원회 위원장' },
+    { title: '더불어민주당 최고위원' },
+    { title: '제22대 국회의원 (중구·성동구 갑)', isCurrent: true },
+  ],
+  ssw: [
+    { title: '주 호주시드니 총영사관 부총영사' },
+    { title: '대통령 행정자치비서관실 선임행정관' },
+    { title: '행정안전부 지방행정정책관' },
+    { title: '대통령 정무수석실 자치행정비서관' },
+    { title: '충청북도 행정부지사' },
+    { title: '충청북도당 위원장' },
+    { title: '청주시 상당구 당협위원장 · 국민의힘 지방자치위원장', isCurrent: true },
+  ],
+};
+
 async function seedContent() {
   console.log('🌱 기존 컨텐츠 시딩 시작...\n');
 
@@ -269,7 +412,31 @@ async function seedContent() {
     console.log('');
   }
 
-  console.log('🎉 컨텐츠 시딩 완료!');
+  // 학력/경력 시딩
+  console.log('📚 학력/경력 시딩...\n');
+  for (const [code, items] of Object.entries(allEducation)) {
+    if (!items.length) { console.log(`  ⏭️  ${code}: 학력 데이터 없음`); continue; }
+    const existing = await redis.get(`${code}:education`);
+    if (existing && existing.length > 0) {
+      console.log(`  ⏭️  ${code}: 학력 이미 존재 (${existing.length}개) - 스킵`);
+    } else {
+      await redis.set(`${code}:education`, buildItems(items));
+      console.log(`  ✅ ${code}: 학력 ${items.length}개 시딩`);
+    }
+  }
+  console.log('');
+  for (const [code, items] of Object.entries(allCareer)) {
+    if (!items.length) { console.log(`  ⏭️  ${code}: 경력 데이터 없음`); continue; }
+    const existing = await redis.get(`${code}:career`);
+    if (existing && existing.length > 0) {
+      console.log(`  ⏭️  ${code}: 경력 이미 존재 (${existing.length}개) - 스킵`);
+    } else {
+      await redis.set(`${code}:career`, buildItems(items));
+      console.log(`  ✅ ${code}: 경력 ${items.length}개 시딩`);
+    }
+  }
+
+  console.log('\n🎉 컨텐츠 시딩 완료!');
 }
 
 seedContent().catch(console.error);
