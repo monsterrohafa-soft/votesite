@@ -28,6 +28,7 @@ const candidates = [
   { code: 'yjg', name: '유지곤', party: '조국혁신당', password: '1234' },
   { code: 'jws', name: '전원석', party: '더불어민주당', password: '1234' },
   { code: 'jhh', name: '전현희', party: '더불어민주당', password: '1234' },
+  { code: 'ssw', name: '서승우', party: '국민의힘', password: '1234' },
 ];
 
 async function seed() {

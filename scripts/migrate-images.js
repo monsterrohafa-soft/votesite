@@ -15,7 +15,7 @@ const redis = new Redis({
   token: process.env.KV_REST_API_TOKEN,
 });
 
-const candidates = ['lsh', 'njh', 'jdm', 'lhs', 'css', 'ysh', 'yjg', 'jws', 'jhh'];
+const candidates = ['lsh', 'njh', 'jdm', 'lhs', 'css', 'ysh', 'yjg', 'jws', 'jhh', 'ssw'];
 const PROJECT_ROOT = new URL('..', import.meta.url).pathname;
 
 // 후보별 사진 메타데이터 (category + alt)
@@ -92,6 +92,18 @@ const photoMeta = {
     { alt: '싱크홀 방지 간담회', category: 'event' },
     { alt: '시의회 회의 전경', category: 'activity' },
     { alt: '퐁피두 분관 철회 기자회견', category: 'activity' },
+  ],
+  ssw: [
+    { alt: '서승우 KBS 뉴스 보도', category: 'media' },
+    { alt: '서승우 당협위원장 인터뷰', category: 'activity' },
+    { alt: '서승우 대통령실 자치행정비서관', category: 'campaign' },
+    { alt: '서승우 충북도 행정부지사 업무', category: 'activity' },
+    { alt: '서승우 행정부지사 취임', category: 'activity' },
+    { alt: '서승우 충북도당위원장 선출', category: 'event' },
+    { alt: '서승우 청주시장 출마 선언', category: 'campaign' },
+    { alt: '서승우 출마 기자회견', category: 'campaign' },
+    { alt: '서승우 출마선언 CBMTV', category: 'campaign' },
+    { alt: '서승우 청주특례시 공약 발표', category: 'media' },
   ],
   jhh: [
     { alt: '국회 의정활동', category: 'activity' },

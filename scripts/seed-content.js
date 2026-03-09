@@ -190,6 +190,26 @@ const candidateData = {
     ],
   },
 
+  ssw: {
+    pledges: [
+      { icon: 'fas fa-city', title: '청주특별시 추진', desc: '인구 88만 청주의 위상에 맞는 특례시 지정을 추진합니다', details: ['비수도권 특례시 기준 완화 추진', '청주·청원 통합 효과 극대화', '자치분권 역량 강화'] },
+      { icon: 'fas fa-users', title: '100만 광역시 실현', desc: '청주·세종·증평을 연결한 100만 생활 광역시를 만들겠습니다', details: ['청주-세종-증평 일일 생활권 구축', '충청메가시티 거점도시 역할', '광역 교통 인프라 연결'] },
+      { icon: 'fas fa-microchip', title: 'AI 스마트시티 조성', desc: '인공지능 기반의 미래형 스마트 도시를 구현합니다', details: ['AI 기반 스마트 행정 시스템', '디지털 시민 서비스 플랫폼', '첨단 ICT 산업 육성'] },
+      { icon: 'fas fa-plane-departure', title: '교통·물류 국제 허브', desc: '청주공항·오송역·GTX를 연결하는 교통 허브를 만듭니다', details: ['청주국제공항 활성화', '오송역 KTX 연계 교통망', '충청권 광역급행철도(GTX) 추진'] },
+      { icon: 'fas fa-water', title: '수변 감성 도시', desc: '미호강·무심천 중심의 수변 감성 도시를 조성합니다', details: ['사직동 센트럴파크 조성', '미호강·무심천 수변 공간 정비', '시민 여가·문화 공간 확충'] },
+    ],
+    contacts: [
+      { type: 'address', label: '출마 지역', value: '충북 청주시장' },
+      { type: 'landmark', label: '소속', value: '국민의힘 충북도당위원장' },
+    ],
+    videos: [
+      { videoId: 'juTxJKmQ5tg', title: '서승우 청주시장 출마 선언', desc: '청주시장 출마 선언 보도' },
+      { videoId: '-OA99ceWyjw', title: '서승우 전 충북도당위원장 청주시장 출마 기자회견', desc: '출마 기자회견 전문' },
+      { videoId: 'HBoOqqlkIO0', title: '제1호 공약 "청주 특례시" 추진 발표', desc: '핵심 공약 발표' },
+      { videoId: 'EXEqh0IK2mk', title: "서승우, '내일이 더 기대되는 청주' 출마선언", desc: 'CBMTV 보도' },
+    ],
+  },
+
   css: {
     pledges: [
       { icon: 'fas fa-rocket', title: '미래산업 관문', desc: '일자리가 넘치는 역동적인 도시', details: ['AI 기반 혁신산업 유치 및 일자리 창출', '자율주행·미래 모빌리티 실증 거점 조성', '청년 창업 지원 및 스타트업 생태계 구축', '소상공인·전통시장 디지털 전환 지원'] },
