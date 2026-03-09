@@ -199,8 +199,10 @@ const candidateData = {
       { icon: 'fas fa-water', title: '수변 감성 도시', desc: '미호강·무심천 중심의 수변 감성 도시를 조성합니다', details: ['사직동 센트럴파크 조성', '미호강·무심천 수변 공간 정비', '시민 여가·문화 공간 확충'] },
     ],
     contacts: [
+      { type: 'phone', label: '전화', value: '010-3466-1660', url: 'tel:010-3466-1660' },
+      { type: 'instagram', label: '인스타그램', value: '@seungwoocityboy', url: 'https://www.instagram.com/seungwoocityboy' },
+      { type: 'facebook', label: '페이스북', value: '서승우', url: 'https://www.facebook.com/seoseung.u.904831' },
       { type: 'address', label: '출마 지역', value: '충북 청주시장' },
-      { type: 'landmark', label: '소속', value: '국민의힘 충북도당위원장' },
     ],
     videos: [
       { videoId: 'juTxJKmQ5tg', title: '서승우 청주시장 출마 선언', desc: '청주시장 출마 선언 보도' },
