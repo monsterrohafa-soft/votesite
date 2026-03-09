@@ -239,6 +239,24 @@
 
   <!-- 프로필 탭 -->
   <div class="tab-content" id="tab-profile">
+    <!-- 소개글 섹션 -->
+    <div class="profile-section">
+      <h3>📝 소개글</h3>
+      <div class="form-row full">
+        <div class="form-group">
+          <label>부제목</label>
+          <input type="text" id="introSubtitle" placeholder="예: 중앙과 지방을 아우르는 행정 전문가">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label>소개 문구 (줄바꿈 가능)</label>
+          <textarea id="introText" rows="4" style="width:100%;padding:12px 14px;border:1px solid #ddd;border-radius:10px;font-size:14px;outline:none;resize:vertical;font-family:inherit;" placeholder="예: 청주에서 나고 자라며 이 도시의 가능성을 누구보다 잘 압니다."></textarea>
+        </div>
+      </div>
+      <button class="btn-sm btn-add" onclick="saveIntro()">소개글 저장</button>
+    </div>
+
     <!-- 학력 섹션 -->
     <div class="profile-section">
       <h3>🎓 학력</h3>
@@ -603,6 +621,7 @@ async function doLogin() {
     document.getElementById('loginView').style.display = 'none';
     document.getElementById('dashView').style.display = 'block';
     loadStats();
+    loadIntro();
     loadEducation();
     loadCareer();
     loadHero();
@@ -656,6 +675,29 @@ async function loadStats() {
       `;
     }).join('');
   } catch {}
+}
+
+// ========== 소개글 관리 ==========
+async function loadIntro() {
+  try {
+    const res = await fetch(`${API}/profile?code=${code}&type=intro`);
+    const data = await res.json();
+    document.getElementById('introSubtitle').value = data.subtitle || '';
+    document.getElementById('introText').value = data.text || '';
+  } catch {}
+}
+
+async function saveIntro() {
+  const subtitle = document.getElementById('introSubtitle').value.trim();
+  const text = document.getElementById('introText').value.trim();
+  try {
+    const res = await fetch(`${API}/profile?type=intro`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ subtitle, text }),
+    });
+    if (res.ok) showToast('소개글 저장 완료');
+  } catch { showToast('저장 실패'); }
 }
 
 // ========== 학력 관리 ==========

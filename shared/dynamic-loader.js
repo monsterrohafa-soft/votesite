@@ -12,6 +12,7 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     loadDynamicHero();
+    loadDynamicIntro();
     loadDynamicEducation();
     loadDynamicCareer();
     loadDynamicGallery();
@@ -85,6 +86,36 @@
     try {
       await fetch(`${API}/visit?code=${code}`, { method: 'POST' });
     } catch {}
+  }
+
+  /* 동적 소개글 로드 */
+  async function loadDynamicIntro() {
+    const aboutSection = document.getElementById('about');
+    if (!aboutSection) return;
+
+    const sectionTitle = aboutSection.querySelector('.section-title');
+    const introText = aboutSection.querySelector('.intro-text');
+
+    try {
+      const res = await fetch(`${API}/profile?code=${code}&type=intro`);
+      if (!res.ok) throw new Error('API error');
+      const data = await res.json();
+
+      if (!data || (!data.subtitle && !data.text)) return;
+
+      if (data.subtitle && sectionTitle) {
+        const accent = sectionTitle.querySelector('.title-accent');
+        const accentHTML = accent ? accent.outerHTML : '';
+        sectionTitle.innerHTML = accentHTML + '\n        ' + data.subtitle;
+      }
+
+      if (data.text && introText) {
+        introText.innerHTML = '\u201C' + data.text.replace(/\n/g, '<br>') + '\u201D';
+      }
+
+    } catch {
+      // 데이터 없으면 기존 정적 HTML 유지
+    }
   }
 
   /* 동적 학력 로드 */

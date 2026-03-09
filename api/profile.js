@@ -20,7 +20,7 @@ function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 }
 
-const VALID_TYPES = ['education', 'career'];
+const VALID_TYPES = ['education', 'career', 'intro'];
 
 export default async function handler(req, res) {
   if (req.method === 'OPTIONS') {
@@ -29,7 +29,26 @@ export default async function handler(req, res) {
 
   const { type } = req.query;
   if (!type || !VALID_TYPES.includes(type)) {
-    return res.status(400).json({ error: 'type 파라미터 필요 (education 또는 career)' });
+    return res.status(400).json({ error: 'type 파라미터 필요 (education, career, intro)' });
+  }
+
+  // intro: 단일 객체 (GET/POST만 지원)
+  if (type === 'intro') {
+    if (req.method === 'GET') {
+      const { code } = req.query;
+      if (!code) return res.status(400).json({ error: 'code 파라미터 필요' });
+      const data = await redis.get(`${code}:intro`) || {};
+      return res.status(200).json(data);
+    }
+    if (req.method === 'POST') {
+      const user = verifyToken(req);
+      if (!user) return res.status(401).json({ error: '인증 필요' });
+      const { subtitle, text } = req.body;
+      const data = { subtitle: subtitle || '', text: text || '', updatedAt: new Date().toISOString() };
+      await redis.set(`${user.code}:intro`, data);
+      return res.status(200).json(data);
+    }
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
   // GET: 학력/경력 목록 (인증 불필요)

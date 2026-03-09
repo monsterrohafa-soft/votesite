@@ -235,6 +235,20 @@ const candidateData = {
   },
 };
 
+// 소개글 데이터 (프로필 탭용)
+const allIntro = {
+  lsh: { subtitle: '45년 부산진구 토박이', text: '모든 구민이 삶의 기본을 보장받고, 행정이 생활 속에서 작동하는 도시를 만들겠습니다.' },
+  njh: { subtitle: '부산의 진보를 이끌다', text: '' },
+  jdm: { subtitle: '기장 토박이, 재선 국회의원', text: '기장군의회, 부산시의회, 국회까지 오직 기장군민만을 위해 뛰어온 일꾼입니다.' },
+  lhs: { subtitle: '개금동 토박이, 4선 국회의원', text: '부산진구 개금동에서 태어나 오직 부산진구민만을 위해 뛰어온 4선 국회의원입니다.' },
+  css: { subtitle: '보통 사람을 위한 특별한 정치', text: '민주주의의 최후의 보루는 깨어 있고 조직된 시민의 힘입니다.' },
+  ysh: { subtitle: '동안성 토박이, 규제 돌파의 선봉장', text: '안성에서 배우고 활동하며 시민과 함께 지역의 문제를 풀어왔습니다.\n교통과 산업의 변화가 시민 한 사람 한 사람의 삶의 변화로 이어지도록 책임지는 도의원이 되겠습니다.' },
+  yjg: { subtitle: '창업가에서 정치인으로, 서구의 새 엔진', text: '스무 살에 불꽃을 쏘아 올리며 꿈을 시작했고, 서른셋에 다시 대학에 들어가 공학을 배웠습니다.\n이제 그 도전의 경험으로 멈춰버린 서구의 엔진을 바꾸겠습니다.' },
+  jws: { subtitle: '을숙도 장비, 사하구의 겸손한 일꾼', text: '구의원에서 시의원까지, 사하구 현장을 지켜온 10년의 경험으로 구민의 삶을 바꾸겠습니다.\n겸손하게, 그러나 단단하게 사하구의 새 시대를 열겠습니다.' },
+  jhh: { subtitle: '치과의사에서 국회의원까지, 도전의 정치인', text: '치과의사에서 변호사로, 국회의원에서 권익위원장까지. 어떤 자리에서든 시민의 편에 섰습니다.\n이제 서울시장으로, 시민이 다시 주인되는 서울을 만들겠습니다.' },
+  ssw: { subtitle: '중앙과 지방을 아우르는 행정 전문가', text: '청주에서 나고 자라며 이 도시의 가능성을 누구보다 잘 압니다.\n중앙과 지방정부 핵심 요직에서 쌓은 실전 경험으로\n인구 88만 청주를 다시 뛰게 하겠습니다.\n성과로 증명하는 행정가, 서승우입니다.' },
+};
+
 // 학력/경력 데이터 (프로필 탭용)
 const allEducation = {
   lsh: [
@@ -413,7 +427,19 @@ async function seedContent() {
   }
 
   // 학력/경력 시딩
-  console.log('📚 학력/경력 시딩...\n');
+  // 소개글 시딩
+  console.log('📝 소개글 시딩...\n');
+  for (const [code, data] of Object.entries(allIntro)) {
+    const existing = await redis.get(`${code}:intro`);
+    if (existing && (existing.subtitle || existing.text)) {
+      console.log(`  ⏭️  ${code}: 소개글 이미 존재 - 스킵`);
+    } else {
+      await redis.set(`${code}:intro`, { ...data, updatedAt: new Date().toISOString() });
+      console.log(`  ✅ ${code}: 소개글 시딩`);
+    }
+  }
+
+  console.log('\n📚 학력/경력 시딩...\n');
   for (const [code, items] of Object.entries(allEducation)) {
     if (!items.length) { console.log(`  ⏭️  ${code}: 학력 데이터 없음`); continue; }
     const existing = await redis.get(`${code}:education`);
