@@ -84,38 +84,15 @@ export default async function handler(req, res) {
     return res.status(200).json(newItem);
   }
 
-  // PUT: 수정 또는 순서 변경 (인증 필요)
+  // PUT: 수정 (인증 필요)
   if (req.method === 'PUT') {
     const user = verifyToken(req);
     if (!user) return res.status(401).json({ error: '인증 필요' });
 
-    const { id, title, isCurrent, direction } = req.body;
+    const { id, title, isCurrent } = req.body;
     if (!id) return res.status(400).json({ error: 'id 필수' });
 
     const items = await redis.get(`${user.code}:${type}`) || [];
-
-    // 순서 변경 (direction: 'up' | 'down')
-    if (direction) {
-      items.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-      const idx = items.findIndex(p => p.id === id);
-      if (idx === -1) return res.status(404).json({ error: '항목을 찾을 수 없습니다' });
-
-      const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
-      if (swapIdx < 0 || swapIdx >= items.length) {
-        return res.status(200).json(items); // 이동 불가, 현재 상태 반환
-      }
-
-      // order 값 스왑
-      const tmpOrder = items[idx].order;
-      items[idx].order = items[swapIdx].order;
-      items[swapIdx].order = tmpOrder;
-
-      await redis.set(`${user.code}:${type}`, items);
-      items.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-      return res.status(200).json(items);
-    }
-
-    // 일반 수정
     const idx = items.findIndex(p => p.id === id);
     if (idx === -1) return res.status(404).json({ error: '항목을 찾을 수 없습니다' });
 
@@ -124,6 +101,25 @@ export default async function handler(req, res) {
 
     await redis.set(`${user.code}:${type}`, items);
     return res.status(200).json(items[idx]);
+  }
+
+  // PATCH: 일괄 순서 변경 (인증 필요)
+  if (req.method === 'PATCH') {
+    const user = verifyToken(req);
+    if (!user) return res.status(401).json({ error: '인증 필요' });
+
+    const { ids } = req.body;
+    if (!Array.isArray(ids)) return res.status(400).json({ error: 'ids 배열 필수' });
+
+    const items = await redis.get(`${user.code}:${type}`) || [];
+    ids.forEach((id, i) => {
+      const item = items.find(p => p.id === id);
+      if (item) item.order = i;
+    });
+
+    await redis.set(`${user.code}:${type}`, items);
+    items.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    return res.status(200).json(items);
   }
 
   // DELETE: 삭제 (인증 필요)

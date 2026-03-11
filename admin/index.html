@@ -172,10 +172,10 @@
     .profile-item .item-title { font-size: 14px; font-weight: 600; }
     .profile-item .badge-current { display: inline-block; background: #1a1a1a; color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
     .profile-item .item-actions { display: flex; gap: 6px; }
-    .profile-item .item-order-btns { display: flex; flex-direction: column; gap: 2px; margin-right: 10px; }
-    .btn-order { width: 24px; height: 18px; border: 1px solid #ddd; border-radius: 4px; background: #fff; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; color: #666; }
-    .btn-order:hover:not(:disabled) { background: #f0f0f0; color: #333; }
-    .btn-order:disabled { opacity: 0.3; cursor: default; }
+    .profile-item { cursor: grab; user-select: none; transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s; }
+    .profile-item.dragging { opacity: 0.5; transform: scale(0.97); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+    .profile-item .item-order-num { width: 24px; height: 24px; border-radius: 50%; background: #1a1a1a; color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 12px; }
+    .profile-list .drag-placeholder { border: 2px dashed #aaa; border-radius: 10px; background: #f0f0f0; min-height: 48px; margin: 4px 0; }
     .profile-form { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
     .profile-form h3 { font-size: 15px; margin-bottom: 16px; }
   </style>
@@ -716,11 +716,8 @@ async function loadEducation() {
       return;
     }
     container.innerHTML = items.map((item, i) => `
-      <div class="profile-item">
-        <div class="item-order-btns">
-          <button class="btn-order" onclick="moveEducation('${item.id}','up')" title="위로" ${i === 0 ? 'disabled' : ''}>▲</button>
-          <button class="btn-order" onclick="moveEducation('${item.id}','down')" title="아래로" ${i === items.length - 1 ? 'disabled' : ''}>▼</button>
-        </div>
+      <div class="profile-item" draggable="true" data-id="${item.id}">
+        <span class="item-order-num">${i + 1}</span>
         <div class="item-info">
           <div class="item-title">${item.title}</div>
         </div>
@@ -730,6 +727,7 @@ async function loadEducation() {
         </div>
       </div>
     `).join('');
+    initDragSort(container, 'education');
   } catch { container.innerHTML = '<div class="empty-state">불러오기 실패</div>'; }
 }
 
@@ -787,15 +785,109 @@ function cancelEduEdit() {
   document.getElementById('eduAddBtn').style.display = '';
 }
 
-async function moveEducation(id, direction) {
-  try {
-    const res = await fetch(`${API}/profile?type=education`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-      body: JSON.stringify({ id, direction }),
+// ========== 드래그 앤 드롭 순서 변경 (학력/경력 공통) ==========
+function initDragSort(container, type) {
+  let dragEl = null;
+  let placeholder = null;
+
+  container.querySelectorAll('.profile-item').forEach(item => {
+    item.addEventListener('dragstart', e => {
+      dragEl = item;
+      item.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', '');
+      placeholder = document.createElement('div');
+      placeholder.className = 'drag-placeholder';
     });
-    if (res.ok) loadEducation();
-  } catch {}
+
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      if (placeholder && placeholder.parentNode) placeholder.remove();
+      // 번호 재매기기
+      container.querySelectorAll('.profile-item .item-order-num').forEach((num, i) => {
+        num.textContent = i + 1;
+      });
+      // 서버에 순서 저장
+      const ids = [...container.querySelectorAll('.profile-item')].map(el => el.dataset.id);
+      saveOrder(type, ids);
+      dragEl = null;
+    });
+
+    item.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      if (!dragEl || item === dragEl) return;
+      const rect = item.getBoundingClientRect();
+      const mid = rect.top + rect.height / 2;
+      if (e.clientY < mid) {
+        container.insertBefore(dragEl, item);
+      } else {
+        container.insertBefore(dragEl, item.nextSibling);
+      }
+    });
+  });
+
+  // 터치 지원
+  let touchDragEl = null;
+  let touchClone = null;
+  let touchStartY = 0;
+
+  container.querySelectorAll('.profile-item').forEach(item => {
+    item.addEventListener('touchstart', e => {
+      if (e.target.closest('.item-actions')) return; // 버튼 터치는 무시
+      touchDragEl = item;
+      touchStartY = e.touches[0].clientY;
+      setTimeout(() => {
+        if (touchDragEl === item) {
+          item.classList.add('dragging');
+          touchClone = item.cloneNode(true);
+          touchClone.style.cssText = 'position:fixed;pointer-events:none;z-index:9999;opacity:0.8;width:' + item.offsetWidth + 'px;left:' + item.getBoundingClientRect().left + 'px;top:' + item.getBoundingClientRect().top + 'px;';
+          document.body.appendChild(touchClone);
+        }
+      }, 150);
+    }, { passive: true });
+
+    item.addEventListener('touchmove', e => {
+      if (!touchDragEl || !touchClone) return;
+      e.preventDefault();
+      const y = e.touches[0].clientY;
+      touchClone.style.top = y - 24 + 'px';
+      const target = document.elementFromPoint(e.touches[0].clientX, y);
+      const targetItem = target?.closest('.profile-item');
+      if (targetItem && targetItem !== touchDragEl && targetItem.parentNode === container) {
+        const rect = targetItem.getBoundingClientRect();
+        if (y < rect.top + rect.height / 2) {
+          container.insertBefore(touchDragEl, targetItem);
+        } else {
+          container.insertBefore(touchDragEl, targetItem.nextSibling);
+        }
+      }
+    }, { passive: false });
+
+    item.addEventListener('touchend', () => {
+      if (touchClone) { touchClone.remove(); touchClone = null; }
+      if (touchDragEl) {
+        touchDragEl.classList.remove('dragging');
+        container.querySelectorAll('.profile-item .item-order-num').forEach((num, i) => {
+          num.textContent = i + 1;
+        });
+        const ids = [...container.querySelectorAll('.profile-item')].map(el => el.dataset.id);
+        saveOrder(container.id === 'eduList' ? 'education' : 'career', ids);
+        touchDragEl = null;
+      }
+    });
+  });
+}
+
+async function saveOrder(type, ids) {
+  try {
+    await fetch(`${API}/profile?type=${type}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ ids }),
+    });
+    showToast('순서 변경 완료');
+  } catch { showToast('순서 저장 실패'); }
 }
 
 async function deleteEducation(id) {
@@ -821,11 +913,8 @@ async function loadCareer() {
       return;
     }
     container.innerHTML = items.map((item, i) => `
-      <div class="profile-item">
-        <div class="item-order-btns">
-          <button class="btn-order" onclick="moveCareer('${item.id}','up')" title="위로" ${i === 0 ? 'disabled' : ''}>▲</button>
-          <button class="btn-order" onclick="moveCareer('${item.id}','down')" title="아래로" ${i === items.length - 1 ? 'disabled' : ''}>▼</button>
-        </div>
+      <div class="profile-item" draggable="true" data-id="${item.id}">
+        <span class="item-order-num">${i + 1}</span>
         <div class="item-info">
           <div class="item-title">${item.title}${item.isCurrent ? '<span class="badge-current">현재</span>' : ''}</div>
         </div>
@@ -835,6 +924,7 @@ async function loadCareer() {
         </div>
       </div>
     `).join('');
+    initDragSort(container, 'career');
   } catch { container.innerHTML = '<div class="empty-state">불러오기 실패</div>'; }
 }
 
@@ -895,16 +985,6 @@ function cancelCareerEdit() {
   document.getElementById('careerAddBtn').style.display = '';
 }
 
-async function moveCareer(id, direction) {
-  try {
-    const res = await fetch(`${API}/profile?type=career`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-      body: JSON.stringify({ id, direction }),
-    });
-    if (res.ok) loadCareer();
-  } catch {}
-}
 
 async function deleteCareer(id) {
   if (!confirm('이 경력을 삭제하시겠습니까?')) return;
