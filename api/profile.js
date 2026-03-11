@@ -70,11 +70,12 @@ export default async function handler(req, res) {
     if (!title) return res.status(400).json({ error: '내용은 필수입니다' });
 
     const items = await redis.get(`${user.code}:${type}`) || [];
+    const maxOrder = items.length > 0 ? Math.max(...items.map(i => i.order ?? 0)) : -1;
     const newItem = {
       id: generateId(),
       title,
       ...(type === 'career' ? { isCurrent: !!isCurrent } : {}),
-      order: items.length,
+      order: maxOrder + 1,
       createdAt: new Date().toISOString(),
     };
     items.push(newItem);
@@ -83,21 +84,43 @@ export default async function handler(req, res) {
     return res.status(200).json(newItem);
   }
 
-  // PUT: 수정 (인증 필요)
+  // PUT: 수정 또는 순서 변경 (인증 필요)
   if (req.method === 'PUT') {
     const user = verifyToken(req);
     if (!user) return res.status(401).json({ error: '인증 필요' });
 
-    const { id, title, isCurrent, order } = req.body;
+    const { id, title, isCurrent, direction } = req.body;
     if (!id) return res.status(400).json({ error: 'id 필수' });
 
     const items = await redis.get(`${user.code}:${type}`) || [];
+
+    // 순서 변경 (direction: 'up' | 'down')
+    if (direction) {
+      items.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+      const idx = items.findIndex(p => p.id === id);
+      if (idx === -1) return res.status(404).json({ error: '항목을 찾을 수 없습니다' });
+
+      const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
+      if (swapIdx < 0 || swapIdx >= items.length) {
+        return res.status(200).json(items); // 이동 불가, 현재 상태 반환
+      }
+
+      // order 값 스왑
+      const tmpOrder = items[idx].order;
+      items[idx].order = items[swapIdx].order;
+      items[swapIdx].order = tmpOrder;
+
+      await redis.set(`${user.code}:${type}`, items);
+      items.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+      return res.status(200).json(items);
+    }
+
+    // 일반 수정
     const idx = items.findIndex(p => p.id === id);
     if (idx === -1) return res.status(404).json({ error: '항목을 찾을 수 없습니다' });
 
     if (title !== undefined) items[idx].title = title;
     if (type === 'career' && isCurrent !== undefined) items[idx].isCurrent = !!isCurrent;
-    if (order !== undefined) items[idx].order = order;
 
     await redis.set(`${user.code}:${type}`, items);
     return res.status(200).json(items[idx]);
@@ -117,6 +140,10 @@ export default async function handler(req, res) {
     if (updated.length === items.length) {
       return res.status(404).json({ error: '항목을 찾을 수 없습니다' });
     }
+
+    // 삭제 후 order 재정렬
+    updated.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    updated.forEach((item, i) => { item.order = i; });
 
     await redis.set(`${user.code}:${type}`, updated);
     return res.status(200).json({ success: true });
