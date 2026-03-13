@@ -69,6 +69,13 @@ const allNews = {
     { title: '역대급 경쟁에 발걸음 빨라진 청주시장 예비후보들', source: '중부매일', url: 'https://www.jbnews.com/news/articleView.html?idxno=1499728', date: '2026-03-01' },
     { title: '서승우 청주시장 예비후보, 온라인 시민 정책 플랫폼 오픈', source: '충북일보', url: 'https://www.inews365.com/news/article.html?no=908826', date: '2026-02-25' },
   ],
+  kma: [
+    { title: '강미애 세종미래교육연구소장, 세종시교육감 재도전 공식 선언', source: '세종우먼', url: 'https://sejongwomans.com/View.aspx?No=3945472', date: '2026-01-22' },
+    { title: '강미애 "세종 학생들의 AI교육·학력향상 책임지겠다"', source: '굿모닝충청', url: 'https://www.goodmorningcc.com/news/articleView.html?idxno=439374', date: '2026-01-22' },
+    { title: '강미애 예비후보 "세종교육의 현안과 해법은..."', source: '굿모닝충청', url: 'https://www.goodmorningcc.com/news/articleView.html?idxno=442582', date: '2026-03-10' },
+    { title: '강미애 세종교육감 예비후보 "중학교 학력, 성적보다 지속하는 힘 중요"', source: '내외일보', url: 'https://www.naewoeilbo.com/news/articleView.html?idxno=2316850', date: '2026-03-12' },
+    { title: '강미애, "선거사무소 개소...세종교육 1번지" 강조', source: '브릿지경제', url: 'https://www.viva100.com/article/20260307500187', date: '2026-03-07' },
+  ],
   jhh: [
     { title: '전현희 "돈 벌어오는 CEO 서울시장 되겠다" 서울시장 출마선언', source: '서울신문', url: 'https://www.seoul.co.kr/news/politics/assembly/2026/02/20260220500132', date: '2026-02-20' },
     { title: '전현희 "DDP 해체하고 서울돔 짓겠다"…K-콘텐츠 랜드마크 공약', source: '아주경제', url: 'https://www.ajunews.com/view/20260224100000000', date: '2026-02-24' },

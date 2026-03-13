@@ -15,7 +15,7 @@ const redis = new Redis({
   token: process.env.KV_REST_API_TOKEN,
 });
 
-const candidates = ['lsh', 'njh', 'jdm', 'lhs', 'css', 'ysh', 'yjg', 'jws', 'jhh', 'ssw'];
+const candidates = ['lsh', 'njh', 'jdm', 'lhs', 'css', 'ysh', 'yjg', 'jws', 'jhh', 'ssw', 'kma'];
 const PROJECT_ROOT = new URL('..', import.meta.url).pathname;
 
 // 후보별 사진 메타데이터 (category + alt)
@@ -116,6 +116,18 @@ const photoMeta = {
     { alt: '기자회견', category: 'media' },
     { alt: '인터뷰', category: 'media' },
     { alt: '당대회 참석', category: 'event' },
+  ],
+  kma: [
+    { alt: '출마선언 기자회견', category: 'campaign' },
+    { alt: '선거사무소 개소식', category: 'campaign' },
+    { alt: '교육 현장 방문', category: 'activity' },
+    { alt: '정책발표회', category: 'campaign' },
+    { alt: '언론 인터뷰', category: 'media' },
+    { alt: '교육 행사', category: 'event' },
+    { alt: '학교 방문', category: 'activity' },
+    { alt: '교육감 후보 단체사진', category: 'event' },
+    { alt: '교육 연구 활동', category: 'activity' },
+    { alt: '기자회견', category: 'media' },
   ],
 };
 
