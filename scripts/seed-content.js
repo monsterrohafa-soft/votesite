@@ -238,9 +238,18 @@ const candidateData = {
     contacts: [
       { type: 'phone', label: '전화', value: '010-6592-8060', url: 'tel:010-6592-8060' },
       { type: 'email', label: '이메일', value: 'j65928060@kakao.com', url: 'mailto:j65928060@kakao.com' },
+      { type: 'instagram', label: '인스타그램', value: '@soonhee.ju', url: 'https://www.instagram.com/soonhee.ju/' },
+      { type: 'facebook', label: '페이스북', value: 'soonhee.ju', url: 'https://www.facebook.com/soonhee.ju' },
+      { type: 'blog', label: '블로그', value: '동래는 주순희입니다!', url: 'https://blog.naver.com/dongnae1004' },
+      { type: 'youtube', label: '유튜브', value: '주순희TV', url: 'https://www.youtube.com/@TV-fn1sy' },
       { type: 'address', label: '출마 지역', value: '부산광역시 동래구 동래구청장' },
     ],
-    videos: [],
+    videos: [
+      { videoId: '4cZphQnyp7k', title: '주순희 예비후보, 동래구청장 출마 기자회견', desc: 'ktHCN부산방송 출마선언 보도' },
+      { videoId: 'INbJBHL7OAE', title: '제283회 구정질문 - 안전한 보행권 환경에 대하여', desc: '동래구의회 의정활동 (2019.03)' },
+      { videoId: 'qEZun40LcpA', title: '제272회 동래구 장애인 등의 편의시설 실태조사', desc: '동래구의회 의정활동 (2017.12)' },
+      { videoId: '2ZHCec4Z-AE', title: '2022년 제1회 공정관광대상 최우수상 수상', desc: '주순희TV' },
+    ],
   },
 
   css: {
