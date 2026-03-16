@@ -233,9 +233,14 @@ img { max-width: 100%; height: auto; display: block; }
 .profile-info h3 { font-size: 20px; font-weight: 700; }
 .age-tag { font-size: 13px; font-weight: 400; color: var(--text-muted); }
 .party-affiliation { font-size: 14px; color: var(--primary); font-weight: 500; margin-top: 4px; }
-.profile-sns { display: flex; gap: 12px; margin-top: 8px; }
-.profile-sns a { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: var(--bg-party); color: var(--primary); font-size: 16px; transition: var(--transition); }
-.profile-sns a:hover { background: var(--primary); color: white; }
+/* 히어로 SNS 아이콘 */
+.hero-sns { display: flex; gap: 16px; justify-content: center; padding: 4px 0 12px; }
+.hero-sns a { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; transition: var(--transition); opacity: 0.85; }
+.hero-sns a:hover { opacity: 1; transform: scale(1.15); }
+.hero-sns a[aria-label="인스타그램"] { color: #E4405F; }
+.hero-sns a[aria-label="페이스북"] { color: #1877F2; }
+.hero-sns a[aria-label="유튜브"] { color: #FF0000; }
+.hero-sns a.naver-blog { color: #03C75A; }
 
 /* 타임라인 */
 .timeline-section { margin-bottom: 28px; }
