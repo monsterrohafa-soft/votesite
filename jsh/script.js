@@ -167,8 +167,8 @@ function shareKakao() {
     Kakao.Share.sendDefault({
       objectType: 'feed',
       content: {
-        title: '주순희 | 부산 동래구청장 예비후보',
-        description: '동래의 자존심을 세우겠습니다 - 더불어민주당 주순희',
+        title: '똑!순희 주순희 | 부산 동래구청장 예비후보',
+        description: '배움과 나눔이 함께하는 교육특별시, 동래구 - 더불어민주당 주순희',
         imageUrl: '',
         link: {
           mobileWebUrl: window.location.href,
@@ -188,8 +188,8 @@ function shareKakao() {
   } else {
     if (navigator.share) {
       navigator.share({
-        title: '주순희 | 부산 동래구청장 예비후보',
-        text: '동래의 자존심을 세우겠습니다 - 더불어민주당 주순희',
+        title: '똑!순희 주순희 | 부산 동래구청장 예비후보',
+        text: '배움과 나눔이 함께하는 교육특별시, 동래구 - 더불어민주당 주순희',
         url: window.location.href,
       });
     } else {
