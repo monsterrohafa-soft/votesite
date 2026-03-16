@@ -109,6 +109,12 @@
     .badge-sent { background: var(--primary-light); color: var(--primary); }
     .badge-signed { background: var(--success-light); color: var(--success); }
     .card-meta { font-size: 12px; color: var(--gray-400); margin-bottom: 12px; }
+    .code-copy {
+      background: var(--gray-100); padding: 1px 6px; border-radius: 4px;
+      font-family: monospace; font-weight: 600; color: var(--gray-600);
+      cursor: pointer; transition: all 0.2s; user-select: all;
+    }
+    .code-copy:hover { background: var(--primary-light); color: var(--primary); }
     .card-actions { display: flex; gap: 6px; flex-wrap: wrap; }
 
     /* Modal */
@@ -454,7 +460,7 @@ function renderList() {
         <span class="badge ${statusBadgeClass(c.status)}">${statusLabel(c.status)}</span>
       </div>
       <div class="card-meta">
-        생성: ${formatDate(c.createdAt)} &middot; 수정: ${formatDate(c.updatedAt)} &middot; 코드: ${esc(c.code)}
+        생성: ${formatDate(c.createdAt)} &middot; 수정: ${formatDate(c.updatedAt)} &middot; 코드: <span class="code-copy" onclick="copyCode('${esc(c.code)}')" title="클릭하여 복사">${esc(c.code)}</span>
       </div>
       <div class="card-actions">
         <button class="btn btn-outline btn-sm" onclick="openPreview('${esc(c.code)}')">미리보기</button>
@@ -621,6 +627,15 @@ async function deleteContract(code) {
   } catch (e) {
     if (e.message !== 'Unauthorized') toast('삭제에 실패했습니다.', true);
   }
+}
+
+// === Copy Code ===
+function copyCode(code) {
+  navigator.clipboard.writeText(code).then(() => {
+    toast(`코드 "${code}"가 복사되었습니다.`);
+  }).catch(() => {
+    prompt('아래 코드를 복사하세요:', code);
+  });
 }
 
 // === Copy URL ===
