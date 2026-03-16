@@ -26,7 +26,7 @@ const DEFAULT_TEMPLATE = {
       id: 'parties',
       type: 'text',
       title: '계약 당사자',
-      content: '갑(의뢰인): {{candidateName}} ({{partyName}}, {{region}} {{position}})\n을(수급인): 로하파소프트',
+      content: '갑(의뢰인): {{candidateName}} ({{partyName}}, {{region}} {{position}})\n을(수급인): 에이젠(AZEN)',
     },
     {
       id: 'purpose',
