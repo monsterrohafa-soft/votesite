@@ -270,12 +270,12 @@
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label>계약기간 (개월)</label>
-          <input type="number" id="fMonths" placeholder="6">
-        </div>
-        <div class="form-group">
           <label>시작일</label>
           <input type="date" id="fStartDate">
+        </div>
+        <div class="form-group">
+          <label>종료일</label>
+          <input type="date" id="fEndDate">
         </div>
       </div>
       <div class="form-group">
@@ -485,7 +485,7 @@ function openCreateModal() {
   document.getElementById('fPosition').value = '';
   document.getElementById('fCreatedFee').value = '';
   document.getElementById('fMonthlyFee').value = '';
-  document.getElementById('fMonths').value = '';
+  document.getElementById('fEndDate').value = '';
   document.getElementById('fStartDate').value = '';
   document.getElementById('fSpecial').value = '';
   document.getElementById('formModal').classList.add('show');
@@ -510,7 +510,7 @@ async function openEditModal(code) {
     document.getElementById('fPosition').value = c.position || '';
     document.getElementById('fCreatedFee').value = c.createdFee || '';
     document.getElementById('fMonthlyFee').value = c.monthlyFee || '';
-    document.getElementById('fMonths').value = c.contractMonths || '';
+    document.getElementById('fEndDate').value = c.endDate || '';
     document.getElementById('fStartDate').value = c.startDate || '';
     document.getElementById('fSpecial').value = c.specialTerms || '';
     document.getElementById('formModal').classList.add('show');
@@ -534,7 +534,7 @@ async function submitForm() {
     position: document.getElementById('fPosition').value.trim(),
     createdFee: document.getElementById('fCreatedFee').value,
     monthlyFee: document.getElementById('fMonthlyFee').value,
-    contractMonths: document.getElementById('fMonths').value,
+    endDate: document.getElementById('fEndDate').value,
     startDate: document.getElementById('fStartDate').value,
     specialTerms: document.getElementById('fSpecial').value.trim(),
   };

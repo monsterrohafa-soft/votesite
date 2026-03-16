@@ -53,13 +53,13 @@ const DEFAULT_TEMPLATE = {
       id: 'fees',
       type: 'fees',
       title: '제3조 (계약 금액)',
-      content: '1. 홈페이지 제작비: {{createdFee}}원 (VAT 별도)\n2. 월 유지보수비: {{monthlyFee}}원 (VAT 별도)\n3. 계약 기간: {{startDate}}부터 {{contractMonths}}개월',
+      content: '1. 홈페이지 제작비: {{createdFee}}원 (VAT 별도)\n2. 월 유지보수비: {{monthlyFee}}원 (VAT 별도)\n3. 계약 기간: {{startDate}} ~ {{endDate}}',
     },
     {
       id: 'payment',
       type: 'text',
       title: '제4조 (대금 지급)',
-      content: '1. 제작비는 계약 체결 시 50%, 홈페이지 납품 완료 시 50%를 지급한다.\n2. 유지보수비는 매월 1일에 선불로 지급한다.',
+      content: '1. 제작비는 계약 체결 시 50%, 홈페이지 납품 완료 시 50%를 지급한다.\n2. 유지보수비는 매월 1일에 선불로 지급한다.\n3. 계약 범위를 초과하는 추가 개발 및 기능 보수에 대한 비용은 갑과 을이 별도 협의하여 결정한다.',
     },
     {
       id: 'maintenance',
@@ -101,8 +101,8 @@ function replacePlaceholders(sections, data) {
     '{{position}}': data.position || '',
     '{{createdFee}}': data.createdFee ? Number(data.createdFee).toLocaleString() : '',
     '{{monthlyFee}}': data.monthlyFee ? Number(data.monthlyFee).toLocaleString() : '',
-    '{{contractMonths}}': data.contractMonths || '',
     '{{startDate}}': data.startDate || '',
+    '{{endDate}}': data.endDate || '',
     '{{specialTerms}}': data.specialTerms || '없음',
   };
 
@@ -203,7 +203,7 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     if (!verifyAdmin(req)) return res.status(401).json({ error: '인증 필요' });
 
-    const { code: newCode, candidateName, partyName, region, position, createdFee, monthlyFee, contractMonths, startDate, specialTerms } = req.body;
+    const { code: newCode, candidateName, partyName, region, position, createdFee, monthlyFee, startDate, endDate, specialTerms } = req.body;
     if (!newCode || !candidateName) {
       return res.status(400).json({ error: 'code, candidateName 필수' });
     }
@@ -214,7 +214,7 @@ export default async function handler(req, res) {
     }
 
     const template = await redis.get('contract:template') || DEFAULT_TEMPLATE;
-    const data = { candidateName, partyName, region, position, createdFee, monthlyFee, contractMonths, startDate, specialTerms };
+    const data = { candidateName, partyName, region, position, createdFee, monthlyFee, startDate, endDate, specialTerms };
     const sections = replacePlaceholders(template.sections, data);
 
     const contract = {
@@ -226,8 +226,8 @@ export default async function handler(req, res) {
       position: position || '',
       createdFee: createdFee || '',
       monthlyFee: monthlyFee || '',
-      contractMonths: contractMonths || '',
       startDate: startDate || '',
+      endDate: endDate || '',
       specialTerms: specialTerms || '',
       sections,
       status: 'draft',
@@ -244,7 +244,7 @@ export default async function handler(req, res) {
   if (req.method === 'PUT') {
     if (!verifyAdmin(req)) return res.status(401).json({ error: '인증 필요' });
 
-    const { code: editCode, candidateName, partyName, region, position, createdFee, monthlyFee, contractMonths, startDate, specialTerms, status } = req.body;
+    const { code: editCode, candidateName, partyName, region, position, createdFee, monthlyFee, startDate, endDate, specialTerms, status } = req.body;
     if (!editCode) return res.status(400).json({ error: 'code 필수' });
 
     const contract = await redis.get(`contract:${editCode}`);
@@ -259,8 +259,8 @@ export default async function handler(req, res) {
     if (position !== undefined) contract.position = position;
     if (createdFee !== undefined) contract.createdFee = createdFee;
     if (monthlyFee !== undefined) contract.monthlyFee = monthlyFee;
-    if (contractMonths !== undefined) contract.contractMonths = contractMonths;
     if (startDate !== undefined) contract.startDate = startDate;
+    if (endDate !== undefined) contract.endDate = endDate;
     if (specialTerms !== undefined) contract.specialTerms = specialTerms;
     if (status !== undefined) contract.status = status;
 
