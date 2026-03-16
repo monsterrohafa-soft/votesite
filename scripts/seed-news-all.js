@@ -78,6 +78,7 @@ const allNews = {
   ],
   jsh: [
     { title: '주순희 전 의장 출사표, 동래를 세계적 혁신 도시로 도약시킬 것', source: '우리일보', url: 'https://www.wooriilbo.com/news/article.html?no=99377', date: '2026-03-06' },
+    { title: '주순희 전 의장, 동래구청장 출마…활력 넘치는 동래 만들 것', source: '뉴스1', url: 'https://www.news1.kr/local/busan-gyeongnam/6092557', date: '2026-03-06' },
     { title: '민주당 동래구청장 경선 판 흔드나… 박성현, 지역위원장 사퇴로 차출론 현실화', source: '이투데이', url: 'https://www.etoday.co.kr/news/view/2553181', date: '2026-02-04' },
     { title: '격전지 동래구청장 선거, 여야 모두 다자 구도 방향', source: '프레시안', url: 'https://www.pressian.com/pages/articles/2026030610144137654', date: '2026-03-06' },
   ],
