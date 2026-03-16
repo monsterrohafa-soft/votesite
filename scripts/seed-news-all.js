@@ -76,6 +76,12 @@ const allNews = {
     { title: '강미애 세종교육감 예비후보 "중학교 학력, 성적보다 지속하는 힘 중요"', source: '내외일보', url: 'https://www.naewoeilbo.com/news/articleView.html?idxno=2316850', date: '2026-03-12' },
     { title: '강미애, "선거사무소 개소...세종교육 1번지" 강조', source: '브릿지경제', url: 'https://www.viva100.com/article/20260307500187', date: '2026-03-07' },
   ],
+  jsh: [
+    { title: '주순희 전 의장 출사표, 동래를 세계적 혁신 도시로 도약시킬 것', source: '우리일보', url: 'https://www.wooriilbo.com/news/article.html?no=99377', date: '2026-03-06' },
+    { title: '민주당 동래구청장 경선 판 흔드나… 박성현, 지역위원장 사퇴로 차출론 현실화', source: '이투데이', url: 'https://www.etoday.co.kr/news/view/2553181', date: '2026-02-04' },
+    { title: '격전지 동래구청장 선거, 여야 모두 다자 구도 방향', source: '프레시안', url: 'https://www.pressian.com/pages/articles/2026030610144137654', date: '2026-03-06' },
+  ],
+
   jhh: [
     { title: '전현희 "돈 벌어오는 CEO 서울시장 되겠다" 서울시장 출마선언', source: '서울신문', url: 'https://www.seoul.co.kr/news/politics/assembly/2026/02/20260220500132', date: '2026-02-20' },
     { title: '전현희 "DDP 해체하고 서울돔 짓겠다"…K-콘텐츠 랜드마크 공약', source: '아주경제', url: 'https://www.ajunews.com/view/20260224100000000', date: '2026-02-24' },
