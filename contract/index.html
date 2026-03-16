@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>계약서 관리</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-light: #dbeafe;
+      --success: #16a34a;
+      --success-light: #dcfce7;
+      --warning: #f59e0b;
+      --warning-light: #fef3c7;
+      --danger: #dc2626;
+      --danger-light: #fee2e2;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --radius: 12px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.06);
+      --shadow-lg: 0 4px 24px rgba(0,0,0,0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--gray-50); color: var(--gray-900); line-height: 1.5; }
+
+    /* Login */
+    .login-wrap { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+    .login-box { background: #fff; border-radius: var(--radius); padding: 40px 32px; width: 100%; max-width: 400px; box-shadow: var(--shadow-lg); }
+    .login-box h1 { font-size: 22px; margin-bottom: 8px; text-align: center; }
+    .login-box p { color: var(--gray-500); font-size: 14px; text-align: center; margin-bottom: 28px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--gray-600); }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 10px 14px; border: 1px solid var(--gray-200); border-radius: 8px;
+      font-size: 14px; outline: none; transition: border 0.2s; background: #fff; font-family: inherit;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 10px 18px; border: none; border-radius: 8px; font-size: 14px;
+      font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn-success:hover { background: #15803d; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-danger:hover { background: #b91c1c; }
+    .btn-outline { background: #fff; color: var(--gray-700); border: 1px solid var(--gray-200); }
+    .btn-outline:hover { background: var(--gray-50); }
+    .btn-sm { padding: 6px 12px; font-size: 12px; }
+    .btn-block { width: 100%; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .error-msg { color: var(--danger); font-size: 13px; text-align: center; margin-top: 12px; display: none; }
+
+    /* Dashboard */
+    .dashboard { display: none; max-width: 768px; margin: 0 auto; padding: 16px; }
+
+    .header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 20px; padding: 16px 20px; background: #fff;
+      border-radius: var(--radius); box-shadow: var(--shadow);
+    }
+    .header h1 { font-size: 18px; }
+    .header-actions { display: flex; gap: 8px; }
+
+    /* Stats */
+    .stats-bar {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;
+    }
+    .stat-item {
+      background: #fff; border-radius: var(--radius); padding: 16px; text-align: center;
+      box-shadow: var(--shadow);
+    }
+    .stat-item .num { font-size: 28px; font-weight: 800; }
+    .stat-item .lbl { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
+    .stat-item.total .num { color: var(--gray-800); }
+    .stat-item.draft .num { color: var(--gray-400); }
+    .stat-item.sent .num { color: var(--primary); }
+    .stat-item.signed .num { color: var(--success); }
+
+    /* Contract Cards */
+    .contract-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+    .contract-card {
+      background: #fff; border-radius: var(--radius); padding: 16px 20px;
+      box-shadow: var(--shadow); transition: box-shadow 0.2s;
+    }
+    .contract-card:hover { box-shadow: var(--shadow-lg); }
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .card-info h3 { font-size: 16px; font-weight: 700; }
+    .card-info .party { font-size: 13px; color: var(--gray-500); margin-top: 2px; }
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: 11px; font-weight: 700; white-space: nowrap;
+    }
+    .badge-draft { background: var(--gray-100); color: var(--gray-500); }
+    .badge-sent { background: var(--primary-light); color: var(--primary); }
+    .badge-signed { background: var(--success-light); color: var(--success); }
+    .card-meta { font-size: 12px; color: var(--gray-400); margin-bottom: 12px; }
+    .card-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    /* Modal */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+      z-index: 100; align-items: flex-start; justify-content: center;
+      padding: 20px; overflow-y: auto;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal {
+      background: #fff; border-radius: var(--radius); width: 100%; max-width: 600px;
+      box-shadow: var(--shadow-lg); margin-top: 40px; margin-bottom: 40px;
+    }
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 20px; border-bottom: 1px solid var(--gray-100);
+    }
+    .modal-header h2 { font-size: 16px; }
+    .modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--gray-400); padding: 4px; }
+    .modal-body { padding: 20px; }
+    .modal-footer { padding: 16px 20px; border-top: 1px solid var(--gray-100); display: flex; justify-content: flex-end; gap: 8px; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* Preview */
+    .preview-section { margin-bottom: 20px; }
+    .preview-section h3 { font-size: 15px; font-weight: 700; color: var(--gray-800); margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--gray-100); }
+    .preview-section p { font-size: 14px; color: var(--gray-600); white-space: pre-line; }
+    .preview-section ul { padding-left: 20px; font-size: 14px; color: var(--gray-600); }
+    .preview-section ul li { margin-bottom: 4px; }
+    .preview-header-title { font-size: 20px; font-weight: 800; text-align: center; margin-bottom: 24px; color: var(--gray-900); }
+    .signature-box { margin-top: 20px; padding: 16px; background: var(--gray-50); border-radius: 8px; }
+    .signature-box img { max-width: 200px; border: 1px solid var(--gray-200); border-radius: 4px; margin-top: 8px; }
+
+    /* Status dropdown */
+    .status-select { padding: 4px 8px; font-size: 12px; border: 1px solid var(--gray-200); border-radius: 6px; background: #fff; cursor: pointer; font-family: inherit; }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: var(--gray-800); color: #fff; padding: 12px 24px; border-radius: 10px;
+      font-size: 14px; transition: transform 0.3s ease; z-index: 999;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.error { background: var(--danger); }
+
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--gray-400); font-size: 14px; }
+
+    @media (max-width: 480px) {
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+      .form-row { grid-template-columns: 1fr; }
+      .header { flex-direction: column; gap: 12px; align-items: stretch; }
+      .header-actions { justify-content: flex-end; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Login -->
+<div id="loginScreen" class="login-wrap">
+  <div class="login-box">
+    <h1>계약서 관리</h1>
+    <p>관리자 비밀번호를 입력하세요</p>
+    <div class="form-group">
+      <label>비밀번호</label>
+      <input type="password" id="loginPassword" placeholder="비밀번호 입력" autocomplete="off">
+    </div>
+    <button class="btn btn-primary btn-block" onclick="doLogin()" style="margin-top: 8px;">로그인</button>
+    <div id="loginError" class="error-msg">비밀번호가 올바르지 않습니다</div>
+  </div>
+</div>
+
+<!-- Dashboard -->
+<div id="dashboard" class="dashboard">
+  <!-- Header -->
+  <div class="header">
+    <h1>계약서 관리</h1>
+    <div class="header-actions">
+      <button class="btn btn-primary btn-sm" onclick="openCreateModal()">+ 새 계약서</button>
+      <button class="btn btn-outline btn-sm" onclick="doLogout()">로그아웃</button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-item total">
+      <div class="num" id="statTotal">0</div>
+      <div class="lbl">전체</div>
+    </div>
+    <div class="stat-item draft">
+      <div class="num" id="statDraft">0</div>
+      <div class="lbl">작성중</div>
+    </div>
+    <div class="stat-item sent">
+      <div class="num" id="statSent">0</div>
+      <div class="lbl">발송됨</div>
+    </div>
+    <div class="stat-item signed">
+      <div class="num" id="statSigned">0</div>
+      <div class="lbl">서명완료</div>
+    </div>
+  </div>
+
+  <!-- Contract List -->
+  <div id="contractList" class="contract-list"></div>
+</div>
+
+<!-- Create/Edit Modal -->
+<div id="formModal" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="formModalTitle">새 계약서 작성</h2>
+      <button class="modal-close" onclick="closeFormModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>후보 코드</label>
+        <select id="fCode" onchange="onCandidateSelect()">
+          <option value="">-- 선택 --</option>
+          <option value="lsh">lsh - 이상호</option>
+          <option value="njh">njh - 노정현</option>
+          <option value="jdm">jdm - 정동만</option>
+          <option value="lhs">lhs - 이헌승</option>
+          <option value="css">css - 차승세</option>
+          <option value="ysh">ysh - 윤성환</option>
+          <option value="yjg">yjg - 유지곤</option>
+          <option value="jws">jws - 전원석</option>
+          <option value="jhh">jhh - 전현희</option>
+          <option value="ssw">ssw - 서승우</option>
+          <option value="kma">kma - 강미애</option>
+          <option value="jsh">jsh - 주순희</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>후보명</label>
+          <input type="text" id="fName" placeholder="홍길동">
+        </div>
+        <div class="form-group">
+          <label>정당</label>
+          <input type="text" id="fParty" placeholder="더불어민주당">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>지역</label>
+          <input type="text" id="fRegion" placeholder="부산진구">
+        </div>
+        <div class="form-group">
+          <label>직위</label>
+          <input type="text" id="fPosition" placeholder="국회의원 예비후보">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>제작비 (원)</label>
+          <input type="number" id="fCreatedFee" placeholder="500000">
+        </div>
+        <div class="form-group">
+          <label>월 유지보수비 (원)</label>
+          <input type="number" id="fMonthlyFee" placeholder="100000">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>계약기간 (개월)</label>
+          <input type="number" id="fMonths" placeholder="6">
+        </div>
+        <div class="form-group">
+          <label>시작일</label>
+          <input type="date" id="fStartDate">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>특약사항</label>
+        <textarea id="fSpecial" placeholder="특약사항을 입력하세요 (선택)"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeFormModal()">취소</button>
+      <button class="btn btn-primary" id="formSubmitBtn" onclick="submitForm()">생성</button>
+    </div>
+  </div>
+</div>
+
+<!-- Preview Modal -->
+<div id="previewModal" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>계약서 미리보기</h2>
+      <button class="modal-close" onclick="closePreviewModal()">&times;</button>
+    </div>
+    <div class="modal-body" id="previewContent"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closePreviewModal()">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<script>
+const API_BASE = window.location.origin;
+const CANDIDATES = {
+  lsh: { name: '이상호', party: '더불어민주당', region: '부산진구', position: '국회의원 예비후보' },
+  njh: { name: '노정현', party: '진보당', region: '연제구', position: '국회의원 예비후보' },
+  jdm: { name: '정동만', party: '국민의힘', region: '기장군', position: '국회의원 예비후보' },
+  lhs: { name: '이헌승', party: '국민의힘', region: '부산진구을', position: '국회의원 예비후보' },
+  css: { name: '차승세', party: '더불어민주당', region: '해운대구을', position: '국회의원 예비후보' },
+  ysh: { name: '윤성환', party: '국민의힘', region: '안성시 제2선거구', position: '시의원 예비후보' },
+  yjg: { name: '유지곤', party: '조국혁신당', region: '대전 서구', position: '국회의원 예비후보' },
+  jws: { name: '전원석', party: '더불어민주당', region: '사하구', position: '국회의원 예비후보' },
+  jhh: { name: '전현희', party: '더불어민주당', region: '서울', position: '서울시장 예비후보' },
+  ssw: { name: '서승우', party: '국민의힘', region: '청주시', position: '청주시장 예비후보' },
+  kma: { name: '강미애', party: '무소속', region: '세종시', position: '교육감 예비후보' },
+  jsh: { name: '주순희', party: '더불어민주당', region: '동래구', position: '동래구청장 예비후보' },
+};
+
+let contracts = [];
+let editingCode = null;
+
+// === Auth ===
+function getToken() { return localStorage.getItem('contractAdminToken'); }
+function setToken(t) { localStorage.setItem('contractAdminToken', t); }
+function clearToken() { localStorage.removeItem('contractAdminToken'); }
+
+function authHeaders() {
+  return { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` };
+}
+
+async function doLogin() {
+  const pw = document.getElementById('loginPassword').value.trim();
+  if (!pw) return;
+  setToken(pw);
+  try {
+    const res = await fetch(`${API_BASE}/api/contract?list=true`, { headers: authHeaders() });
+    if (res.status === 401) {
+      clearToken();
+      document.getElementById('loginError').style.display = 'block';
+      return;
+    }
+    document.getElementById('loginError').style.display = 'none';
+    showDashboard();
+  } catch (e) {
+    clearToken();
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+
+function doLogout() {
+  clearToken();
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginPassword').value = '';
+}
+
+// === Init ===
+function init() {
+  if (getToken()) {
+    showDashboard();
+  }
+  document.getElementById('loginPassword').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+}
+
+async function showDashboard() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  await loadContracts();
+}
+
+// === API ===
+async function apiFetch(url, opts = {}) {
+  const res = await fetch(url, { ...opts, headers: authHeaders() });
+  if (res.status === 401) {
+    toast('인증이 만료되었습니다. 다시 로그인하세요.', true);
+    doLogout();
+    throw new Error('Unauthorized');
+  }
+  return res;
+}
+
+async function loadContracts() {
+  try {
+    const res = await apiFetch(`${API_BASE}/api/contract?list=true`);
+    contracts = await res.json();
+    renderStats();
+    renderList();
+  } catch (e) {
+    if (e.message !== 'Unauthorized') {
+      toast('목록을 불러올 수 없습니다.', true);
+    }
+  }
+}
+
+// === Render ===
+function renderStats() {
+  const total = contracts.length;
+  const draft = contracts.filter(c => c.status === 'draft').length;
+  const sent = contracts.filter(c => c.status === 'sent').length;
+  const signed = contracts.filter(c => c.status === 'signed').length;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statDraft').textContent = draft;
+  document.getElementById('statSent').textContent = sent;
+  document.getElementById('statSigned').textContent = signed;
+}
+
+function statusLabel(s) {
+  if (s === 'draft') return '작성중';
+  if (s === 'sent') return '발송됨';
+  if (s === 'signed') return '서명완료';
+  return s;
+}
+
+function statusBadgeClass(s) {
+  if (s === 'draft') return 'badge-draft';
+  if (s === 'sent') return 'badge-sent';
+  if (s === 'signed') return 'badge-signed';
+  return 'badge-draft';
+}
+
+function formatDate(iso) {
+  if (!iso) return '-';
+  const d = new Date(iso);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function renderList() {
+  const el = document.getElementById('contractList');
+  if (contracts.length === 0) {
+    el.innerHTML = '<div class="empty-state">등록된 계약서가 없습니다.<br>새 계약서를 작성해 보세요.</div>';
+    return;
+  }
+  el.innerHTML = contracts.map(c => `
+    <div class="contract-card">
+      <div class="card-top">
+        <div class="card-info">
+          <h3>${esc(c.candidateName)}</h3>
+          <div class="party">${esc(c.partyName || '-')}</div>
+        </div>
+        <span class="badge ${statusBadgeClass(c.status)}">${statusLabel(c.status)}</span>
+      </div>
+      <div class="card-meta">
+        생성: ${formatDate(c.createdAt)} &middot; 수정: ${formatDate(c.updatedAt)} &middot; 코드: ${esc(c.code)}
+      </div>
+      <div class="card-actions">
+        <button class="btn btn-outline btn-sm" onclick="openPreview('${esc(c.code)}')">미리보기</button>
+        <button class="btn btn-outline btn-sm" onclick="openEditModal('${esc(c.code)}')">수정</button>
+        <select class="status-select" onchange="changeStatus('${esc(c.code)}', this.value)" ${c.status === 'signed' ? 'disabled' : ''}>
+          <option value="draft" ${c.status==='draft'?'selected':''}>작성중</option>
+          <option value="sent" ${c.status==='sent'?'selected':''}>발송됨</option>
+          <option value="signed" ${c.status==='signed'?'selected':''}>서명완료</option>
+        </select>
+        <button class="btn btn-outline btn-sm" onclick="copyUrl('${esc(c.code)}')">URL 복사</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteContract('${esc(c.code)}')">삭제</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function esc(str) {
+  if (!str) return '';
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML.replace(/'/g, '&#39;');
+}
+
+// === Create / Edit ===
+function onCandidateSelect() {
+  const code = document.getElementById('fCode').value;
+  if (code && CANDIDATES[code]) {
+    const c = CANDIDATES[code];
+    document.getElementById('fName').value = c.name;
+    document.getElementById('fParty').value = c.party;
+    document.getElementById('fRegion').value = c.region;
+    document.getElementById('fPosition').value = c.position;
+  }
+}
+
+function openCreateModal() {
+  editingCode = null;
+  document.getElementById('formModalTitle').textContent = '새 계약서 작성';
+  document.getElementById('formSubmitBtn').textContent = '생성';
+  document.getElementById('fCode').value = '';
+  document.getElementById('fCode').disabled = false;
+  document.getElementById('fName').value = '';
+  document.getElementById('fParty').value = '';
+  document.getElementById('fRegion').value = '';
+  document.getElementById('fPosition').value = '';
+  document.getElementById('fCreatedFee').value = '';
+  document.getElementById('fMonthlyFee').value = '';
+  document.getElementById('fMonths').value = '';
+  document.getElementById('fStartDate').value = '';
+  document.getElementById('fSpecial').value = '';
+  document.getElementById('formModal').classList.add('show');
+}
+
+async function openEditModal(code) {
+  try {
+    const res = await apiFetch(`${API_BASE}/api/contract?code=${code}`);
+    const c = await res.json();
+    if (c.status === 'signed') {
+      toast('서명 완료된 계약서는 수정할 수 없습니다.', true);
+      return;
+    }
+    editingCode = code;
+    document.getElementById('formModalTitle').textContent = '계약서 수정';
+    document.getElementById('formSubmitBtn').textContent = '저장';
+    document.getElementById('fCode').value = code;
+    document.getElementById('fCode').disabled = true;
+    document.getElementById('fName').value = c.candidateName || '';
+    document.getElementById('fParty').value = c.partyName || '';
+    document.getElementById('fRegion').value = c.region || '';
+    document.getElementById('fPosition').value = c.position || '';
+    document.getElementById('fCreatedFee').value = c.createdFee || '';
+    document.getElementById('fMonthlyFee').value = c.monthlyFee || '';
+    document.getElementById('fMonths').value = c.contractMonths || '';
+    document.getElementById('fStartDate').value = c.startDate || '';
+    document.getElementById('fSpecial').value = c.specialTerms || '';
+    document.getElementById('formModal').classList.add('show');
+  } catch (e) {
+    if (e.message !== 'Unauthorized') toast('계약서 정보를 불러올 수 없습니다.', true);
+  }
+}
+
+function closeFormModal() {
+  document.getElementById('formModal').classList.remove('show');
+  editingCode = null;
+}
+
+async function submitForm() {
+  const code = document.getElementById('fCode').value;
+  const data = {
+    code,
+    candidateName: document.getElementById('fName').value.trim(),
+    partyName: document.getElementById('fParty').value.trim(),
+    region: document.getElementById('fRegion').value.trim(),
+    position: document.getElementById('fPosition').value.trim(),
+    createdFee: document.getElementById('fCreatedFee').value,
+    monthlyFee: document.getElementById('fMonthlyFee').value,
+    contractMonths: document.getElementById('fMonths').value,
+    startDate: document.getElementById('fStartDate').value,
+    specialTerms: document.getElementById('fSpecial').value.trim(),
+  };
+
+  if (!data.code || !data.candidateName) {
+    toast('후보 코드와 후보명은 필수입니다.', true);
+    return;
+  }
+
+  const btn = document.getElementById('formSubmitBtn');
+  btn.disabled = true;
+
+  try {
+    const isEdit = editingCode !== null;
+    const res = await apiFetch(`${API_BASE}/api/contract`, {
+      method: isEdit ? 'PUT' : 'POST',
+      body: JSON.stringify(data),
+    });
+    const result = await res.json();
+    if (!res.ok) {
+      toast(result.error || '오류가 발생했습니다.', true);
+      return;
+    }
+    toast(isEdit ? '계약서가 수정되었습니다.' : '계약서가 생성되었습니다.');
+    closeFormModal();
+    await loadContracts();
+  } catch (e) {
+    if (e.message !== 'Unauthorized') toast('요청에 실패했습니다.', true);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// === Status Change ===
+async function changeStatus(code, newStatus) {
+  try {
+    const res = await apiFetch(`${API_BASE}/api/contract`, {
+      method: 'PUT',
+      body: JSON.stringify({ code, status: newStatus }),
+    });
+    const result = await res.json();
+    if (!res.ok) {
+      toast(result.error || '상태 변경 실패', true);
+      await loadContracts();
+      return;
+    }
+    toast(`상태가 "${statusLabel(newStatus)}"(으)로 변경되었습니다.`);
+    await loadContracts();
+  } catch (e) {
+    if (e.message !== 'Unauthorized') toast('상태 변경에 실패했습니다.', true);
+    await loadContracts();
+  }
+}
+
+// === Delete ===
+async function deleteContract(code) {
+  if (!confirm(`"${code}" 계약서를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
+  try {
+    const res = await apiFetch(`${API_BASE}/api/contract?code=${code}`, { method: 'DELETE' });
+    const result = await res.json();
+    if (!res.ok) {
+      toast(result.error || '삭제 실패', true);
+      return;
+    }
+    toast('계약서가 삭제되었습니다.');
+    await loadContracts();
+  } catch (e) {
+    if (e.message !== 'Unauthorized') toast('삭제에 실패했습니다.', true);
+  }
+}
+
+// === Copy URL ===
+function copyUrl(code) {
+  const url = `${window.location.origin}/contract/view/?code=${code}`;
+  navigator.clipboard.writeText(url).then(() => {
+    toast('URL이 클립보드에 복사되었습니다.');
+  }).catch(() => {
+    prompt('아래 URL을 복사하세요:', url);
+  });
+}
+
+// === Preview ===
+async function openPreview(code) {
+  try {
+    const res = await apiFetch(`${API_BASE}/api/contract?code=${code}`);
+    const c = await res.json();
+    if (!res.ok) {
+      toast(c.error || '미리보기 실패', true);
+      return;
+    }
+    renderPreview(c);
+    document.getElementById('previewModal').classList.add('show');
+  } catch (e) {
+    if (e.message !== 'Unauthorized') toast('미리보기를 불러올 수 없습니다.', true);
+  }
+}
+
+function renderPreview(contract) {
+  const el = document.getElementById('previewContent');
+  let html = '';
+
+  if (contract.sections && contract.sections.length > 0) {
+    contract.sections.forEach(s => {
+      if (s.type === 'header') {
+        html += `<div class="preview-header-title">${esc(s.title)}</div>`;
+      } else if (s.type === 'list') {
+        html += `<div class="preview-section"><h3>${esc(s.title)}</h3><ul>${(s.items||[]).map(i => `<li>${esc(i)}</li>`).join('')}</ul></div>`;
+      } else {
+        html += `<div class="preview-section"><h3>${esc(s.title)}</h3><p>${esc(s.content)}</p></div>`;
+      }
+    });
+  }
+
+  if (contract.signature) {
+    html += `<div class="signature-box">
+      <strong>서명 정보</strong><br>
+      서명자: ${esc(contract.signature.signerName)}<br>
+      연락처: ${esc(contract.signature.signerPhone)}<br>
+      서명일: ${formatDate(contract.signature.signedAt)}<br>
+      ${contract.signature.dataUrl ? `<img src="${contract.signature.dataUrl}" alt="서명">` : ''}
+    </div>`;
+  }
+
+  el.innerHTML = html;
+}
+
+function closePreviewModal() {
+  document.getElementById('previewModal').classList.remove('show');
+}
+
+// === Toast ===
+function toast(msg, isError = false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = isError ? 'toast error show' : 'toast show';
+  setTimeout(() => { el.classList.remove('show'); }, 3000);
+}
+
+// === Close modals on overlay click ===
+document.addEventListener('click', e => {
+  if (e.target.id === 'formModal') closeFormModal();
+  if (e.target.id === 'previewModal') closePreviewModal();
+});
+
+// === Escape key closes modals ===
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeFormModal();
+    closePreviewModal();
+  }
+});
+
+init();
+</script>
+</body>
+</html>

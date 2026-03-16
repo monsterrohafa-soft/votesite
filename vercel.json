@@ -2,7 +2,9 @@
   "trailingSlash": true,
   "rewrites": [
     { "source": "/admin/", "destination": "/admin/index.html" },
-    { "source": "/:code/admin/", "destination": "/admin/index.html" }
+    { "source": "/:code/admin/", "destination": "/admin/index.html" },
+    { "source": "/contract/", "destination": "/contract/index.html" },
+    { "source": "/contract/view/", "destination": "/contract/view/index.html" }
   ],
   "headers": [
     {
