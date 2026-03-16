@@ -30,6 +30,7 @@ const candidates = [
   { code: 'jhh', name: '전현희', party: '더불어민주당', password: '1234' },
   { code: 'ssw', name: '서승우', party: '국민의힘', password: '1234' },
   { code: 'kma', name: '강미애', party: '무소속', password: '1234' },
+  { code: 'jsh', name: '주순희', party: '더불어민주당', password: '1234' },
 ];
 
 async function seed() {
