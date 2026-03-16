@@ -139,16 +139,6 @@
 
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-    /* Preview */
-    .preview-section { margin-bottom: 20px; }
-    .preview-section h3 { font-size: 15px; font-weight: 700; color: var(--gray-800); margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--gray-100); }
-    .preview-section p { font-size: 14px; color: var(--gray-600); white-space: pre-line; }
-    .preview-section ul { padding-left: 20px; font-size: 14px; color: var(--gray-600); }
-    .preview-section ul li { margin-bottom: 4px; }
-    .preview-header-title { font-size: 20px; font-weight: 800; text-align: center; margin-bottom: 24px; color: var(--gray-900); }
-    .signature-box { margin-top: 20px; padding: 16px; background: var(--gray-50); border-radius: 8px; }
-    .signature-box img { max-width: 200px; border: 1px solid var(--gray-200); border-radius: 4px; margin-top: 8px; }
-
     /* Status dropdown */
     .status-select { padding: 4px 8px; font-size: 12px; border: 1px solid var(--gray-200); border-radius: 6px; background: #fff; cursor: pointer; font-family: inherit; }
 
@@ -300,19 +290,6 @@
   </div>
 </div>
 
-<!-- Preview Modal -->
-<div id="previewModal" class="modal-overlay">
-  <div class="modal">
-    <div class="modal-header">
-      <h2>계약서 미리보기</h2>
-      <button class="modal-close" onclick="closePreviewModal()">&times;</button>
-    </div>
-    <div class="modal-body" id="previewContent"></div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closePreviewModal()">닫기</button>
-    </div>
-  </div>
-</div>
 
 <!-- Toast -->
 <div id="toast" class="toast"></div>
@@ -649,52 +626,8 @@ function copyUrl(code) {
 }
 
 // === Preview ===
-async function openPreview(code) {
-  try {
-    const res = await apiFetch(`${API_BASE}/api/contract?code=${code}`);
-    const c = await res.json();
-    if (!res.ok) {
-      toast(c.error || '미리보기 실패', true);
-      return;
-    }
-    renderPreview(c);
-    document.getElementById('previewModal').classList.add('show');
-  } catch (e) {
-    if (e.message !== 'Unauthorized') toast('미리보기를 불러올 수 없습니다.', true);
-  }
-}
-
-function renderPreview(contract) {
-  const el = document.getElementById('previewContent');
-  let html = '';
-
-  if (contract.sections && contract.sections.length > 0) {
-    contract.sections.forEach(s => {
-      if (s.type === 'header') {
-        html += `<div class="preview-header-title">${esc(s.title)}</div>`;
-      } else if (s.type === 'list') {
-        html += `<div class="preview-section"><h3>${esc(s.title)}</h3><ul>${(s.items||[]).map(i => `<li>${esc(i)}</li>`).join('')}</ul></div>`;
-      } else {
-        html += `<div class="preview-section"><h3>${esc(s.title)}</h3><p>${esc(s.content)}</p></div>`;
-      }
-    });
-  }
-
-  if (contract.signature) {
-    html += `<div class="signature-box">
-      <strong>서명 정보</strong><br>
-      서명자: ${esc(contract.signature.signerName)}<br>
-      연락처: ${esc(contract.signature.signerPhone)}<br>
-      서명일: ${formatDate(contract.signature.signedAt)}<br>
-      ${contract.signature.dataUrl ? `<img src="${contract.signature.dataUrl}" alt="서명">` : ''}
-    </div>`;
-  }
-
-  el.innerHTML = html;
-}
-
-function closePreviewModal() {
-  document.getElementById('previewModal').classList.remove('show');
+function openPreview(code) {
+  window.open(`${window.location.origin}/contract/view/?code=${code}&preview=1`, '_blank');
 }
 
 // === Toast ===
@@ -708,15 +641,11 @@ function toast(msg, isError = false) {
 // === Close modals on overlay click ===
 document.addEventListener('click', e => {
   if (e.target.id === 'formModal') closeFormModal();
-  if (e.target.id === 'previewModal') closePreviewModal();
 });
 
 // === Escape key closes modals ===
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    closeFormModal();
-    closePreviewModal();
-  }
+  if (e.key === 'Escape') closeFormModal();
 });
 
 init();

@@ -912,7 +912,9 @@
 <script>
 (function() {
   const API_BASE = window.location.origin;
-  const code = new URLSearchParams(window.location.search).get('code');
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get('code');
+  const isPreview = params.get('preview') === '1';
 
   const loadingEl = document.getElementById('loadingState');
   const errorEl = document.getElementById('errorState');
@@ -962,7 +964,7 @@
 
       const contract = await res.json();
 
-      if (contract.status === 'draft') {
+      if (contract.status === 'draft' && !isPreview) {
         showError('아직 발송되지 않은 계약서입니다', '계약서가 준비되면 다시 안내드리겠습니다.');
         return;
       }
@@ -972,7 +974,7 @@
 
       if (contract.status === 'signed') {
         showSignedState(contract.signature);
-      } else {
+      } else if (!isPreview) {
         showSignForm();
       }
     } catch (err) {
