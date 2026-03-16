@@ -331,13 +331,7 @@
       text-transform: uppercase;
     }
 
-    /* Two-column signature blocks */
-    .signature-columns {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      margin-top: 8px;
-    }
+    /* Stacked signature blocks (full width) */
     .sig-block {
       border: 1px solid var(--color-border);
       border-radius: 4px;
@@ -391,69 +385,71 @@
       font-weight: 700;
     }
 
-    /* Signed state - two columns */
-    .signed-client-block .sig-block-body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 14px;
-      min-height: 160px;
-      justify-content: center;
-    }
-    .signed-image {
-      max-width: 220px;
-      max-height: 120px;
-      border: 1px solid var(--color-border-light);
-      border-radius: 3px;
-      background: #fff;
-    }
-    .signed-meta {
-      font-size: 12px;
-      color: var(--color-text-secondary);
-      line-height: 1.9;
-      text-align: center;
-      width: 100%;
-    }
-    .signed-meta strong { color: var(--color-text); font-weight: 600; }
 
-    /* AZEN seal block */
-    .azen-sig-block .sig-block-body {
+    /* Signature block row layout (info left, seal/signature right) */
+    .sig-block-row {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 12px;
-      min-height: 160px;
+      justify-content: space-between;
+      gap: 20px;
     }
+
+    /* AZEN seal - red stamp style */
     .azen-seal {
-      width: 80px;
-      height: 80px;
-      border: 2.5px solid var(--color-navy);
+      width: 72px;
+      height: 72px;
+      border: 3px solid #c0392b;
       border-radius: 50%;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 2px;
+      flex-shrink: 0;
+      position: relative;
+      transform: rotate(-8deg);
+      box-shadow: inset 0 0 0 2px rgba(192, 57, 43, 0.15);
     }
-    .azen-seal-name {
+    .azen-seal::after {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border: 1px solid rgba(192, 57, 43, 0.3);
+      border-radius: 50%;
+    }
+    .azen-seal-text {
+      font-family: var(--font-serif);
       font-size: 18px;
       font-weight: 700;
-      color: var(--color-navy);
-      letter-spacing: 0.06em;
-    }
-    .azen-seal-sub {
-      font-size: 8.5px;
-      color: var(--color-navy);
-      letter-spacing: 0.1em;
+      color: #c0392b;
+      letter-spacing: 0.08em;
     }
     .azen-sig-info {
-      font-size: 12px;
+      font-size: 14px;
       color: var(--color-text-secondary);
-      text-align: center;
       line-height: 1.9;
     }
     .azen-sig-info strong { color: var(--color-text); font-weight: 600; }
+
+    /* Signed client block row */
+    .signed-client-block .sig-block-body {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .signed-image {
+      max-width: 200px;
+      max-height: 100px;
+      border: 1px solid var(--color-border-light);
+      border-radius: 3px;
+      background: #fff;
+      flex-shrink: 0;
+    }
+    .signed-meta {
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      line-height: 1.9;
+    }
+    .signed-meta strong { color: var(--color-text); font-weight: 600; }
 
     /* ── Sign form (unsigned state) ─────────────── */
     .client-sign-wrap {
@@ -663,7 +659,8 @@
     @media (max-width: 680px) {
       .document { padding: 40px 28px; }
       .section-header h1 { font-size: 22px; }
-      .signature-columns { grid-template-columns: 1fr; }
+      .sig-block-row { flex-direction: column; text-align: center; }
+      .signed-client-block .sig-block-body { flex-direction: column; text-align: center; }
       .section-title { font-size: 14px; }
       .section-content,
       .section-list li,
@@ -738,8 +735,10 @@
         print-color-adjust: exact;
       }
 
-      .signed-client-block .sig-block-body { display: flex !important; }
-      .signed-image { max-width: 180px; border: 0.5pt solid #ccc; }
+      .signed-client-block .sig-block-body { display: flex !important; align-items: center; }
+      .signed-image { max-width: 160px; border: 0.5pt solid #ccc; }
+      .azen-seal { border-color: #c0392b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .azen-seal-text { color: #c0392b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
       .document-footer { display: block !important; }
 
@@ -779,10 +778,9 @@
       <div class="azen-header">
         <div class="azen-logo">
           <div class="azen-logo-name">AZEN</div>
-          <div class="azen-logo-sub">선거 전략 컨설팅</div>
+          <div class="azen-logo-sub">에이젠</div>
         </div>
         <div class="azen-header-right">
-          에이젠(AZEN) 선거전략연구소<br>
           전자계약 시스템
         </div>
       </div>
@@ -797,93 +795,88 @@
         <!-- Signed state notice (shown when already signed) -->
         <div id="signedDisplay" style="display: none;">
           <div class="signed-notice">이미 서명이 완료된 계약서입니다</div>
-          <div class="signature-columns">
-            <!-- 갑 block - signed -->
-            <div class="sig-block signed-client-block">
-              <div class="sig-block-header">
-                <span>갑 (의뢰인)</span>
-                <span class="role">CLIENT</span>
+
+          <!-- 을 (수급인) - AZEN -->
+          <div class="sig-block azen-sig-block">
+            <div class="sig-block-header">
+              <span>을 (수급인)</span>
+              <span class="role">AZEN</span>
+            </div>
+            <div class="sig-block-body sig-block-row">
+              <div class="azen-sig-info">
+                <strong>에이젠(AZEN)</strong><br>
+                대표 김상규
               </div>
-              <div class="sig-block-body">
-                <img id="signedImage" class="signed-image" alt="서명 이미지">
-                <div class="signed-meta" id="signedMeta"></div>
+              <div class="azen-seal">
+                <span class="azen-seal-text">에이젠</span>
               </div>
             </div>
+          </div>
 
-            <!-- 을 block - AZEN -->
-            <div class="sig-block azen-sig-block">
-              <div class="sig-block-header">
-                <span>을 (수급인)</span>
-                <span class="role">AZEN</span>
-              </div>
-              <div class="sig-block-body">
-                <div class="azen-seal">
-                  <span class="azen-seal-name">AZEN</span>
-                  <span class="azen-seal-sub">에이젠</span>
-                </div>
-                <div class="azen-sig-info">
-                  <strong>에이젠(AZEN) 선거전략연구소</strong><br>
-                  대표 에이젠
-                </div>
-              </div>
+          <!-- 갑 (의뢰인) - signed -->
+          <div class="sig-block signed-client-block" style="margin-top: 16px;">
+            <div class="sig-block-header">
+              <span>갑 (의뢰인)</span>
+              <span class="role">CLIENT</span>
+            </div>
+            <div class="sig-block-body sig-block-row">
+              <div class="signed-meta" id="signedMeta"></div>
+              <img id="signedImage" class="signed-image" alt="서명 이미지">
             </div>
           </div>
         </div>
 
         <!-- Sign form (shown when unsigned) -->
         <div id="signForm" style="display: none;">
-          <div class="signature-columns">
-            <!-- 갑 block - form -->
-            <div class="sig-block">
-              <div class="sig-block-header">
-                <span>갑 (의뢰인)</span>
-                <span class="role">CLIENT</span>
+          <!-- 을 (수급인) - AZEN -->
+          <div class="sig-block azen-sig-block">
+            <div class="sig-block-header">
+              <span>을 (수급인)</span>
+              <span class="role">AZEN</span>
+            </div>
+            <div class="sig-block-body sig-block-row">
+              <div class="azen-sig-info">
+                <strong>에이젠(AZEN)</strong><br>
+                대표 김상규
               </div>
-              <div class="sig-block-body">
-                <div class="client-sign-wrap">
-                  <div>
-                    <div class="canvas-wrap" id="canvasWrap">
-                      <span class="canvas-label" id="canvasLabel">여기에 서명해 주세요</span>
-                      <canvas id="signatureCanvas"></canvas>
-                    </div>
-                    <div class="canvas-actions">
-                      <button class="btn-clear" id="btnClear" type="button">지우기</button>
-                    </div>
-                  </div>
-
-                  <div class="form-row">
-                    <div class="form-group">
-                      <label for="signerName">성명</label>
-                      <input type="text" id="signerName" placeholder="홍길동">
-                    </div>
-                    <div class="form-group">
-                      <label for="signerPhone">연락처</label>
-                      <input type="tel" id="signerPhone" placeholder="010-1234-5678">
-                    </div>
-                  </div>
-
-                  <div class="sign-error" id="signError"></div>
-
-                  <button class="btn-sign" id="btnSign" type="button">서명 완료</button>
-                </div>
+              <div class="azen-seal">
+                <span class="azen-seal-text">에이젠</span>
               </div>
             </div>
+          </div>
 
-            <!-- 을 block - AZEN -->
-            <div class="sig-block azen-sig-block">
-              <div class="sig-block-header">
-                <span>을 (수급인)</span>
-                <span class="role">AZEN</span>
-              </div>
-              <div class="sig-block-body">
-                <div class="azen-seal">
-                  <span class="azen-seal-name">AZEN</span>
-                  <span class="azen-seal-sub">에이젠</span>
+          <!-- 갑 (의뢰인) - form -->
+          <div class="sig-block" style="margin-top: 16px;">
+            <div class="sig-block-header">
+              <span>갑 (의뢰인)</span>
+              <span class="role">CLIENT</span>
+            </div>
+            <div class="sig-block-body">
+              <div class="client-sign-wrap">
+                <div>
+                  <div class="canvas-wrap" id="canvasWrap">
+                    <span class="canvas-label" id="canvasLabel">여기에 서명해 주세요</span>
+                    <canvas id="signatureCanvas"></canvas>
+                  </div>
+                  <div class="canvas-actions">
+                    <button class="btn-clear" id="btnClear" type="button">지우기</button>
+                  </div>
                 </div>
-                <div class="azen-sig-info">
-                  <strong>에이젠(AZEN) 선거전략연구소</strong><br>
-                  대표 에이젠
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="signerName">성명</label>
+                    <input type="text" id="signerName" placeholder="홍길동">
+                  </div>
+                  <div class="form-group">
+                    <label for="signerPhone">연락처</label>
+                    <input type="tel" id="signerPhone" placeholder="010-1234-5678">
+                  </div>
                 </div>
+
+                <div class="sign-error" id="signError"></div>
+
+                <button class="btn-sign" id="btnSign" type="button">서명 완료</button>
               </div>
             </div>
           </div>
@@ -893,7 +886,7 @@
       <!-- Document footer -->
       <div class="document-footer">
         <p>본 계약서는 전자서명법에 의거하여 법적 효력을 갖습니다.</p>
-        <p>© AZEN 선거전략연구소 · 무단 복제 및 배포를 금합니다.</p>
+        <p>© AZEN · 무단 복제 및 배포를 금합니다.</p>
       </div>
 
     </div><!-- /.document -->
