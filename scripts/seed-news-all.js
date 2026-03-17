@@ -90,6 +90,14 @@ const allNews = {
     { title: '전현희 "감사의정원, 세금 낭비 막겠다" 정책 비전 제시', source: '이투데이', url: 'https://www.etoday.co.kr/news/view/2548000', date: '2026-02-18' },
     { title: '전현희 의원 "그냥드림" 코너 시민 소통 화제', source: '겟뉴스', url: 'https://www.getnews.co.kr/news/articleView.html?idxno=840000', date: '2026-02-15' },
   ],
+
+  yhg: [
+    { title: '윤희근 전 경찰청장, 충북도지사 출마 선언', source: 'KBS', url: 'https://v.daum.net/v/20260211220048703', date: '2026-02-11' },
+    { title: "'국힘 입당' 윤희근 전 경찰청장, 충북도지사 선거 출마", source: '헤럴드경제', url: 'https://biz.heraldcorp.com/article/10649968', date: '2026-01-06' },
+    { title: '윤희근 예비후보, 1호 공약 "충북형 청년정착 혁신 프로젝트"', source: '충북일보', url: 'https://www.inews365.com/news/article.html?no=909958', date: '2026-03-10' },
+    { title: '윤희근 충북지사 예비후보 "스스로 주도하는 충북 만들 것"', source: '충북일보', url: 'https://www.inews365.com/news/article.html?no=908348', date: '2026-02-28' },
+    { title: '윤희근 전 경찰청장, 충북안전체험관 방문…"안전 충북" 구상 본격화', source: '충북일보', url: 'https://www.inews365.com/news/article.html?no=904016', date: '2026-01-15' },
+  ],
 };
 
 async function seedNews() {
