@@ -15,7 +15,7 @@ const redis = new Redis({
   token: process.env.KV_REST_API_TOKEN,
 });
 
-const candidates = ['lsh', 'njh', 'jdm', 'lhs', 'css', 'ysh', 'yjg', 'jws', 'jhh', 'ssw', 'kma'];
+const candidates = ['lsh', 'njh', 'jdm', 'lhs', 'css', 'ysh', 'yjg', 'jws', 'jhh', 'ssw', 'kma', 'jsh', 'yhg'];
 const PROJECT_ROOT = new URL('..', import.meta.url).pathname;
 
 // 후보별 사진 메타데이터 (category + alt)
@@ -128,6 +128,18 @@ const photoMeta = {
     { alt: '교육감 후보 단체사진', category: 'event' },
     { alt: '교육 연구 활동', category: 'activity' },
     { alt: '기자회견', category: 'media' },
+  ],
+  yhg: [
+    { alt: '윤희근 경찰청장 공식 활동', category: 'activity' },
+    { alt: '윤희근 치안 현장 방문', category: 'activity' },
+    { alt: '윤희근 경찰 업무 보고', category: 'activity' },
+    { alt: '윤희근 충북 지역 방문', category: 'campaign' },
+    { alt: '윤희근 도지사 출마 활동', category: 'campaign' },
+    { alt: '윤희근 도민과 함께', category: 'campaign' },
+    { alt: '윤희근 행사 참석', category: 'event' },
+    { alt: '윤희근 기념식 참석', category: 'event' },
+    { alt: '윤희근 언론 인터뷰', category: 'media' },
+    { alt: '윤희근 뉴스 보도', category: 'media' },
   ],
 };
 
