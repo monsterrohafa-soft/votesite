@@ -168,7 +168,7 @@ function shareKakao() {
       objectType: 'feed',
       content: {
         title: '윤희근 | 충청북도지사 후보',
-        description: '스스로 주도하는 충북 - 국민의힘 윤희근',
+        description: '변화하는 충북, 잘사는 도민, 강한 충청북도 - 국민의힘 윤희근',
         imageUrl: '',
         link: {
           mobileWebUrl: window.location.href,
@@ -189,7 +189,7 @@ function shareKakao() {
     if (navigator.share) {
       navigator.share({
         title: '윤희근 | 충청북도지사 후보',
-        text: '스스로 주도하는 충북',
+        text: '변화하는 충북, 잘사는 도민, 강한 충청북도',
         url: window.location.href,
       });
     } else {
