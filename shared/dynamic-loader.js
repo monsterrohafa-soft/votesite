@@ -11,6 +11,7 @@
   const API = '/api';
 
   document.addEventListener('DOMContentLoaded', () => {
+    loadDynamicOGMeta();
     loadDynamicHero();
     loadDynamicIntro();
     loadDynamicEducation();
@@ -24,6 +25,34 @@
     initDday();
     trackVisit();
   });
+
+  /* OG 메타 태그 동적 교체 */
+  async function loadDynamicOGMeta() {
+    try {
+      const res = await fetch(`${API}/og-meta?code=${code}`);
+      if (!res.ok) return;
+      const data = await res.json();
+      if (!data) return;
+
+      if (data.title) {
+        const ogTitle = document.querySelector('meta[property="og:title"]');
+        if (ogTitle) ogTitle.setAttribute('content', data.title);
+        document.title = data.title;
+      }
+      if (data.description) {
+        const ogDesc = document.querySelector('meta[property="og:description"]');
+        if (ogDesc) ogDesc.setAttribute('content', data.description);
+        const metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc) metaDesc.setAttribute('content', data.description);
+      }
+      if (data.imageUrl) {
+        const ogImage = document.querySelector('meta[property="og:image"]');
+        if (ogImage) ogImage.setAttribute('content', data.imageUrl);
+      }
+    } catch {
+      // KV에 데이터 없으면 기존 정적 태그 유지
+    }
+  }
 
   /* 히어로 이미지 동적 교체 */
   async function loadDynamicHero() {
