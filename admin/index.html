@@ -105,7 +105,9 @@
     .pledge-form textarea { width: 100%; padding: 12px 14px; border: 1px solid #ddd; border-radius: 10px; font-size: 14px; outline: none; resize: vertical; min-height: 80px; font-family: inherit; }
     .pledge-form textarea:focus { border-color: #333; }
     .pledge-list { display: flex; flex-direction: column; gap: 12px; }
-    .pledge-card { background: #fff; border-radius: 12px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); position: relative; }
+    .pledge-card { background: #fff; border-radius: 12px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); position: relative; cursor: grab; transition: opacity 0.15s, transform 0.15s; }
+    .pledge-card.dragging { opacity: 0.5; transform: scale(0.97); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+    #pledgeList .drag-placeholder { border: 2px dashed #aaa; border-radius: 12px; background: #f0f0f0; min-height: 60px; margin: 4px 0; }
     .pledge-card .pledge-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
     .pledge-card .pledge-title { font-size: 16px; font-weight: 700; }
     .pledge-card .pledge-desc { font-size: 13px; color: #888; margin-bottom: 8px; }
@@ -1442,10 +1444,10 @@ async function loadPledges() {
       return;
     }
     container.innerHTML = items.map((item, i) => `
-      <div class="pledge-card">
+      <div class="pledge-card" draggable="true" data-id="${item.id}">
         <div class="pledge-header">
           <div style="display:flex;align-items:flex-start;gap:10px;">
-            <span style="background:var(--primary,#004EA2);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;">${String(i + 1).padStart(2, '0')}</span>
+            <span class="pledge-order-num" style="background:var(--primary,#004EA2);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;">${String(i + 1).padStart(2, '0')}</span>
             <div>
               <div class="pledge-title"><i class="${item.icon || 'fas fa-bullhorn'}" style="margin-right:6px;opacity:0.5;"></i>${item.title}</div>
               <div class="pledge-desc">${item.desc || ''}</div>
@@ -1459,6 +1461,7 @@ async function loadPledges() {
         ${item.details && item.details.length ? `<ul class="pledge-details">${item.details.map(d => `<li>${d}</li>`).join('')}</ul>` : ''}
       </div>
     `).join('');
+    initPledgeDragSort(container);
   } catch { container.innerHTML = '<div class="empty-state">불러오기 실패</div>'; }
 }
 
@@ -1524,6 +1527,106 @@ function cancelPledgeEdit() {
   document.getElementById('pledgeSubmitBtn').textContent = '공약 추가';
   document.getElementById('pledgeFormWrap').style.display = 'none';
   document.getElementById('pledgeAddBtn').style.display = '';
+}
+
+function initPledgeDragSort(container) {
+  let dragEl = null;
+  let placeholder = null;
+
+  container.querySelectorAll('.pledge-card').forEach(item => {
+    item.addEventListener('dragstart', e => {
+      dragEl = item;
+      item.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', '');
+      placeholder = document.createElement('div');
+      placeholder.className = 'drag-placeholder';
+    });
+
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      if (placeholder && placeholder.parentNode) placeholder.remove();
+      container.querySelectorAll('.pledge-card .pledge-order-num').forEach((num, i) => {
+        num.textContent = String(i + 1).padStart(2, '0');
+      });
+      const ids = [...container.querySelectorAll('.pledge-card')].map(el => el.dataset.id);
+      savePledgeOrder(ids);
+      dragEl = null;
+    });
+
+    item.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      if (!dragEl || item === dragEl) return;
+      const rect = item.getBoundingClientRect();
+      const mid = rect.top + rect.height / 2;
+      if (e.clientY < mid) {
+        container.insertBefore(dragEl, item);
+      } else {
+        container.insertBefore(dragEl, item.nextSibling);
+      }
+    });
+  });
+
+  // 터치 지원 (모바일)
+  let touchDragEl = null;
+  let touchClone = null;
+
+  container.querySelectorAll('.pledge-card').forEach(item => {
+    item.addEventListener('touchstart', e => {
+      if (e.target.closest('.pledge-actions')) return;
+      touchDragEl = item;
+      setTimeout(() => {
+        if (touchDragEl === item) {
+          item.classList.add('dragging');
+          touchClone = item.cloneNode(true);
+          touchClone.style.cssText = 'position:fixed;pointer-events:none;z-index:9999;opacity:0.8;width:' + item.offsetWidth + 'px;left:' + item.getBoundingClientRect().left + 'px;top:' + item.getBoundingClientRect().top + 'px;';
+          document.body.appendChild(touchClone);
+        }
+      }, 150);
+    }, { passive: true });
+
+    item.addEventListener('touchmove', e => {
+      if (!touchDragEl || !touchClone) return;
+      e.preventDefault();
+      const y = e.touches[0].clientY;
+      touchClone.style.top = y - 24 + 'px';
+      const target = document.elementFromPoint(e.touches[0].clientX, y);
+      const targetItem = target?.closest('.pledge-card');
+      if (targetItem && targetItem !== touchDragEl && targetItem.parentNode === container) {
+        const rect = targetItem.getBoundingClientRect();
+        if (y < rect.top + rect.height / 2) {
+          container.insertBefore(touchDragEl, targetItem);
+        } else {
+          container.insertBefore(touchDragEl, targetItem.nextSibling);
+        }
+      }
+    }, { passive: false });
+
+    item.addEventListener('touchend', () => {
+      if (touchClone) { touchClone.remove(); touchClone = null; }
+      if (touchDragEl) {
+        touchDragEl.classList.remove('dragging');
+        container.querySelectorAll('.pledge-card .pledge-order-num').forEach((num, i) => {
+          num.textContent = String(i + 1).padStart(2, '0');
+        });
+        const ids = [...container.querySelectorAll('.pledge-card')].map(el => el.dataset.id);
+        savePledgeOrder(ids);
+        touchDragEl = null;
+      }
+    });
+  });
+}
+
+async function savePledgeOrder(ids) {
+  try {
+    await fetch(`${API}/pledges`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ ids }),
+    });
+    showToast('순서 변경 완료');
+  } catch { showToast('순서 저장 실패'); }
 }
 
 async function deletePledge(id) {

@@ -31,7 +31,18 @@ export default async function handler(req, res) {
     if (!code) return res.status(400).json({ error: 'code 파라미터 필요' });
 
     const pledges = await redis.get(`${code}:pledges`) || [];
-    const sorted = pledges.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    // order가 없는 항목에 인덱스 기반 order 자동 부여
+    let needsSave = false;
+    pledges.forEach((p, i) => {
+      if (p.order === undefined || p.order === null) {
+        p.order = i;
+        needsSave = true;
+      }
+    });
+    if (needsSave) {
+      await redis.set(`${code}:pledges`, pledges);
+    }
+    const sorted = pledges.sort((a, b) => a.order - b.order);
     return res.status(200).json(sorted);
   }
 
@@ -81,6 +92,24 @@ export default async function handler(req, res) {
 
     await redis.set(`${user.code}:pledges`, pledges);
     return res.status(200).json(pledges[idx]);
+  }
+
+  // PATCH: 공약 순서 변경 (인증 필요)
+  if (req.method === 'PATCH') {
+    const user = verifyToken(req);
+    if (!user) return res.status(401).json({ error: '인증 필요' });
+
+    const { ids } = req.body;
+    if (!Array.isArray(ids)) return res.status(400).json({ error: 'ids 배열 필수' });
+
+    const pledges = await redis.get(`${user.code}:pledges`) || [];
+    ids.forEach((id, i) => {
+      const p = pledges.find(p => p.id === id);
+      if (p) p.order = i;
+    });
+
+    await redis.set(`${user.code}:pledges`, pledges);
+    return res.status(200).json({ success: true });
   }
 
   // DELETE: 공약 삭제 (인증 필요)
