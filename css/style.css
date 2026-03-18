@@ -399,7 +399,7 @@ img { max-width: 100%; height: auto; display: block; }
   .scroll-top { bottom: 24px; }
   .toast { bottom: 24px; }
   .pledge-cards { display: grid; grid-template-columns: repeat(2, 1fr); }
-  .pledge-cards .pledge-card:last-child { grid-column: span 2; max-width: 50%; margin: 0 auto; }
+  .pledge-cards .pledge-card:last-child:nth-child(odd) { grid-column: span 2; max-width: 50%; margin: 0 auto; }
   .contact-cards { grid-template-columns: repeat(4, 1fr); }
 }
 
