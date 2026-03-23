@@ -32,7 +32,7 @@ const candidates = [
   { code: 'kma', name: '강미애', party: '무소속', password: '1234' },
   { code: 'jsh', name: '주순희', party: '더불어민주당', password: '1234' },
   { code: 'yhg', name: '윤희근', party: '국민의힘', password: '1234' },
-  { code: 'cyh', name: '최윤홍', party: '무소속', password: '1234' },
+  { code: 'cyh', name: '최윤홍', party: '국민의힘', password: '1234' },
 ];
 
 async function seed() {

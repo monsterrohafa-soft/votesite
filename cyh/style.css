@@ -1,14 +1,14 @@
 /* =============================================
    최윤홍 부산교육감 후보 홈페이지 - Mobile First CSS
-   교육 전문가 컬러 (딥블루) 기반
+   국민의힘 공식 컬러 기반
    ============================================= */
 
 :root {
-  --primary: #0D47A1;
-  --primary-dark: #0A3680;
-  --primary-light: #1565C0;
+  --primary: #E61E2B;
+  --primary-dark: #C41620;
+  --primary-light: #FF3D4A;
   --accent: #FFFFFF;
-  --bg-party: #E3F2FD;
+  --bg-party: #FFF0F0;
   /* 공통 */
   --text: #1A1A1A;
   --text-light: #555;
@@ -276,7 +276,7 @@ img { max-width: 100%; height: auto; display: block; }
 .pledge-icon.communication { background: #F3E5F5; color: #9C27B0; }
 
 .pledge-number { position: absolute; top: 20px; right: 20px; font-size: 36px; font-weight: 900; line-height: 1; }
-.pledge-card:nth-child(1) .pledge-number { color: rgba(13,71,161,0.15); }
+.pledge-card:nth-child(1) .pledge-number { color: rgba(230,30,43,0.15); }
 .pledge-card:nth-child(2) .pledge-number { color: rgba(0,188,212,0.2); }
 .pledge-card:nth-child(3) .pledge-number { color: rgba(76,175,80,0.2); }
 .pledge-card:nth-child(4) .pledge-number { color: rgba(255,152,0,0.2); }
