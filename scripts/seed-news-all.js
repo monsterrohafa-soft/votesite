@@ -98,7 +98,7 @@ const allNews = {
     { title: '윤희근 충북지사 예비후보 "스스로 주도하는 충북 만들 것"', source: '충북일보', url: 'https://www.inews365.com/news/article.html?no=908348', date: '2026-02-28' },
     { title: '윤희근 전 경찰청장, 충북안전체험관 방문…"안전 충북" 구상 본격화', source: '충북일보', url: 'https://www.inews365.com/news/article.html?no=904016', date: '2026-01-15' },
   ],
-  cyh: [
+  edubusan: [
     { title: '최윤홍 부산교육감 권한대행, 교육감 재선거 출마선언', source: '뉴스1', url: 'https://www.news1.kr/local/busan-gyeongnam/5696256', date: '2025-02-20' },
     { title: '최윤홍도 출사표, 부산교육감 다자대결 굳어지나', source: '오마이뉴스', url: 'https://www.ohmynews.com/NWS_Web/View/at_pg.aspx?CNTN_CD=A0003108065', date: '2025-03-05' },
     { title: '최윤홍 부산교육감 예비후보, 부산 교실환경 바꾸겠다', source: '매일신문', url: 'https://www.imaeil.com/page/view/2026030415441866386', date: '2026-03-04' },
