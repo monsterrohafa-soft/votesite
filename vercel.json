@@ -1,5 +1,9 @@
 {
   "trailingSlash": true,
+  "redirects": [
+    { "source": "/cyh/", "destination": "/edubusan/", "statusCode": 301 },
+    { "source": "/cyh", "destination": "/edubusan/", "statusCode": 301 }
+  ],
   "rewrites": [
     { "source": "/admin/", "destination": "/admin/index.html" },
     { "source": "/:code/admin/", "destination": "/admin/index.html" },
