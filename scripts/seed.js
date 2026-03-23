@@ -33,6 +33,7 @@ const candidates = [
   { code: 'jsh', name: '주순희', party: '더불어민주당', password: '1234' },
   { code: 'yhg', name: '윤희근', party: '국민의힘', password: '1234' },
   { code: 'cyh', name: '최윤홍', party: '국민의힘', password: '1234' },
+  { code: 'lhy', name: '이호영', party: '국민의힘', password: '1234' },
 ];
 
 async function seed() {
