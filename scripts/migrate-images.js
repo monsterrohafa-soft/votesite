@@ -15,7 +15,7 @@ const redis = new Redis({
   token: process.env.KV_REST_API_TOKEN,
 });
 
-const candidates = ['lsh', 'njh', 'jdm', 'lhs', 'css', 'ysh', 'yjg', 'jws', 'jhh', 'ssw', 'kma', 'jsh', 'yhg'];
+const candidates = ['lsh', 'njh', 'jdm', 'lhs', 'css', 'ysh', 'yjg', 'jws', 'jhh', 'ssw', 'kma', 'jsh', 'yhg', 'cyh'];
 const PROJECT_ROOT = new URL('..', import.meta.url).pathname;
 
 // 후보별 사진 메타데이터 (category + alt)
@@ -140,6 +140,18 @@ const photoMeta = {
     { alt: '윤희근 기념식 참석', category: 'event' },
     { alt: '윤희근 언론 인터뷰', category: 'media' },
     { alt: '윤희근 뉴스 보도', category: 'media' },
+  ],
+  cyh: [
+    { alt: '최윤홍 교육 현장 방문', category: 'activity' },
+    { alt: '최윤홍 교육청 업무', category: 'activity' },
+    { alt: '최윤홍 학교 방문', category: 'activity' },
+    { alt: '최윤홍 거리 유세', category: 'campaign' },
+    { alt: '최윤홍 선거 활동', category: 'campaign' },
+    { alt: '최윤홍 시민과 함께', category: 'event' },
+    { alt: '최윤홍 출판기념회', category: 'event' },
+    { alt: '최윤홍 행사 참석', category: 'event' },
+    { alt: '최윤홍 언론 인터뷰', category: 'media' },
+    { alt: '최윤홍 토론회', category: 'media' },
   ],
 };
 
