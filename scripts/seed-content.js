@@ -279,9 +279,14 @@ const candidateData = {
     contacts: [
       { type: 'phone', label: '전화', value: '051-000-0000' },
       { type: 'address', label: '선거사무소', value: '부산광역시 (상세 주소 입력)' },
-      { type: 'address', label: '출마', value: '부산교육감 후보' },
+      { type: 'address', label: '출마', value: '국민의힘 부산교육감 후보' },
     ],
-    videos: [],
+    videos: [
+      { videoId: '59cQeE4pqkw', title: '부산시교육감 재선거 후보자 토론회', desc: '부산MBC 주관 교육감 후보자 초청 토론회' },
+      { videoId: 'VY9yMTVGIxs', title: '부산교육감 재선거 방송연설 - 최윤홍 후보', desc: 'KBS부산 방송연설 (2025.04.01)' },
+      { videoId: '_ovRva9a_EY', title: '[예비후보에게 듣는다] 최윤홍 부산시교육감 예비후보', desc: 'kt HCN 핫콘뉴스 인터뷰' },
+      { videoId: 'vYexThEIqkg', title: '최윤홍 부산시교육감 권한대행 인터뷰', desc: '부산MBC 2025 부산 교육, 어떻게?' },
+    ],
   },
 
   css: {
