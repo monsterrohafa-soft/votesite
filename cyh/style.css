@@ -219,6 +219,16 @@ img { max-width: 100%; height: auto; display: block; }
 .title-accent { display: block; font-size: 13px; font-weight: 600; color: var(--primary); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 8px; }
 
 /* 후보 소개 */
+.about-highlight {
+  text-align: center; margin-bottom: 28px;
+  padding: 28px 20px; background: white;
+  border-radius: var(--radius-lg); box-shadow: var(--shadow);
+}
+.highlight-stat { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.stat-number { font-size: 48px; font-weight: 900; color: var(--primary); line-height: 1; }
+.stat-label { font-size: 18px; font-weight: 700; color: var(--text); }
+.stat-desc { font-size: 14px; color: var(--text-light); }
+
 .about-intro {
   background: var(--bg-party);
   border-left: 4px solid var(--primary);
@@ -263,6 +273,7 @@ img { max-width: 100%; height: auto; display: block; }
 .pledge-card:nth-child(3)::before { background: #4CAF50; }
 .pledge-card:nth-child(4)::before { background: #FF9800; }
 .pledge-card:nth-child(5)::before { background: #9C27B0; }
+.pledge-card:nth-child(6)::before { background: #1E88E5; }
 
 .pledge-icon {
   width: 56px; height: 56px; border-radius: 16px;
@@ -274,6 +285,7 @@ img { max-width: 100%; height: auto; display: block; }
 .pledge-icon.safety { background: #E8F5E9; color: #4CAF50; }
 .pledge-icon.welfare { background: #FFF3E0; color: #FF9800; }
 .pledge-icon.communication { background: #F3E5F5; color: #9C27B0; }
+.pledge-icon.essence { background: #E3F2FD; color: #1E88E5; }
 
 .pledge-number { position: absolute; top: 20px; right: 20px; font-size: 36px; font-weight: 900; line-height: 1; }
 .pledge-card:nth-child(1) .pledge-number { color: rgba(230,30,43,0.15); }
@@ -281,6 +293,7 @@ img { max-width: 100%; height: auto; display: block; }
 .pledge-card:nth-child(3) .pledge-number { color: rgba(76,175,80,0.2); }
 .pledge-card:nth-child(4) .pledge-number { color: rgba(255,152,0,0.2); }
 .pledge-card:nth-child(5) .pledge-number { color: rgba(156,39,176,0.2); }
+.pledge-card:nth-child(6) .pledge-number { color: rgba(30,136,229,0.2); }
 .pledge-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
 .pledge-desc { font-size: 14px; color: var(--text-light); margin-bottom: 16px; }
 .pledge-details { list-style: none; }
