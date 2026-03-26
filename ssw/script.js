@@ -168,7 +168,7 @@ function shareKakao() {
       objectType: 'feed',
       content: {
         title: '서승우 | 청주시장 예비후보',
-        description: '빛나는 청주시민, 다시 뛰는 더 큰 청주 - 국민의힘 서승우',
+        description: '시민이 빛나는 더 큰 청주 - 국민의힘 서승우',
         imageUrl: '',
         link: {
           mobileWebUrl: window.location.href,
@@ -189,7 +189,7 @@ function shareKakao() {
     if (navigator.share) {
       navigator.share({
         title: '서승우 | 청주시장 예비후보',
-        text: '빛나는 청주시민, 다시 뛰는 더 큰 청주',
+        text: '시민이 빛나는 더 큰 청주',
         url: window.location.href,
       });
     } else {
