@@ -261,6 +261,8 @@ img { max-width: 100%; height: auto; display: block; }
 .pledge-card:nth-child(3)::before { background: #E67E22; }
 .pledge-card:nth-child(4)::before { background: #9B59B6; }
 .pledge-card:nth-child(5)::before { background: #E74C3C; }
+.pledge-card:nth-child(6)::before { background: #F39C12; }
+.pledge-card:nth-child(7)::before { background: #1ABC9C; }
 
 .pledge-icon {
   width: 56px; height: 56px; border-radius: 16px;
@@ -272,6 +274,8 @@ img { max-width: 100%; height: auto; display: block; }
 .pledge-icon.college { background: #FDF2E9; color: #E67E22; }
 .pledge-icon.teacher { background: #F4ECF7; color: #9B59B6; }
 .pledge-icon.safety { background: #FDEDEC; color: #E74C3C; }
+.pledge-icon.dream { background: #FEF9E7; color: #F39C12; }
+.pledge-icon.global { background: #E8F8F5; color: #1ABC9C; }
 
 .pledge-number { position: absolute; top: 20px; right: 20px; font-size: 36px; font-weight: 900; line-height: 1; }
 .pledge-card:nth-child(1) .pledge-number { color: rgba(27,122,110,0.12); }
@@ -279,6 +283,8 @@ img { max-width: 100%; height: auto; display: block; }
 .pledge-card:nth-child(3) .pledge-number { color: rgba(230,126,34,0.12); }
 .pledge-card:nth-child(4) .pledge-number { color: rgba(155,89,182,0.12); }
 .pledge-card:nth-child(5) .pledge-number { color: rgba(231,76,60,0.12); }
+.pledge-card:nth-child(6) .pledge-number { color: rgba(243,156,18,0.12); }
+.pledge-card:nth-child(7) .pledge-number { color: rgba(26,188,156,0.12); }
 .pledge-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
 .pledge-desc { font-size: 14px; color: var(--text-light); margin-bottom: 16px; }
 .pledge-details { list-style: none; }
