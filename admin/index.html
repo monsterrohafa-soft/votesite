@@ -530,7 +530,7 @@
           <i class="fab fa-youtube"></i><span>유튜브</span>
         </button>
         <button type="button" class="contact-type-btn" data-type="blog" onclick="selectContactType('blog')">
-          <i class="fas fa-pen"></i><span>블로그</span>
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="vertical-align:middle;"><path d="M16.273 12.845 7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727v12.845Z"/></svg><span>블로그</span>
         </button>
         <button type="button" class="contact-type-btn" data-type="threads" onclick="selectContactType('threads')">
           <i class="fab fa-threads"></i><span>쓰레드</span>
@@ -1723,10 +1723,16 @@ async function loadContacts() {
       container.innerHTML = '<div class="empty-state">등록된 연락처가 없습니다</div>';
       return;
     }
-    container.innerHTML = items.map(item => `
+    const CONTACT_COLORS = { instagram: '#E4405F', facebook: '#1877F2', youtube: '#FF0000', blog: '#03C75A', threads: '#000' };
+    const naverN = '<svg viewBox="0 0 24 24" width="16" height="16" fill="#fff"><path d="M16.273 12.845 7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727v12.845Z"/></svg>';
+    container.innerHTML = items.map(item => {
+      const brandColor = CONTACT_COLORS[item.type] || '';
+      const iconStyle = brandColor ? `background:${brandColor};color:#fff;` : '';
+      const iconInner = item.type === 'blog' ? naverN : `<i class="${CONTACT_ICONS[item.type] || 'fas fa-link'}"></i>`;
+      return `
       <div class="contact-card">
         <div class="contact-info">
-          <div class="contact-icon"><i class="${CONTACT_ICONS[item.type] || 'fas fa-link'}"></i></div>
+          <div class="contact-icon" style="${iconStyle}">${iconInner}</div>
           <div class="contact-detail">
             <div class="contact-type">${CONTACT_LABELS[item.type] || item.type}${item.label ? ' · ' + item.label : ''}</div>
             <div class="contact-value">${item.value}</div>
@@ -1736,8 +1742,8 @@ async function loadContacts() {
           <button class="btn-edit" onclick="editContact('${item.id}')" title="수정">✏️</button>
           <button class="btn-delete" onclick="deleteContact('${item.id}')" title="삭제">&times;</button>
         </div>
-      </div>
-    `).join('');
+      </div>`;
+    }).join('');
   } catch { container.innerHTML = '<div class="empty-state">불러오기 실패</div>'; }
 }
 

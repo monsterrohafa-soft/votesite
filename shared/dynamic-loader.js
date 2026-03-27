@@ -409,12 +409,29 @@
       container.innerHTML = items.map(item => {
         const icon = iconMap[item.type] || 'fas fa-link';
         const href = getHref(item);
-        const target = (item.url || ['instagram', 'facebook', 'youtube', 'blog'].includes(item.type)) ? ' target="_blank"' : '';
+        const snsTypes = ['instagram', 'facebook', 'youtube', 'blog', 'threads'];
+        const target = (item.url || snsTypes.includes(item.type)) ? ' target="_blank"' : '';
+
+        const colorMap = {
+          instagram: '#E4405F',
+          facebook: '#1877F2',
+          youtube: '#FF0000',
+          blog: '#03C75A',
+          threads: '#000000',
+          phone: '',
+          email: '',
+          address: '',
+        };
+        const brandColor = colorMap[item.type] || '';
+        const iconStyle = brandColor ? ` style="background:${brandColor};color:#fff;"` : '';
+
+        const naverSvg = '<svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path d="M16.273 12.845 7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727v12.845Z"/></svg>';
+        const iconInner = item.type === 'blog' ? naverSvg : `<i class="${icon}" aria-hidden="true"></i>`;
 
         return `
           <a href="${href}" class="contact-card"${target}>
-            <div class="contact-icon">
-              <i class="${icon}" aria-hidden="true"></i>
+            <div class="contact-icon"${iconStyle}>
+              ${iconInner}
             </div>
             <div class="contact-info">
               <h4>${item.label || item.type}</h4>
