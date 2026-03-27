@@ -389,6 +389,7 @@
       facebook: 'fab fa-facebook-f',
       youtube: 'fab fa-youtube',
       blog: 'fas fa-blog',
+      threads: 'fab fa-threads',
     };
 
     function getHref(item) {

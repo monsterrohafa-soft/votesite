@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>관리자 페이지</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -120,6 +121,16 @@
     /* 연락처 관리 */
     .contact-form { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
     .contact-form h3 { font-size: 15px; margin-bottom: 16px; }
+    .contact-type-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .contact-type-btn { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1.5px solid #e0e0e0; border-radius: 20px; background: #fff; font-size: 13px; cursor: pointer; transition: all 0.2s; color: #666; }
+    .contact-type-btn i { font-size: 15px; }
+    .contact-type-btn:hover { border-color: #aaa; background: #fafafa; }
+    .contact-type-btn.active { border-color: #333; background: #333; color: #fff; }
+    .contact-type-btn[data-type="instagram"].active { background: #E4405F; border-color: #E4405F; }
+    .contact-type-btn[data-type="facebook"].active { background: #1877F2; border-color: #1877F2; }
+    .contact-type-btn[data-type="youtube"].active { background: #FF0000; border-color: #FF0000; }
+    .contact-type-btn[data-type="blog"].active { background: #03C75A; border-color: #03C75A; }
+    .contact-type-btn[data-type="threads"].active { background: #000; border-color: #000; }
     .contact-list { display: flex; flex-direction: column; gap: 10px; }
     .contact-card { display: flex; justify-content: space-between; align-items: center; background: #fff; border-radius: 10px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
     .contact-card .contact-info { display: flex; align-items: center; gap: 12px; flex: 1; }
@@ -496,37 +507,40 @@
     <div class="contact-form" id="contactFormWrap" style="display:none;margin-top:16px;">
       <h3 id="contactFormTitle">새 연락처 추가</h3>
       <input type="hidden" id="contactEditId">
-      <div class="form-row">
-        <div class="form-group">
-          <label>타입</label>
-          <select id="contactType">
-            <option value="phone">📞 전화</option>
-            <option value="email">📧 이메일</option>
-            <option value="address">📍 주소</option>
-            <option value="instagram">📷 인스타그램</option>
-            <option value="facebook">👤 페이스북</option>
-            <option value="youtube">▶️ 유튜브</option>
-            <option value="blog">📝 블로그</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>라벨</label>
-          <input type="text" id="contactLabel" placeholder="예: 선거사무소">
-        </div>
+      <input type="hidden" id="contactType" value="phone">
+
+      <!-- 타입 버튼 그리드 -->
+      <div class="contact-type-grid">
+        <button type="button" class="contact-type-btn active" data-type="phone" onclick="selectContactType('phone')">
+          <i class="fas fa-phone-alt"></i><span>전화</span>
+        </button>
+        <button type="button" class="contact-type-btn" data-type="email" onclick="selectContactType('email')">
+          <i class="fas fa-envelope"></i><span>이메일</span>
+        </button>
+        <button type="button" class="contact-type-btn" data-type="address" onclick="selectContactType('address')">
+          <i class="fas fa-map-marker-alt"></i><span>주소</span>
+        </button>
+        <button type="button" class="contact-type-btn" data-type="instagram" onclick="selectContactType('instagram')">
+          <i class="fab fa-instagram"></i><span>인스타</span>
+        </button>
+        <button type="button" class="contact-type-btn" data-type="facebook" onclick="selectContactType('facebook')">
+          <i class="fab fa-facebook"></i><span>페이스북</span>
+        </button>
+        <button type="button" class="contact-type-btn" data-type="youtube" onclick="selectContactType('youtube')">
+          <i class="fab fa-youtube"></i><span>유튜브</span>
+        </button>
+        <button type="button" class="contact-type-btn" data-type="blog" onclick="selectContactType('blog')">
+          <i class="fas fa-pen"></i><span>블로그</span>
+        </button>
+        <button type="button" class="contact-type-btn" data-type="threads" onclick="selectContactType('threads')">
+          <i class="fab fa-threads"></i><span>쓰레드</span>
+        </button>
       </div>
-      <div class="form-row full">
-        <div class="form-group">
-          <label>값</label>
-          <input type="text" id="contactValue" placeholder="예: 010-1234-5678">
-        </div>
-      </div>
-      <div class="form-row full">
-        <div class="form-group">
-          <label>링크 URL (선택)</label>
-          <input type="text" id="contactUrl" placeholder="예: tel:010-1234-5678 또는 https://...">
-        </div>
-      </div>
-      <div style="display:flex;gap:8px;">
+
+      <!-- 동적 입력 필드 -->
+      <div id="contactFields"></div>
+
+      <div style="display:flex;gap:8px;margin-top:12px;">
         <button class="btn-sm btn-add" id="contactSubmitBtn" onclick="submitContact()">연락처 추가</button>
         <button class="btn-sm" id="contactCancelBtn" onclick="cancelContactEdit()" style="background:#ddd;">취소</button>
       </div>
@@ -1641,8 +1655,63 @@ async function deletePledge(id) {
 }
 
 // ========== 연락처 관리 ==========
-const CONTACT_ICONS = { phone: 'fas fa-phone-alt', email: 'fas fa-envelope', address: 'fas fa-map-marker-alt', instagram: 'fab fa-instagram', facebook: 'fab fa-facebook', youtube: 'fab fa-youtube', blog: 'fas fa-pen' };
-const CONTACT_LABELS = { phone: '전화', email: '이메일', address: '주소', instagram: '인스타그램', facebook: '페이스북', youtube: '유튜브', blog: '블로그' };
+const CONTACT_ICONS = { phone: 'fas fa-phone-alt', email: 'fas fa-envelope', address: 'fas fa-map-marker-alt', instagram: 'fab fa-instagram', facebook: 'fab fa-facebook', youtube: 'fab fa-youtube', blog: 'fas fa-pen', threads: 'fab fa-threads' };
+const CONTACT_LABELS = { phone: '전화', email: '이메일', address: '주소', instagram: '인스타그램', facebook: '페이스북', youtube: '유튜브', blog: '블로그', threads: '쓰레드' };
+const CONTACT_FIELD_CONFIG = {
+  phone:     { valueLabel: '전화번호', valuePlaceholder: '010-1234-5678', showUrl: false },
+  email:     { valueLabel: '이메일 주소', valuePlaceholder: 'example@email.com', showUrl: false },
+  address:   { valueLabel: '주소', valuePlaceholder: '세종시 어진동 ...', showUrl: false },
+  instagram: { valueLabel: '표시 이름', valuePlaceholder: '@gangmiae', showUrl: true, urlPlaceholder: 'https://instagram.com/...' },
+  facebook:  { valueLabel: '표시 이름', valuePlaceholder: '강미애', showUrl: true, urlPlaceholder: 'https://facebook.com/...' },
+  youtube:   { valueLabel: '표시 이름', valuePlaceholder: '강미애TV', showUrl: true, urlPlaceholder: 'https://youtube.com/@...' },
+  blog:      { valueLabel: '표시 이름', valuePlaceholder: '강미애 블로그', showUrl: true, urlPlaceholder: 'https://blog.naver.com/...' },
+  threads:   { valueLabel: '표시 이름', valuePlaceholder: '@gangmiae', showUrl: true, urlPlaceholder: 'https://threads.net/@...' },
+};
+
+function selectContactType(type) {
+  document.getElementById('contactType').value = type;
+  document.querySelectorAll('.contact-type-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.type === type);
+  });
+  renderContactFields(type);
+}
+
+function renderContactFields(type) {
+  const config = CONTACT_FIELD_CONFIG[type] || CONTACT_FIELD_CONFIG.phone;
+  const labelVal = document.getElementById('contactLabel')?.value || '';
+  const valueVal = document.getElementById('contactValue')?.value || '';
+  const urlVal = document.getElementById('contactUrl')?.value || '';
+
+  let html = `
+    <div class="form-row full">
+      <div class="form-group">
+        <label>${config.valueLabel}</label>
+        <input type="text" id="contactValue" placeholder="${config.valuePlaceholder}" value="${valueVal.replace(/"/g, '&quot;')}">
+      </div>
+    </div>`;
+
+  if (config.showUrl) {
+    html += `
+    <div class="form-row full">
+      <div class="form-group">
+        <label>링크 URL</label>
+        <input type="text" id="contactUrl" placeholder="${config.urlPlaceholder}" value="${urlVal.replace(/"/g, '&quot;')}">
+      </div>
+    </div>`;
+  } else {
+    html += `<input type="hidden" id="contactUrl" value="">`;
+  }
+
+  html += `
+    <div class="form-row full">
+      <div class="form-group">
+        <label style="color:#aaa;font-size:12px;">별칭 (선택)</label>
+        <input type="text" id="contactLabel" placeholder="예: 선거사무소, 공식채널" value="${labelVal.replace(/"/g, '&quot;')}" style="padding:8px 12px;font-size:13px;">
+      </div>
+    </div>`;
+
+  document.getElementById('contactFields').innerHTML = html;
+}
 
 async function loadContacts() {
   const container = document.getElementById('contactList');
@@ -1674,10 +1743,14 @@ async function loadContacts() {
 
 async function submitContact() {
   const type = document.getElementById('contactType').value;
-  const label = document.getElementById('contactLabel').value.trim();
-  const value = document.getElementById('contactValue').value.trim();
-  const url = document.getElementById('contactUrl').value.trim();
-  if (!value) { showToast('값은 필수입니다'); return; }
+  const label = document.getElementById('contactLabel')?.value.trim() || '';
+  const value = document.getElementById('contactValue')?.value.trim() || '';
+  const urlEl = document.getElementById('contactUrl');
+  let url = urlEl ? urlEl.value.trim() : '';
+  if (!value) { showToast(CONTACT_FIELD_CONFIG[type]?.valueLabel + '을(를) 입력해주세요'); return; }
+  // 기본 타입 자동 URL 생성
+  if (!url && type === 'phone') url = 'tel:' + value.replace(/-/g, '');
+  if (!url && type === 'email') url = 'mailto:' + value;
 
   const editId = document.getElementById('contactEditId').value;
   const method = editId ? 'PUT' : 'POST';
@@ -1701,6 +1774,7 @@ function showContactForm() {
   cancelContactEdit();
   document.getElementById('contactFormWrap').style.display = '';
   document.getElementById('contactAddBtn').style.display = 'none';
+  renderContactFields('phone');
   document.getElementById('contactFormWrap').scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -1711,10 +1785,18 @@ async function editContact(id) {
     const item = items.find(c => c.id === id);
     if (!item) return;
     document.getElementById('contactEditId').value = id;
-    document.getElementById('contactType').value = item.type || 'phone';
-    document.getElementById('contactLabel').value = item.label || '';
-    document.getElementById('contactValue').value = item.value || '';
-    document.getElementById('contactUrl').value = item.url || '';
+    const type = item.type || 'phone';
+    document.getElementById('contactType').value = type;
+    selectContactType(type);
+    // 필드 렌더 후 값 채우기
+    setTimeout(() => {
+      const valEl = document.getElementById('contactValue');
+      const urlEl = document.getElementById('contactUrl');
+      const labelEl = document.getElementById('contactLabel');
+      if (valEl) valEl.value = item.value || '';
+      if (urlEl) urlEl.value = item.url || '';
+      if (labelEl) labelEl.value = item.label || '';
+    }, 0);
     document.getElementById('contactFormTitle').textContent = '연락처 수정';
     document.getElementById('contactSubmitBtn').textContent = '수정 저장';
     document.getElementById('contactFormWrap').style.display = '';
@@ -1726,9 +1808,10 @@ async function editContact(id) {
 function cancelContactEdit() {
   document.getElementById('contactEditId').value = '';
   document.getElementById('contactType').value = 'phone';
-  document.getElementById('contactLabel').value = '';
-  document.getElementById('contactValue').value = '';
-  document.getElementById('contactUrl').value = '';
+  document.getElementById('contactFields').innerHTML = '';
+  document.querySelectorAll('.contact-type-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.type === 'phone');
+  });
   document.getElementById('contactFormTitle').textContent = '새 연락처 추가';
   document.getElementById('contactSubmitBtn').textContent = '연락처 추가';
   document.getElementById('contactFormWrap').style.display = 'none';
