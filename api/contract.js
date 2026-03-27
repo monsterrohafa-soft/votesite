@@ -53,7 +53,7 @@ const DEFAULT_TEMPLATE = {
       id: 'fees',
       type: 'fees',
       title: '제3조 (계약 금액)',
-      content: '1. 홈페이지 제작비: {{createdFee}}원 (VAT 별도)\n2. 월 유지보수비: {{monthlyFee}}원 (VAT 별도)\n3. 계약 기간: {{startDate}} ~ {{endDate}}',
+      content: '1. 홈페이지 제작비: {{createdFee}}원 (VAT 별도)\n2. 월 유지보수비: 계약 종료 후 협의\n3. 계약 기간: {{startDate}} ~ 2026-06-04 (선거일 다음날)',
     },
     {
       id: 'payment',

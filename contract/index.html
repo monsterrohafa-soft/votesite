@@ -264,8 +264,8 @@
           <input type="number" id="fCreatedFee" placeholder="500000">
         </div>
         <div class="form-group">
-          <label>월 유지보수비 (원)</label>
-          <input type="number" id="fMonthlyFee" placeholder="100000">
+          <label>월 유지보수비</label>
+          <input type="text" id="fMonthlyFee" value="계약 종료 후 협의" disabled style="background:#f3f4f6;color:#6b7280;">
         </div>
       </div>
       <div class="form-row">
@@ -275,7 +275,8 @@
         </div>
         <div class="form-group">
           <label>종료일</label>
-          <input type="date" id="fEndDate">
+          <input type="date" id="fEndDate" value="2026-06-04" disabled style="background:#f3f4f6;color:#6b7280;">
+          <small style="color:#6b7280;font-size:11px;">선거일(6/3) 다음날 고정</small>
         </div>
       </div>
       <div class="form-group">
@@ -509,8 +510,8 @@ async function openEditModal(code) {
     document.getElementById('fRegion').value = c.region || '';
     document.getElementById('fPosition').value = c.position || '';
     document.getElementById('fCreatedFee').value = c.createdFee || '';
-    document.getElementById('fMonthlyFee').value = c.monthlyFee || '';
-    document.getElementById('fEndDate').value = c.endDate || '';
+    document.getElementById('fMonthlyFee').value = '계약 종료 후 협의';
+    document.getElementById('fEndDate').value = '2026-06-04';
     document.getElementById('fStartDate').value = c.startDate || '';
     document.getElementById('fSpecial').value = c.specialTerms || '';
     document.getElementById('formModal').classList.add('show');
@@ -533,8 +534,8 @@ async function submitForm() {
     region: document.getElementById('fRegion').value.trim(),
     position: document.getElementById('fPosition').value.trim(),
     createdFee: document.getElementById('fCreatedFee').value,
-    monthlyFee: document.getElementById('fMonthlyFee').value,
-    endDate: document.getElementById('fEndDate').value,
+    monthlyFee: '',
+    endDate: '2026-06-04',
     startDate: document.getElementById('fStartDate').value,
     specialTerms: document.getElementById('fSpecial').value.trim(),
   };
