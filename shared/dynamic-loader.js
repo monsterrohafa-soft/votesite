@@ -80,17 +80,24 @@
     const ELECTION_DATE = new Date('2026-06-03T00:00:00+09:00');
     const PRE_VOTE_START = new Date('2026-05-29T00:00:00+09:00');
     const PRE_VOTE_END = new Date('2026-05-30T23:59:59+09:00');
+    const DAY_MS = 1000 * 60 * 60 * 24;
+
+    function startOfDay(date) {
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    }
 
     function update() {
       const now = new Date();
-      const diff = ELECTION_DATE - now;
+      const today = startOfDay(now);
+      const electionDay = startOfDay(ELECTION_DATE);
+      const diff = electionDay - today;
 
       if (diff <= 0) {
         container.innerHTML = '<div class="dday-number">투표일</div>';
         return;
       }
 
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const days = Math.floor(diff / DAY_MS);
 
       let prevote = '';
       if (now >= PRE_VOTE_START && now <= PRE_VOTE_END) {
