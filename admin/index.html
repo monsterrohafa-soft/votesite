@@ -407,6 +407,7 @@
             <option value="campaign">선거운동</option>
             <option value="event">행사</option>
             <option value="media">언론/미디어</option>
+            <option value="pledge">공약</option>
           </select>
         </div>
       </div>
@@ -1349,7 +1350,7 @@ async function handleFiles(files) {
   loadGallery();
 }
 
-const CAT_LABELS = { activity: '의정활동', campaign: '선거운동', event: '행사', media: '언론' };
+const CAT_LABELS = { activity: '의정활동', campaign: '선거운동', event: '행사', media: '언론', pledge: '공약' };
 
 async function loadGallery() {
   const container = document.getElementById('galleryList');
