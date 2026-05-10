@@ -234,6 +234,7 @@
     <button class="tab-btn" data-tab="contacts" onclick="switchTab('contacts')">연락처</button>
     <button class="tab-btn" data-tab="videos" onclick="switchTab('videos')">영상</button>
     <button class="tab-btn" data-tab="news" onclick="switchTab('news')">기사</button>
+    <button class="tab-btn" data-tab="brochure" onclick="switchTab('brochure')">공보PDF</button>
     <button class="tab-btn" data-tab="qr" onclick="switchTab('qr')">QR코드</button>
   </div>
 
@@ -629,6 +630,43 @@
     </div>
   </div>
 
+  <!-- 공보 PDF 탭 -->
+  <div class="tab-content" id="tab-brochure">
+    <div class="upload-section">
+      <h3>선거공보 PDF 관리</h3>
+      <p class="hero-desc">사이트 '공보' 섹션에 노출되는 선거공보 PDF를 업로드합니다. 모바일에서 다운로드/뷰어로 열립니다.</p>
+
+      <div id="brochureCurrent" style="background:#f8f8f8;border-radius:8px;padding:14px 16px;margin-bottom:16px;font-size:13px;color:#555;display:none;">
+        <div style="font-weight:600;color:#333;margin-bottom:6px;">현재 업로드된 공보</div>
+        <div id="brochureCurrentName">-</div>
+        <div id="brochureCurrentMeta" style="margin-top:4px;font-size:12px;color:#888;"></div>
+        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+          <a id="brochureCurrentLink" href="#" target="_blank" rel="noopener" style="font-size:13px;color:#1976d2;text-decoration:underline;">PDF 열기</a>
+          <button onclick="deleteBrochure()" style="font-size:13px;color:#d32f2f;background:none;border:none;cursor:pointer;text-decoration:underline;padding:0;">삭제</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>PDF 파일 (최대 80MB · application/pdf)</label>
+        <input type="file" id="brochureFileInput" accept="application/pdf">
+      </div>
+
+      <div class="form-group">
+        <label>페이지 수 (선택, 비우면 자동 0)</label>
+        <input type="number" id="brochurePageCount" min="0" max="200" placeholder="예: 12">
+      </div>
+
+      <div id="brochureProgressWrap" style="display:none;margin:12px 0;">
+        <div style="font-size:12px;color:#666;margin-bottom:6px;" id="brochureProgressText">업로드 중...</div>
+        <div style="background:#eee;border-radius:6px;overflow:hidden;height:6px;">
+          <div id="brochureProgressBar" style="height:100%;background:#D81B60;width:0;transition:width .2s;"></div>
+        </div>
+      </div>
+
+      <button class="btn-add" onclick="uploadBrochurePdf()">PDF 업로드</button>
+    </div>
+  </div>
+
   <!-- QR코드 탭 -->
   <div class="tab-content" id="tab-qr">
     <div class="qr-section">
@@ -699,6 +737,7 @@ async function doLogin() {
     loadContacts();
     loadVideos();
     loadNews();
+    loadBrochure();
     generateQR();
   } catch (e) {
     errEl.textContent = '서버 연결에 실패했습니다';
@@ -2190,6 +2229,122 @@ function showToast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ========== 공보 PDF ==========
+async function loadBrochure() {
+  try {
+    const res = await fetch(`${API}/brochure?code=${code}`);
+    if (!res.ok) return;
+    const data = await res.json();
+    renderBrochureCurrent(data);
+  } catch {}
+}
+
+function renderBrochureCurrent(data) {
+  const wrap = document.getElementById('brochureCurrent');
+  if (!wrap) return;
+  if (!data || !data.pdfUrl) {
+    wrap.style.display = 'none';
+    return;
+  }
+  wrap.style.display = '';
+  document.getElementById('brochureCurrentName').textContent = data.fileName || '(이름 없음)';
+  const metaEl = document.getElementById('brochureCurrentMeta');
+  const parts = [];
+  if (data.pageCount) parts.push(`${data.pageCount}페이지`);
+  if (data.updatedAt) {
+    const d = new Date(data.updatedAt);
+    if (!isNaN(d)) parts.push(`업데이트 ${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`);
+  }
+  metaEl.textContent = parts.join(' · ');
+  const link = document.getElementById('brochureCurrentLink');
+  link.href = data.pdfUrl;
+}
+
+async function uploadBrochurePdf() {
+  const fileInput = document.getElementById('brochureFileInput');
+  const file = fileInput.files && fileInput.files[0];
+  if (!file) {
+    showToast('PDF 파일을 선택하세요');
+    return;
+  }
+  if (file.type !== 'application/pdf') {
+    showToast('PDF 파일만 업로드 가능합니다');
+    return;
+  }
+  if (file.size > 80 * 1024 * 1024) {
+    showToast('파일 크기는 80MB 이하여야 합니다');
+    return;
+  }
+
+  const pageCount = Number(document.getElementById('brochurePageCount').value || 0) || 0;
+
+  const wrap = document.getElementById('brochureProgressWrap');
+  const bar = document.getElementById('brochureProgressBar');
+  const txt = document.getElementById('brochureProgressText');
+  wrap.style.display = '';
+  bar.style.width = '0%';
+  txt.textContent = '업로드 준비 중...';
+
+  try {
+    const { upload } = await import('https://esm.sh/@vercel/blob@0.27/client');
+    txt.textContent = '업로드 중...';
+
+    const blob = await upload(file.name, file, {
+      access: 'public',
+      handleUploadUrl: `${API}/brochure-upload-token`,
+      clientPayload: JSON.stringify({ pageCount }),
+      onUploadProgress: (ev) => {
+        if (ev && ev.percentage != null) {
+          bar.style.width = `${ev.percentage}%`;
+          txt.textContent = `업로드 중... ${ev.percentage}%`;
+        }
+      },
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    txt.textContent = '메타 저장 중...';
+    // pageCount 등 추가 메타 저장 (PDF URL은 onUploadCompleted에서 저장됨)
+    await fetch(`${API}/brochure`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        pdfUrl: blob.url,
+        fileName: file.name,
+        pageCount,
+      }),
+    });
+
+    bar.style.width = '100%';
+    txt.textContent = '완료';
+    showToast('공보 PDF 업로드 완료');
+    fileInput.value = '';
+    setTimeout(() => { wrap.style.display = 'none'; }, 800);
+    loadBrochure();
+  } catch (err) {
+    console.error(err);
+    txt.textContent = '실패';
+    showToast(`업로드 실패: ${err.message || err}`);
+  }
+}
+
+async function deleteBrochure() {
+  if (!confirm('공보 PDF를 삭제하시겠습니까?')) return;
+  try {
+    const res = await fetch(`${API}/brochure`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) throw new Error('삭제 실패');
+    showToast('공보 PDF 삭제됨');
+    loadBrochure();
+  } catch (err) {
+    showToast(`삭제 실패: ${err.message || err}`);
+  }
 }
 </script>
 </body>

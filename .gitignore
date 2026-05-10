@@ -3,3 +3,6 @@ node_modules/
 .env
 .env.local
 .env*.local
+
+# 큰 공보 PDF는 Blob에 업로드해서 사용 (git에서 제외)
+*/assets/brochure/*.pdf

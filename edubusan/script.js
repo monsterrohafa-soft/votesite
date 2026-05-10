@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initGalleryFilter();
   initYouTubeEmbed();
   initFadeAnimations();
+  initBrochureViewer();
 });
 
 /* 하단 네비게이션 활성 상태 */
@@ -161,15 +162,80 @@ function initFadeAnimations() {
   targets.forEach((el) => observer.observe(el));
 }
 
+/* 공보 PDF 뷰어 모달 */
+function initBrochureViewer() {
+  const cover = document.getElementById('brochureCover');
+  const viewBtn = document.getElementById('brochureViewBtn');
+  const modal = document.getElementById('brochureModal');
+  const closeBtn = document.getElementById('brochureModalClose');
+  const pagesContainer = document.getElementById('brochureModalPages');
+  if (!modal || !pagesContainer) return;
+
+  // 정적 기본값: assets/brochure/page-01.jpg ~ page-12.jpg
+  let staticPageCount = 12;
+  let staticPagePath = 'assets/brochure/page-';
+
+  function renderPages(pages) {
+    pagesContainer.innerHTML = '';
+    pages.forEach((src, idx) => {
+      const img = document.createElement('img');
+      img.className = 'brochure-modal-page';
+      img.src = src;
+      img.loading = idx < 2 ? 'eager' : 'lazy';
+      img.alt = `공보 ${idx + 1}페이지`;
+      pagesContainer.appendChild(img);
+    });
+  }
+
+  function getStaticPages() {
+    const arr = [];
+    for (let i = 1; i <= staticPageCount; i++) {
+      arr.push(`${staticPagePath}${String(i).padStart(2, '0')}.jpg`);
+    }
+    return arr;
+  }
+
+  function open() {
+    if (!pagesContainer.children.length) {
+      // KV에 동적 페이지가 있으면 그것 사용 (window.__brochurePages 가 dynamic-loader에서 설정됨)
+      const dynamic = window.__brochurePages;
+      renderPages(dynamic && dynamic.length ? dynamic : getStaticPages());
+    }
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function close() {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  if (cover) cover.addEventListener('click', open);
+  if (viewBtn) viewBtn.addEventListener('click', open);
+  if (closeBtn) closeBtn.addEventListener('click', close);
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) close();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) close();
+  });
+}
+
 /* 카카오톡 공유 */
 function shareKakao() {
+  const SHARE_TITLE = '최윤홍 | 부산교육감 후보';
+  const SHARE_DESC = '교육현장 해결사 최윤홍, 부산교육 체인지를 약속합니다';
   if (typeof Kakao !== 'undefined' && Kakao.isInitialized()) {
+    const ogImg = document.querySelector('meta[property="og:image"]');
+    const imageUrl = ogImg ? new URL(ogImg.getAttribute('content'), location.href).href : '';
     Kakao.Share.sendDefault({
       objectType: 'feed',
       content: {
-        title: '최윤홍 | 부산교육감 후보',
-        description: 'Big 부산 교육 - 행복한 부산교육을 만들겠습니다',
-        imageUrl: '',
+        title: SHARE_TITLE,
+        description: SHARE_DESC,
+        imageUrl,
         link: {
           mobileWebUrl: window.location.href,
           webUrl: window.location.href,
@@ -188,8 +254,8 @@ function shareKakao() {
   } else {
     if (navigator.share) {
       navigator.share({
-        title: '최윤홍 | 부산교육감 후보',
-        text: 'Big 부산 교육 - 행복한 부산교육을 만들겠습니다',
+        title: SHARE_TITLE,
+        text: SHARE_DESC,
         url: window.location.href,
       });
     } else {

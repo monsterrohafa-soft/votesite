@@ -22,6 +22,7 @@
     loadDynamicContacts();
     loadDynamicNews();
     loadDynamicVideos();
+    loadDynamicBrochure();
     initDday();
     trackVisit();
   });
@@ -487,6 +488,57 @@
 
     } catch {
       section.style.display = 'none';
+    }
+  }
+
+  /* 동적 공보(brochure) 로드 */
+  async function loadDynamicBrochure() {
+    const section = document.getElementById('brochure');
+    if (!section) return;
+
+    const cardImg = document.getElementById('brochureCoverImg');
+    const meta = document.getElementById('brochureMeta');
+    const dlBtn = document.getElementById('brochureDownloadBtn');
+    const modalDlBtn = document.getElementById('brochureModalDownload');
+
+    try {
+      const res = await fetch(`${API}/brochure?code=${code}`);
+      if (!res.ok) return;
+      const data = await res.json();
+      if (!data) return;
+
+      // 표지 이미지
+      if (data.coverUrl && cardImg) cardImg.src = data.coverUrl;
+
+      // 메타 텍스트
+      if (meta) {
+        const parts = [];
+        if (data.pageCount) parts.push(`${data.pageCount}페이지`);
+        parts.push('부산광역시 교육감 선거 공보');
+        meta.textContent = parts.join(' · ');
+      }
+
+      // PDF 다운로드 URL: 데이터 있을 때만 활성화/표시
+      if (data.pdfUrl) {
+        const fname = data.fileName || '공보.pdf';
+        if (dlBtn) {
+          dlBtn.href = data.pdfUrl;
+          dlBtn.setAttribute('download', fname);
+          dlBtn.style.display = '';
+        }
+        if (modalDlBtn) {
+          modalDlBtn.href = data.pdfUrl;
+          modalDlBtn.setAttribute('download', fname);
+          modalDlBtn.style.display = '';
+        }
+      }
+
+      // 페이지 이미지 배열을 모달에서 사용하도록 노출
+      if (Array.isArray(data.pages) && data.pages.length) {
+        window.__brochurePages = data.pages;
+      }
+    } catch {
+      // 데이터 없으면 정적 fallback
     }
   }
 

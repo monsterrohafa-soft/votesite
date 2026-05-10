@@ -1,14 +1,15 @@
 /* =============================================
    최윤홍 부산교육감 후보 홈페이지 - Mobile First CSS
-   국민의힘 공식 컬러 기반
+   메인 컬러: 마젠타 핫핑크 (공보 표지 색상)
    ============================================= */
 
 :root {
-  --primary: #E61E2B;
-  --primary-dark: #C41620;
-  --primary-light: #FF3D4A;
+  --primary: #D81B60;
+  --primary-dark: #AD1457;
+  --primary-light: #EC407A;
   --accent: #FFFFFF;
-  --bg-party: #FFF0F0;
+  --accent-gold: #FFD700;
+  --bg-party: #FCE4EC;
   /* 공통 */
   --text: #1A1A1A;
   --text-light: #555;
@@ -274,6 +275,7 @@ img { max-width: 100%; height: auto; display: block; }
 .pledge-card:nth-child(4)::before { background: #FF9800; }
 .pledge-card:nth-child(5)::before { background: #9C27B0; }
 .pledge-card:nth-child(6)::before { background: #1E88E5; }
+.pledge-card:nth-child(7)::before { background: #FF5722; }
 
 .pledge-icon {
   width: 56px; height: 56px; border-radius: 16px;
@@ -286,14 +288,16 @@ img { max-width: 100%; height: auto; display: block; }
 .pledge-icon.welfare { background: #FFF3E0; color: #FF9800; }
 .pledge-icon.communication { background: #F3E5F5; color: #9C27B0; }
 .pledge-icon.essence { background: #E3F2FD; color: #1E88E5; }
+.pledge-icon.guard { background: #FBE9E7; color: #FF5722; }
 
 .pledge-number { position: absolute; top: 20px; right: 20px; font-size: 36px; font-weight: 900; line-height: 1; }
-.pledge-card:nth-child(1) .pledge-number { color: rgba(230,30,43,0.15); }
+.pledge-card:nth-child(1) .pledge-number { color: rgba(216,27,96,0.15); }
 .pledge-card:nth-child(2) .pledge-number { color: rgba(0,188,212,0.2); }
 .pledge-card:nth-child(3) .pledge-number { color: rgba(76,175,80,0.2); }
 .pledge-card:nth-child(4) .pledge-number { color: rgba(255,152,0,0.2); }
 .pledge-card:nth-child(5) .pledge-number { color: rgba(156,39,176,0.2); }
 .pledge-card:nth-child(6) .pledge-number { color: rgba(30,136,229,0.2); }
+.pledge-card:nth-child(7) .pledge-number { color: rgba(255,87,34,0.2); }
 .pledge-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
 .pledge-desc { font-size: 14px; color: var(--text-light); margin-bottom: 16px; }
 .pledge-details { list-style: none; }
@@ -440,3 +444,191 @@ img { max-width: 100%; height: auto; display: block; }
 .schedule-title { font-size: 15px; font-weight: 700; color: var(--text); }
 .schedule-time { font-size: 13px; color: var(--text-light); margin-top: 2px; }
 .schedule-location { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+/* ===== 히어로 - 메인 슬로건 강조 (공보 색감) ===== */
+.slogan-main {
+  font-size: 30px; font-weight: 900;
+  color: var(--accent-gold);
+  letter-spacing: -1px;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.18);
+}
+.slogan-keyword {
+  display: inline-block;
+  background: var(--accent-gold);
+  color: var(--primary-dark);
+  padding: 2px 12px;
+  border-radius: 8px;
+  font-weight: 900;
+}
+
+/* CHANGE 핵심 키워드 배너 */
+.slogan-banner { background: var(--primary); padding: 22px 0; }
+.slogan-banner .container { padding: 0 12px; }
+.slogan-items { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; row-gap: 10px; }
+.slogan-item {
+  display: flex; align-items: center; gap: 6px;
+  color: white; font-size: 13px; font-weight: 700; white-space: nowrap;
+}
+.slogan-item i { color: var(--accent-gold); font-size: 14px; }
+
+/* ===== 검증된 실력 (왜 최윤홍인가) ===== */
+.proof-section { padding: 60px 0 40px; background: var(--bg-light); }
+.proof-intro {
+  text-align: center; font-size: 15px; color: var(--text-light);
+  line-height: 1.8; margin: 0 auto 32px; max-width: 480px; padding: 0 16px;
+}
+.proof-intro strong { color: var(--primary); font-weight: 700; }
+.proof-list { display: flex; flex-direction: column; gap: 16px; }
+.proof-card {
+  background: white; border-radius: var(--radius);
+  padding: 22px 20px; box-shadow: var(--shadow);
+  border-left: 4px solid var(--primary);
+}
+.proof-card-num {
+  display: inline-block;
+  background: var(--primary); color: white;
+  width: 28px; height: 28px; border-radius: 50%;
+  font-size: 13px; font-weight: 800; line-height: 28px;
+  text-align: center; margin-right: 8px;
+}
+.proof-card-title { font-size: 16px; font-weight: 800; color: var(--text); display: flex; align-items: center; margin-bottom: 6px; }
+.proof-card-role { font-size: 13px; color: var(--primary); font-weight: 600; margin-bottom: 10px; }
+.proof-card-body { font-size: 14px; line-height: 1.7; color: var(--text-light); }
+
+/* ===== 이미 해낸 성과 (실적) ===== */
+.results-section { padding: 60px 0; }
+.results-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.result-card {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white; padding: 22px 20px; border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.result-card-num { font-size: 32px; font-weight: 900; color: var(--accent-gold); line-height: 1; margin-bottom: 8px; }
+.result-card-title { font-size: 17px; font-weight: 800; margin-bottom: 6px; }
+.result-card-desc { font-size: 13px; line-height: 1.6; opacity: 0.92; }
+
+/* ===== 공보 PDF 뷰어 섹션 ===== */
+.brochure-section { padding: 60px 0; background: var(--bg-light); }
+.brochure-card {
+  background: white; border-radius: var(--radius-lg);
+  overflow: hidden; box-shadow: var(--shadow-lg);
+}
+.brochure-cover {
+  position: relative; cursor: pointer;
+  background: var(--primary-dark);
+}
+.brochure-cover img {
+  width: 100%; display: block;
+  aspect-ratio: 0.74; object-fit: cover;
+}
+.brochure-cover-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,0.6) 100%);
+  display: flex; align-items: flex-end;
+  padding: 24px;
+}
+.brochure-cover-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: white; font-size: 15px; font-weight: 700;
+  background: rgba(0,0,0,0.5); backdrop-filter: blur(6px);
+  padding: 10px 18px; border-radius: 50px;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+.brochure-meta {
+  padding: 18px 20px;
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid var(--border);
+}
+.brochure-meta-text { font-size: 13px; color: var(--text-muted); }
+.brochure-actions { display: flex; gap: 8px; }
+.brochure-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: 50px;
+  font-size: 13px; font-weight: 600;
+  background: var(--bg-light); color: var(--text);
+  border: 1px solid var(--border);
+  text-decoration: none; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.brochure-btn.primary {
+  background: var(--primary); color: white; border-color: var(--primary);
+}
+
+/* PDF 뷰어 풀스크린 모달 */
+.brochure-modal {
+  position: fixed; inset: 0; z-index: 3000;
+  background: rgba(0,0,0,0.96);
+  display: none; flex-direction: column;
+}
+.brochure-modal.active { display: flex; }
+.brochure-modal-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 16px;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(12px);
+  color: white;
+  padding-top: calc(12px + env(safe-area-inset-top, 0));
+}
+.brochure-modal-title { font-size: 14px; font-weight: 600; }
+.brochure-modal-close {
+  background: rgba(255,255,255,0.15); color: white;
+  border: none; width: 36px; height: 36px; border-radius: 50%;
+  font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.brochure-modal-body {
+  flex: 1; overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 20px 12px;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom, 0));
+}
+.brochure-modal-pages { display: flex; flex-direction: column; gap: 12px; max-width: 900px; margin: 0 auto; }
+.brochure-modal-page {
+  width: 100%; display: block; border-radius: 4px;
+  background: white; box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+.brochure-modal-footer {
+  padding: 12px 16px;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(12px);
+  display: flex; gap: 10px; justify-content: center;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0));
+}
+.brochure-download-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 24px; border-radius: 50px;
+  background: var(--primary); color: white;
+  font-size: 14px; font-weight: 700; text-decoration: none;
+}
+
+/* OG/메인 이미지 풀폭 (히어로 포스터 자동 contain) */
+.hero { background: var(--primary); }
+.hero-poster-img { background: var(--primary); }
+
+/* 공약 섹션 메인 헤딩 강조 */
+.pledges .section-title { font-size: 26px; }
+.pledges-lead {
+  text-align: center; font-size: 14px; color: var(--text-light);
+  line-height: 1.7; margin: -20px auto 32px; max-width: 480px; padding: 0 20px;
+}
+.pledges-lead strong { color: var(--primary); font-weight: 700; }
+
+/* 마무리 호소문 */
+.closing-section {
+  padding: 60px 20px; background: var(--primary);
+  color: white; text-align: center;
+}
+.closing-quote {
+  font-size: 19px; font-weight: 800; line-height: 1.7;
+  margin-bottom: 24px; letter-spacing: -0.5px;
+}
+.closing-quote em {
+  font-style: normal; color: var(--accent-gold);
+}
+.closing-body {
+  font-size: 14px; line-height: 1.9; opacity: 0.92;
+  max-width: 480px; margin: 0 auto;
+}
+.closing-sign {
+  margin-top: 28px;
+  font-size: 20px; font-weight: 900;
+  color: var(--accent-gold);
+}
