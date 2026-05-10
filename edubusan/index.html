@@ -44,7 +44,11 @@
   <!-- 히어로 섹션 -->
   <section class="hero" id="hero">
     <div class="hero-poster">
-      <img src="assets/hero-main.jpg" alt="최윤홍 부산교육감 후보 - 교육현장 해결사" class="hero-poster-img">
+      <picture>
+        <source type="image/webp" srcset="assets/hero-main.webp">
+        <source type="image/jpeg" srcset="assets/hero-main-800.jpg 800w, assets/hero-main.jpg 1600w" sizes="(max-width: 600px) 100vw, 800px">
+        <img src="assets/hero-main.jpg" alt="최윤홍 부산교육감 후보 - 교육현장 해결사" class="hero-poster-img" fetchpriority="high">
+      </picture>
     </div>
     <div class="hero-text">
       <div class="hero-meta">

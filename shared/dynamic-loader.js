@@ -66,7 +66,11 @@
       // .hero-img (일반 후보) 또는 .hero-poster-img (포스터형) 찾기
       const heroImg = document.querySelector('.hero-img') || document.querySelector('.hero-poster-img');
       if (heroImg) {
+        // <picture> 내부 <source>가 있으면 srcset을 비워 동적 src가 적용되도록 함
+        const picture = heroImg.closest('picture');
+        if (picture) picture.querySelectorAll('source').forEach((s) => s.removeAttribute('srcset'));
         heroImg.src = data.url;
+        heroImg.srcset = '';
       }
     } catch {
       // 데이터 없으면 기존 정적 이미지 유지
