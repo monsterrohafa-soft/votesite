@@ -169,11 +169,18 @@ function initBrochureViewer() {
   const modal = document.getElementById('brochureModal');
   const closeBtn = document.getElementById('brochureModalClose');
   const pagesContainer = document.getElementById('brochureModalPages');
+  const counter = document.getElementById('brochureModalCounter');
   if (!modal || !pagesContainer) return;
 
-  // 정적 기본값: assets/brochure/page-01.jpg ~ page-12.jpg
-  let staticPageCount = 12;
-  let staticPagePath = 'assets/brochure/page-';
+  const STATIC_PAGE_COUNT = 12;
+  const STATIC_PAGE_PATH = 'assets/brochure/page-';
+  let pageObserver = null;
+
+  function getStaticPages() {
+    return Array.from({ length: STATIC_PAGE_COUNT }, (_, i) =>
+      `${STATIC_PAGE_PATH}${String(i + 1).padStart(2, '0')}.jpg`
+    );
+  }
 
   function renderPages(pages) {
     pagesContainer.innerHTML = '';
@@ -183,21 +190,32 @@ function initBrochureViewer() {
       img.src = src;
       img.loading = idx < 2 ? 'eager' : 'lazy';
       img.alt = `공보 ${idx + 1}페이지`;
+      img.dataset.page = String(idx + 1);
+      // 클릭 시 새 탭에서 원본 보기 (브라우저 핀치줌으로 확대 가능)
+      img.addEventListener('click', () => window.open(src, '_blank', 'noopener'));
       pagesContainer.appendChild(img);
     });
+    if (counter) counter.textContent = `1 / ${pages.length}`;
+    setupCounter(pages.length);
   }
 
-  function getStaticPages() {
-    const arr = [];
-    for (let i = 1; i <= staticPageCount; i++) {
-      arr.push(`${staticPagePath}${String(i).padStart(2, '0')}.jpg`);
-    }
-    return arr;
+  function setupCounter(total) {
+    if (pageObserver) pageObserver.disconnect();
+    if (!counter || !total) return;
+    pageObserver = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter((e) => e.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (visible) {
+        const n = visible.target.dataset.page;
+        counter.textContent = `${n} / ${total}`;
+      }
+    }, { root: modal.querySelector('.brochure-modal-body'), threshold: [0.4, 0.6, 0.8] });
+    pagesContainer.querySelectorAll('img').forEach((img) => pageObserver.observe(img));
   }
 
   function open() {
     if (!pagesContainer.children.length) {
-      // KV에 동적 페이지가 있으면 그것 사용 (window.__brochurePages 가 dynamic-loader에서 설정됨)
       const dynamic = window.__brochurePages;
       renderPages(dynamic && dynamic.length ? dynamic : getStaticPages());
     }
