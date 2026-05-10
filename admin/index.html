@@ -1186,16 +1186,39 @@ async function handleHeroFile(file) {
 let ogImageUrl = '';
 
 async function loadOGMeta() {
+  let kvData = null;
   try {
     const res = await fetch(`/api/og-meta?code=${code}`);
-    if (!res.ok) return;
-    const data = await res.json();
-    if (!data) return;
-    document.getElementById('ogTitle').value = data.title || '';
-    document.getElementById('ogDescription').value = data.description || '';
-    ogImageUrl = data.imageUrl || '';
-    updateOGPreview();
+    if (res.ok) kvData = await res.json();
   } catch {}
+
+  // KV에 데이터 있으면 그대로, 없으면 사이트 정적 meta에서 가져와 default 표시
+  if (kvData && (kvData.title || kvData.description || kvData.imageUrl)) {
+    document.getElementById('ogTitle').value = kvData.title || '';
+    document.getElementById('ogDescription').value = kvData.description || '';
+    ogImageUrl = kvData.imageUrl || '';
+  } else {
+    try {
+      const siteRes = await fetch(`/${code}/`, { cache: 'no-store' });
+      if (siteRes.ok) {
+        const html = await siteRes.text();
+        const pick = (re) => { const m = html.match(re); return m ? m[1].trim() : ''; };
+        const t = pick(/<meta\s+property=["']og:title["']\s+content=["']([^"']+)["']/i);
+        const d = pick(/<meta\s+property=["']og:description["']\s+content=["']([^"']+)["']/i);
+        let i = pick(/<meta\s+property=["']og:image["']\s+content=["']([^"']+)["']/i);
+        if (i && !/^https?:\/\//i.test(i)) i = new URL(i, `${location.origin}/${code}/`).href;
+        document.getElementById('ogTitle').value = t;
+        document.getElementById('ogDescription').value = d;
+        ogImageUrl = i;
+        // 출처 안내 라벨
+        const titleEl = document.getElementById('ogTitle');
+        const descEl = document.getElementById('ogDescription');
+        if (titleEl) titleEl.title = '사이트 기본값 (저장하면 KV에 덮어씁니다)';
+        if (descEl) descEl.title = '사이트 기본값 (저장하면 KV에 덮어씁니다)';
+      }
+    } catch {}
+  }
+  updateOGPreview();
 
   // 업로드 이벤트 바인딩
   const uploadArea = document.getElementById('ogUploadArea');
@@ -1218,8 +1241,9 @@ function updateOGPreview() {
   const title = document.getElementById('ogTitle').value.trim();
   const desc = document.getElementById('ogDescription').value.trim();
   const preview = document.getElementById('ogImagePreview');
-  if (ogImageUrl) {
-    document.getElementById('ogPreviewImg').src = ogImageUrl;
+  if (ogImageUrl || title || desc) {
+    if (ogImageUrl) document.getElementById('ogPreviewImg').src = ogImageUrl;
+    document.getElementById('ogPreviewImg').style.display = ogImageUrl ? '' : 'none';
     document.getElementById('ogPreviewTitle').textContent = title || '(제목 미입력)';
     document.getElementById('ogPreviewDesc').textContent = desc || '(설명 미입력)';
     preview.style.display = 'block';

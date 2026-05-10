@@ -305,6 +305,46 @@ img { max-width: 100%; height: auto; display: block; }
 .pledge-details li::before { content: ''; position: absolute; left: 0; top: 8px; width: 8px; height: 8px; border-radius: 50%; background: var(--primary); opacity: 0.4; }
 .pledge-details li:last-child { margin-bottom: 0; }
 
+/* PDF식 카테고리(•) + 화살표(➠) 그룹 */
+.pledge-groups { display: flex; flex-direction: column; gap: 14px; margin-top: 4px; }
+.pledge-group {
+  background: var(--bg-light);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.pledge-group-title {
+  font-size: 14px; font-weight: 700; color: var(--text);
+  display: flex; align-items: flex-start; gap: 6px;
+  line-height: 1.5;
+}
+.pledge-group-title::before {
+  content: '•';
+  color: var(--primary);
+  font-weight: 900;
+  font-size: 18px;
+  line-height: 1.1;
+  flex-shrink: 0;
+}
+.pledge-arrows { list-style: none; margin-top: 8px; padding-left: 18px; }
+.pledge-arrows li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-light);
+  margin-bottom: 5px;
+}
+.pledge-arrows li::before {
+  content: '➠';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 13px;
+}
+.pledge-arrows li:last-child { margin-bottom: 0; }
+
 /* 사진첩 */
 .gallery-tabs { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 4px; }
 .gallery-tabs::-webkit-scrollbar { display: none; }
