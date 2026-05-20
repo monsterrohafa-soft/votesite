@@ -10,7 +10,7 @@
 - 저장소 경로: `/Users/riky/project/votesite`
 - GitHub: `monsterrohafa-soft/votesite`
 - 기술 스택: Vercel Functions + Vanilla JS + Upstash Redis + Vercel Blob
-- 관련 문서: `/Users/riky/nas-obsidian/02. share/00. 프로젝트관리/votesite/`
+- 관련 문서: `/home/riky/nas-obsidian/02. share/00. 프로젝트관리/votesite/`
 
 ## 구조 메모
 - `admin/`: 관리자 화면
